@@ -8,7 +8,7 @@ Planning poker, also called Scrum poker, is a consensus-based, gamified techniqu
 
  - [Daniil Korshov][daniel-ki]
  - [Aleksandra Azarova][foggylight]
- - [Ekaterina Kotliarenko][foggylight]
+ - [Ekaterina Kotliarenko][kagerka]
 
 ## Mentor:
 
