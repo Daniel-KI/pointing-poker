@@ -1,0 +1,147 @@
+@import '../../utils/colors.scss';
+
+.text-input {
+  display: inline-block;
+  background-color: transparent;
+  width: fit-content;
+
+  .text-input__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: $text-dark-secondary;
+    font-family: inherit;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+
+    transition: 0.3s ease-in-out;
+    &:focus-within,
+    &:hover {
+      color: $text-dark;
+    }
+  }
+
+  .text-input__field {
+    padding: 0.375rem;
+    border: none;
+    outline: none;
+
+    color: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+
+    border-radius: 0.4rem;
+    background-color: #ffffff;
+  }
+
+  &.text-input_small {
+    .text-input__container {
+      .text-input__field {
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  &.text-input_large {
+    .text-input__container {
+      .text-input__field {
+        font-size: 1.25rem;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  &.text-input_bordered {
+    .text-input__container {
+      padding: 0.2rem;
+      border-radius: 0.6rem;
+      background-color: $light;
+
+      &:focus-within,
+      &:hover {
+        background-color: $light-active;
+      }
+    }
+  }
+
+  &.text-input_controlled {
+    position: relative;
+
+    .text-input__container {
+      .text-input__field {
+        padding-right: 2.125rem;
+      }
+      .text-input__btn {
+        position: absolute;
+        right: 0.375rem;
+        top: 0;
+        width: fit-content;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        color: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: inherit;
+
+        background-color: transparent;
+        border: none;
+        outline: none;
+        background-color: transparent;
+
+        &:hover {
+          cursor: pointer;
+        }
+        .text-input__btn-icon {
+          color: inherit;
+        }
+      }
+    }
+
+    &.text-input_small {
+      .text-input__container {
+        .text-input__field {
+          padding-right: 2rem;
+        }
+        .text-input__btn {
+          .text-input__btn-icon {
+            width: 0.875rem;
+            height: 0.875rem;
+          }
+        }
+      }
+    }
+
+    &.text-input_large {
+      .text-input__container {
+        .text-input__field {
+          padding-right: 2.375rem;
+        }
+      }
+      .text-input__btn {
+        .text-input__btn-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    }
+  }
+
+  &.text-input_disabled {
+    pointer-events: none;
+    cursor: none;
+    .text-input__container {
+      background-color: $light;
+      color: $light;
+    }
+  }
+}
