@@ -1,5 +1,4 @@
 import './Button.scss';
-import '../../utils/colors.scss';
 
 import React, { ReactNode } from 'react';
 import classNames from 'classnames';
