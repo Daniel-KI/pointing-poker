@@ -1,126 +1,90 @@
 import './TextInput.scss';
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 
 type InputSize = 'large' | 'small';
+type InputColor = 'primary' | 'warning' | 'danger' | 'success' | 'dark' | 'light';
 type InputAutocomplete = 'on' | 'off';
-type InputType = 'text' | 'password';
 
 interface TextInputProps {
+  color?: InputColor;
   size?: InputSize;
+  id?: string;
   className?: string;
   bordered?: boolean;
-  hidden?: boolean;
-  showButton?: boolean;
   disabled?: boolean;
   autocomplete?: InputAutocomplete;
   placeholder?: string;
   maxlength?: number;
   value?: string;
-  onChange?: (value: string) => void;
-  inputValidation?: (value: string) => string;
+  required?: boolean;
+  name?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const TextInput: React.FC<TextInputProps> = props => {
   const {
-    bordered,
+    color,
     size,
+    id,
     className,
-    hidden,
-    showButton,
+    bordered,
     disabled,
     autocomplete,
     placeholder,
     maxlength,
     value,
+    required,
+    name,
     onChange,
-    inputValidation,
   } = props;
-  const getTextInputType = (): InputType => {
-    if (hidden) {
-      return 'password';
-    }
-    return 'text';
-  };
-  const [inputType, setInputType] = useState<InputType>(getTextInputType());
   const [inputValue, setInputValue] = useState<string>(value || '');
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.currentTarget.value);
+    if (onChange) onChange(event);
+  };
   const classes = classNames(
     {
       'text-input': true,
+      [`text-input_${color}`]: color && bordered,
       [`text-input_${size}`]: size,
       'text-input_bordered': bordered,
-      [`text-input_controlled`]: showButton,
       'text-input_disabled': disabled,
     },
     className,
   );
-  const toggleVisibility = () => {
-    if (inputType === 'password') {
-      setInputType('text');
-      return;
-    }
-    setInputType('password');
-  };
-  const showValidationMessage = (input: HTMLInputElement) => {
-    const message = inputValidation ? inputValidation(input.value) : '';
-    input.setCustomValidity(message);
-    input.reportValidity();
-  };
-  const onTextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!disabled) {
-      setInputValue(event.currentTarget.value);
-      if (onChange) onChange(event.currentTarget.value);
-      showValidationMessage(event.currentTarget);
-    }
-  };
 
   return (
-    <div className={classes}>
-      <div className='text-input__container'>
-        <input
-          className='text-input__field'
-          type={inputType}
-          autoComplete={autocomplete}
-          disabled={disabled}
-          onChange={onTextInputChange}
-          value={inputValue}
-          placeholder={placeholder}
-          maxLength={maxlength}
-          onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>) => {
-            showValidationMessage(event.currentTarget);
-          }}
-          onClick={(event: React.MouseEvent<HTMLInputElement>) => {
-            showValidationMessage(event.currentTarget);
-          }}
-        />
-        {showButton && hidden ? (
-          <button className='text-input__btn' type='button' onClick={toggleVisibility}>
-            {inputType === 'text' ? (
-              <IoEyeOffOutline className='text-input__btn-icon' />
-            ) : (
-              <IoEyeOutline className='text-input__btn-icon' />
-            )}
-          </button>
-        ) : null}
-      </div>
-    </div>
+    <input
+      id={id}
+      className={classes}
+      type='text'
+      autoComplete={autocomplete}
+      disabled={disabled}
+      onChange={onInputChange}
+      placeholder={placeholder}
+      maxLength={maxlength}
+      value={inputValue}
+      required={required}
+      name={name}
+    />
   );
 };
 
 TextInput.defaultProps = {
-  bordered: false,
+  color: undefined,
   size: undefined,
+  id: undefined,
   className: undefined,
-  hidden: false,
-  showButton: false,
+  bordered: false,
   disabled: false,
   autocomplete: 'off',
   placeholder: '',
   maxlength: undefined,
   value: '',
+  required: false,
+  name: '',
   onChange: undefined,
-  inputValidation: undefined,
 };
 
 export default TextInput;
