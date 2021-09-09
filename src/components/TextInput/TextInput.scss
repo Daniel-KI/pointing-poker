@@ -16,8 +16,6 @@
 
   transition: 0.3s ease-in-out;
 
-  margin: 1rem;
-
   &:hover,
   &:focus {
     color: $text-dark;
@@ -89,6 +87,7 @@
       }
     }
   }
+
   &.text-input_disabled {
     pointer-events: none;
     cursor: none;
