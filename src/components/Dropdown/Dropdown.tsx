@@ -8,8 +8,7 @@ interface DropdownProps {
   setSelected: (value: string) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = props => {
-  const { options, selected, setSelected } = props;
+const Dropdown: React.FC<DropdownProps> = ({ options, selected, setSelected }) => {
   const [isActive, setActive] = useState(false);
 
   const toggleClass = () => {
