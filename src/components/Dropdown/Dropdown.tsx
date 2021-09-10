@@ -3,7 +3,12 @@ import './Dropdown.scss';
 import '../../utils/colors.scss';
 import { IoCaretDown, IoCaretUp } from 'react-icons/io5';
 
-const Dropdown: React.FC = () => {
+interface DropdownProps {
+  options: string[];
+}
+
+const Dropdown: React.FC<DropdownProps> = props => {
+  const { options } = props;
   const [isActive, setActive] = useState(false);
   const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
 
@@ -30,15 +35,19 @@ const Dropdown: React.FC = () => {
   return (
     <div className='dropdown'>
       {/*
-      Так как возможности для стилизации селекта сильно ограничены, добавила селект, невидимый на странице,
-      который, возможно, понадобится для обработки данных. Если это лишнее, то данный селект можно удалить,
-      оставив лишь основной с дизайном.
+          Так как возможности для стилизации селекта сильно ограничены, добавила селект, невидимый на странице,
+          который, возможно, понадобится для обработки данных. Если это лишнее, то данный селект можно удалить,
+          оставив лишь основной с дизайном.
       */}
       <select name='' id='dropdownSelect' className='dropdown__select'>
         <option value={selectValue}>{selectValue}</option>
       </select>
 
-      {/* Селект с выпадающим списком, стилизованный в соответствии с дизайном в фигме */}
+      {/*
+          Селект с выпадающим списком, стилизованный в соответствии с дизайном в фигме.
+          Данные для списка элементов поступают в виде массива через пропсы.
+          <Dropdown options={['Low', 'Medium', 'Hight']} />
+      */}
       <div
         className={isActive ? 'select  is-active' : 'select'}
         onClick={toggleClass}
@@ -52,42 +61,23 @@ const Dropdown: React.FC = () => {
         </div>
 
         <div className='select__body'>
-          <div
-            className='select__item'
-            data-value='Low'
-            onClick={selectChoose}
-            onKeyPress={handleKeyPress}
-            role='option'
-            aria-selected
-            tabIndex={0}
-          >
-            Low
-          </div>
-          <div
-            className='select__item'
-            data-value='Medium'
-            onClick={selectChoose}
-            onKeyPress={handleKeyPress}
-            role='option'
-            aria-selected
-            tabIndex={0}
-          >
-            Medium
-          </div>
-          <div
-            className='select__item'
-            data-value='Hight'
-            onClick={selectChoose}
-            onKeyPress={handleKeyPress}
-            role='option'
-            aria-selected
-            tabIndex={0}
-          >
-            Hight
-          </div>
+          {options.map((element: string, i) => (
+            <div
+              key={`${i + 1}`}
+              className='select__item'
+              data-value={element}
+              onClick={selectChoose}
+              onKeyPress={handleKeyPress}
+              role='option'
+              aria-selected
+              tabIndex={0}
+            >
+              {element}
+            </div>
+          ))}
 
           {/* Фон ховера при наведении на элемент селекта */}
-          <div className='select__item-bg' />
+          <span className='select__item-bg' />
         </div>
       </div>
     </div>

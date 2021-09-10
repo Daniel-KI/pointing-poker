@@ -6,7 +6,8 @@
 
 .select {
   position: relative;
-  width: 263px;
+  min-width: 263px;
+  width: max-content;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
 
@@ -89,28 +90,32 @@
   transition: 0.3s ease all;
   border-bottom: 1px solid $primary;
   color: $primary;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
-  &:nth-child(3) {
-    border-bottom: none;
+  &:last-of-type {
+    border-bottom: 0;
   }
 
   &:hover {
     color: #ffffff;
   }
 
-  &:nth-child(1):hover ~ .select__item-bg {
-    top: 0;
-    background-color: $primary-disabled;
-    border-radius: 0;
+  $selectItemHeight: 61px;
+
+  @mixin itemHover() {
+    @for $i from 1 through 15 {
+      &:nth-child(#{$i}):hover ~ .select__item-bg {
+        top: $selectItemHeight * ($i - 1);
+        background-color: $primary-disabled;
+      }
+    }
   }
 
-  &:nth-child(2):hover ~ .select__item-bg {
-    top: 61px;
-    background-color: $primary-disabled;
-  }
+  @include itemHover();
 
-  &:nth-child(3):hover ~ .select__item-bg {
-    top: 122px;
+  &:last-of-type:hover ~ .select__item-bg {
     background-color: $primary-disabled;
     border-radius: 0 0 8px 8px;
   }
