@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './Dropdown.scss';
-import '../../utils/colors.scss';
 import { IoCaretDown, IoCaretUp } from 'react-icons/io5';
 
 interface DropdownProps {
   options: string[];
+  selected: string | undefined;
+  setSelected: (value: string) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = props => {
-  const { options } = props;
+  const { options, selected, setSelected } = props;
   const [isActive, setActive] = useState(false);
-  const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
 
   const toggleClass = () => {
     setActive(!isActive);
@@ -18,16 +18,17 @@ const Dropdown: React.FC<DropdownProps> = props => {
 
   const selectChoose = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const val = (event.target as HTMLElement).dataset.value;
-    setSelectValue(val);
+    if (val) setSelected(val);
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
+  const optionOnKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' && !isActive) {
       setActive(isActive);
       toggleClass();
     }
     if (event.key === 'Enter' && isActive) {
-      setSelectValue((event.target as HTMLElement).dataset.value);
+      const val = (event.target as HTMLElement).dataset.value;
+      if (val) setSelected(val);
       setActive(!isActive);
     }
   };
@@ -35,39 +36,31 @@ const Dropdown: React.FC<DropdownProps> = props => {
   return (
     <div className='dropdown'>
       {/*
-          Так как возможности для стилизации селекта сильно ограничены, добавила селект, невидимый на странице,
-          который, возможно, понадобится для обработки данных. Если это лишнее, то данный селект можно удалить,
-          оставив лишь основной с дизайном.
-      */}
-      <select name='' id='dropdownSelect' className='dropdown__select'>
-        <option value={selectValue}>{selectValue}</option>
-      </select>
-
-      {/*
-          Селект с выпадающим списком, стилизованный в соответствии с дизайном в фигме.
           Данные для списка элементов поступают в виде массива через пропсы.
-          <Dropdown options={['Low', 'Medium', 'Hight']} />
+          В родительском компоненте это выглядит следующим образом:
+          const [priority, setPriority] = useState<string | undefined>(undefined);
+          <Dropdown options={['low', 'medium', 'hight']} selected={priority} setSelected={setPriority} />
       */}
       <div
         className={isActive ? 'select  is-active' : 'select'}
         onClick={toggleClass}
-        onKeyPress={handleKeyPress}
+        onKeyPress={optionOnKeyPress}
         role='listbox'
         tabIndex={0}
       >
         <div className='select__header'>
-          <span className='select__current'>{selectValue === undefined ? 'Select priority' : selectValue}</span>
+          <span className='select__current'>{!selected ? 'Select option' : selected}</span>
           <div className='select__icon'>{isActive ? <IoCaretUp /> : <IoCaretDown />}</div>
         </div>
 
         <div className='select__body'>
-          {options.map((element: string, i) => (
+          {options.map((element: string) => (
             <div
-              key={`${i + 1}`}
+              key={element}
               className='select__item'
               data-value={element}
               onClick={selectChoose}
-              onKeyPress={handleKeyPress}
+              onKeyPress={optionOnKeyPress}
               role='option'
               aria-selected
               tabIndex={0}
