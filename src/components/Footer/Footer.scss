@@ -30,7 +30,7 @@
       }
 
       &:hover {
-        *{
+        * {
           fill: $primary-active;
         }
       }
@@ -72,7 +72,7 @@
     }
   }
 
-  @media(max-width: 576px) {
+  @media (max-width: 576px) {
     .footer__container {
       flex-direction: column;
       justify-content: center;
