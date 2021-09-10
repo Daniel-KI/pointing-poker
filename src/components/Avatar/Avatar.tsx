@@ -11,8 +11,7 @@ interface AvatarProps {
   imgName: string;
 }
 
-const Avatar: React.FC<AvatarProps> = props => {
-  const { imgName } = props;
+const Avatar: React.FC<AvatarProps> = ({ imgName }) => {
   const classes = classNames({
     avatar: true,
     avatar_empty: !imgName.length,
