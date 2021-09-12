@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { IoCloudUpload } from 'react-icons/io5';
 
-type ButtonColor = 'primary' | 'warning' | 'danger' | 'success' | 'dark' | 'light';
-type ButtonSize = 'large' | 'small';
+import Color from '../../types/Color';
+import Size from '../../types/Size';
 
 interface FileInputProps {
-  color?: ButtonColor;
-  size?: ButtonSize;
+  color?: Color;
+  size?: Size;
   id?: string;
   className?: string;
   disabled?: boolean;
@@ -18,8 +18,17 @@ interface FileInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const FileInput: React.FC<FileInputProps> = props => {
-  const { color, size, id, className, disabled, name, multiply, accept, onChange } = props;
+const FileInput: React.FC<FileInputProps> = ({
+  color,
+  size,
+  id,
+  className,
+  disabled,
+  name,
+  multiply,
+  accept,
+  onChange,
+}) => {
   const [files, setFiles] = useState<FileList | null>(null);
   const label = `Choose file${multiply ? 's' : ''}`;
   const classes = classNames(
@@ -36,7 +45,7 @@ const FileInput: React.FC<FileInputProps> = props => {
   const getFilesNamesLabel = (): string => {
     if (!files || !files.length) return label;
     let namesList = '';
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i += 1) {
       const fileName = files[i].name;
       if (namesList) {
         namesList = namesList.concat(', ');
