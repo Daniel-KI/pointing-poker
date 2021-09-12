@@ -2,13 +2,14 @@ import './TextInput.scss';
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
-type InputSize = 'large' | 'small';
-type InputColor = 'primary' | 'warning' | 'danger' | 'success' | 'dark' | 'light';
+import Color from '../../types/Color';
+import Size from '../../types/Size';
+
 type InputAutocomplete = 'on' | 'off';
 
 interface TextInputProps {
-  color?: InputColor;
-  size?: InputSize;
+  color?: Color;
+  size?: Size;
   id?: string;
   className?: string;
   bordered?: boolean;
@@ -22,22 +23,21 @@ interface TextInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TextInput: React.FC<TextInputProps> = props => {
-  const {
-    color,
-    size,
-    id,
-    className,
-    bordered,
-    disabled,
-    autocomplete,
-    placeholder,
-    maxlength,
-    value,
-    required,
-    name,
-    onChange,
-  } = props;
+const TextInput: React.FC<TextInputProps> = ({
+  color,
+  size,
+  id,
+  className,
+  bordered,
+  disabled,
+  autocomplete,
+  placeholder,
+  maxlength,
+  value,
+  required,
+  name,
+  onChange,
+}) => {
   const [inputValue, setInputValue] = useState<string>(value || '');
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.currentTarget.value);
