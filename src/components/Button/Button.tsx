@@ -3,13 +3,13 @@ import './Button.scss';
 import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 
-type ButtonColor = 'primary' | 'warning' | 'danger' | 'success' | 'dark' | 'light';
-type ButtonSize = 'large' | 'small';
+import Color from '../../types/Color';
+import Size from '../../types/Size';
 
 interface ButtonProps {
   children: ReactNode | undefined;
-  color?: ButtonColor;
-  size?: ButtonSize;
+  color?: Color;
+  size?: Size;
   id?: string;
   className?: string;
   disabled?: boolean;
@@ -18,8 +18,7 @@ interface ButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const Button: React.FC<ButtonProps> = props => {
-  const { children, color, size, id, className, disabled, active, submit, onClick } = props;
+const Button: React.FC<ButtonProps> = ({ children, color, size, id, className, disabled, active, submit, onClick }) => {
   const classes = classNames(
     {
       btn: true,
