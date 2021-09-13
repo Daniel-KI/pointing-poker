@@ -1,0 +1,10 @@
+@import '../../utils/colors.scss';
+@import '../../utils/containers.scss';
+
+.main {
+  .main__container {
+    @extend .container_small;
+    margin: 0 auto;
+    // background-color: green;
+  }
+}
