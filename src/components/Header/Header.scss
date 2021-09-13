@@ -60,6 +60,14 @@
     }
   }
 
+  &.header_centered {
+    @media (max-width: 576px) {
+      .header__container {
+        justify-content: center;
+      }
+    }
+  }
+
   @media (max-width: 576px) {
     .header__container {
       .header__logo {

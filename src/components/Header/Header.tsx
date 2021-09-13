@@ -1,6 +1,7 @@
 import React from 'react';
 import './Header.scss';
 import { IoChatboxEllipses } from 'react-icons/io5';
+import classNames from 'classnames';
 import { ReactComponent as AppLogo } from '../../assets/app-logo.svg';
 
 interface HeaderProps {
@@ -8,8 +9,13 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ isAuthorized }) => {
+  const classes = classNames({
+    header: true,
+    header_centered: !isAuthorized,
+  });
+
   return (
-    <header className='header'>
+    <header className={classes}>
       <div className='header__container'>
         <div className='header__logo'>
           <a href='/' className='header__logo-link'>
