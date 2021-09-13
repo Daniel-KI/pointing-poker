@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import './Dropdown.scss';
 import { IoCaretDown, IoCaretUp } from 'react-icons/io5';
-
-interface DropdownProps {
-  options: string[];
-  selected: string | undefined;
-  setSelected: (value: string) => void;
-}
+import { DropdownProps } from './models';
 
 const Dropdown: React.FC<DropdownProps> = ({ options, selected, setSelected }) => {
   const [isActive, setActive] = useState(false);
