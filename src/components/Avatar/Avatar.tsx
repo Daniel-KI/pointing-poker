@@ -1,15 +1,12 @@
 import React from 'react';
 import { IoPerson } from 'react-icons/io5';
-import './avatar.scss';
+import './Avatar.scss';
 import classNames from 'classnames';
+import { AvatarProps } from './models';
 
 // В компоненте обязательный props с именем файла аватарки:
 // <Avatar imgName='' />
 // Если имени файла нет, то применяется аватарка по умолчанию.
-
-interface AvatarProps {
-  imgName: string;
-}
 
 const Avatar: React.FC<AvatarProps> = ({ imgName }) => {
   const classes = classNames({
