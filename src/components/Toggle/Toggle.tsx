@@ -1,4 +1,5 @@
 import React from 'react';
+import { ToggleProps } from './models';
 import './Toggle.scss';
 
 /*
@@ -7,11 +8,6 @@ import './Toggle.scss';
   const [checked, toggleChecked] = useState<boolean>(false);
   <Toggle checked={checked} onChange={toggleChecked} />
 */
-
-interface ToggleProps {
-  checked: boolean;
-  onChange: (value: boolean) => void;
-}
 
 const Toggle: React.FC<ToggleProps> = ({ checked, onChange }) => {
   const toggleValue = () => {
