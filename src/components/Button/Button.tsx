@@ -7,10 +7,10 @@ const Button: React.FC<ButtonProps> = ({ children, color, size, id, className, d
   const classes = classNames(
     {
       btn: true,
-      [`btn_${color}`]: color,
-      [`btn_${size}`]: size,
-      btn_active: active,
-      btn_disabled: disabled,
+      [`btn--${color}`]: color,
+      [`btn--${size}`]: size,
+      'btn--active': active,
+      'btn--disabled': disabled,
     },
     className,
   );
