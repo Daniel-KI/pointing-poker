@@ -1,22 +1,7 @@
 import './Button.scss';
-
-import React, { ReactNode } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-
-import Color from '../../types/Color';
-import Size from '../../types/Size';
-
-interface ButtonProps {
-  children: ReactNode | undefined;
-  color?: Color;
-  size?: Size;
-  id?: string;
-  className?: string;
-  disabled?: boolean;
-  active?: boolean;
-  submit?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}
+import { ButtonProps } from './models';
 
 const Button: React.FC<ButtonProps> = ({ children, color, size, id, className, disabled, active, submit, onClick }) => {
   const classes = classNames(
