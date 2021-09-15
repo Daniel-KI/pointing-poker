@@ -1,27 +1,7 @@
 import './TextInput.scss';
 import React, { useState } from 'react';
 import classNames from 'classnames';
-
-import Color from '../../types/Color';
-import Size from '../../types/Size';
-
-type InputAutocomplete = 'on' | 'off';
-
-interface TextInputProps {
-  color?: Color;
-  size?: Size;
-  id?: string;
-  className?: string;
-  bordered?: boolean;
-  disabled?: boolean;
-  autocomplete?: InputAutocomplete;
-  placeholder?: string;
-  maxlength?: number;
-  value?: string;
-  required?: boolean;
-  name?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { TextInputProps } from './models';
 
 const TextInput: React.FC<TextInputProps> = ({
   color,
@@ -46,10 +26,10 @@ const TextInput: React.FC<TextInputProps> = ({
   const classes = classNames(
     {
       'text-input': true,
-      [`text-input_${color}`]: color && bordered,
-      [`text-input_${size}`]: size,
-      'text-input_bordered': bordered,
-      'text-input_disabled': disabled,
+      [`text-input--${size}`]: size,
+      'text-input--bordered': bordered,
+      [`text-input--${color}`]: color && bordered,
+      'text-input--disabled': disabled,
     },
     className,
   );
