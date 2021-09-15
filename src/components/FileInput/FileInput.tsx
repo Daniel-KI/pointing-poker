@@ -59,7 +59,7 @@ const FileInput: React.FC<FileInputProps> = ({
           type='file'
           disabled={disabled}
           multiple={multiply}
-          onInput={onInputChange}
+          onChange={onInputChange}
           accept={accept}
         />
       </span>
