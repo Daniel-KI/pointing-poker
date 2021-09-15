@@ -2,21 +2,7 @@ import './FileInput.scss';
 import React, { useState } from 'react';
 import classNames from 'classnames';
 import { IoCloudUpload } from 'react-icons/io5';
-
-import Color from '../../types/Color';
-import Size from '../../types/Size';
-
-interface FileInputProps {
-  color?: Color;
-  size?: Size;
-  id?: string;
-  className?: string;
-  disabled?: boolean;
-  name?: string;
-  multiply?: boolean;
-  accept?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { FileInputProps } from './models';
 
 const FileInput: React.FC<FileInputProps> = ({
   color,
@@ -34,10 +20,10 @@ const FileInput: React.FC<FileInputProps> = ({
   const classes = classNames(
     {
       'file-input': true,
-      [`file-input_${color}`]: color,
-      [`file-input_${size}`]: size,
-      'file-input_filled': files && files.length,
-      'file-input_disabled': disabled,
+      [`file-input--${color}`]: color,
+      [`file-input--${size}`]: size,
+      'file-input--filled': files && files.length,
+      'file-input--disabled': disabled,
     },
     className,
   );
@@ -56,6 +42,7 @@ const FileInput: React.FC<FileInputProps> = ({
   };
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.currentTarget.blur();
     setFiles(event.currentTarget.files);
     if (onChange) onChange(event);
   };

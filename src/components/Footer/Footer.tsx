@@ -10,11 +10,11 @@ const Footer: React.FC = () => {
         <a href='https://rs.school/react/' className='footer__logo-wrapper'>
           <RsLogo className='footer__logo' />
         </a>
-        <ul className='footer__developers-list'>
+        <ul className='developers-list'>
           {developers.map(developer => {
             return (
-              <li className='footer__developers-item' key={developer.name}>
-                <a href={developer.link} className='footer__developers-link'>
+              <li className='developers-list__item' key={developer.name}>
+                <a href={developer.link} className='developers-list__link'>
                   {developer.name}
                 </a>
               </li>
