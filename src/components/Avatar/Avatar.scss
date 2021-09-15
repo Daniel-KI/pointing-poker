@@ -1,4 +1,4 @@
-@import '../../utils/colors.scss';
+@import '../../ui/colors.scss';
 
 .avatar {
   width: 80px;
@@ -23,6 +23,26 @@
       height: 50px;
       width: 50px;
       color: $dark;
+    }
+  }
+
+  &_large {
+    width: 120px;
+    height: 120px;
+
+    &.avatar_empty .avatar__icon {
+      height: 76px;
+      width: 76px;
+    }
+  }
+
+  &_small {
+    width: 60px;
+    height: 60px;
+
+    &.avatar_empty .avatar__icon {
+      height: 38px;
+      width: 38px;
     }
   }
 }

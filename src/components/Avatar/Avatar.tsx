@@ -8,10 +8,11 @@ import { AvatarProps } from './models';
 // <Avatar imgName='' />
 // Если имени файла нет, то применяется аватарка по умолчанию.
 
-const Avatar: React.FC<AvatarProps> = ({ imgName }) => {
+const Avatar: React.FC<AvatarProps> = ({ imgName, size }) => {
   const classes = classNames({
     avatar: true,
     avatar_empty: !imgName.length,
+    [`avatar_${size}`]: size,
   });
 
   return (
