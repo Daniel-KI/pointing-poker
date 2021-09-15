@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import '../ui/colors.scss';
+@import '../ui/fonts.scss';
 
 body {
   box-sizing: border-box;
   margin: 0;
 
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  line-height: 1.25;
+  font-family: $default-font-family;
+  font-size: $default-font-size;
+  line-height: $line-height-md;
   font-weight: 400;
   background-color: $light-bg;
 }
@@ -16,4 +17,20 @@ body {
   box-sizing: inherit;
   padding: 0;
   margin: 0;
+}
+
+.sm {
+  font-size: $title-sm;
+}
+.md {
+  font-size: $title-md;
+}
+.lg {
+  font-size: $title-lg;
+}
+.xl {
+  font-size: $title-xl;
+}
+.xxl {
+  font-size: $title-xxl;
 }
