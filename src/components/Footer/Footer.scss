@@ -1,5 +1,7 @@
 @import '../../ui/colors.scss';
 @import '../../ui/containers.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
 
 .footer {
   width: 100%;
@@ -17,6 +19,13 @@
     flex-direction: row;
     justify-content: space-between;
     margin: 0 auto;
+
+    @media (max-width: $screen-sm) {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 0;
+    }
   }
 
   &__logo {
@@ -34,15 +43,6 @@
       }
     }
   }
-
-  @media (max-width: 576px) {
-    &__container {
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem 0;
-    }
-  }
 }
 
 .developers-list {
@@ -55,8 +55,8 @@
   &__item {
     font-family: inherit;
     font-weight: 400;
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: $text-md;
+    line-height: $line-height-lg;
     margin: 0 3rem 0 0;
     color: $text-dark;
     transition: 0.3s ease-in-out;
@@ -67,6 +67,18 @@
 
     &:hover {
       color: $primary-active;
+    }
+
+    @media (max-width: $screen-sm) {
+      margin: 0 0 1rem 0;
+
+      &:first-child {
+        margin: 1rem 0 1rem 0;
+      }
+
+      &:last-child {
+        margin: 0 0 0 0;
+      }
     }
   }
 
@@ -79,19 +91,7 @@
     text-decoration: none;
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: $screen-sm) {
     flex-direction: column;
-
-    &__item {
-      margin: 0 0 1rem 0;
-
-      &:first-child {
-        margin: 1rem 0 1rem 0;
-      }
-
-      &:last-child {
-        margin: 0 0 0 0;
-      }
-    }
   }
 }
