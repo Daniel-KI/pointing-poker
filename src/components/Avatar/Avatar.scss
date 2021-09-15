@@ -1,0 +1,28 @@
+@import '../../utils/colors.scss';
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: transparent;
+
+  .avatar__img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  &.avatar_empty {
+    background-color: $light;
+
+    & .avatar__icon {
+      height: 50px;
+      width: 50px;
+      color: $dark;
+    }
+  }
+}

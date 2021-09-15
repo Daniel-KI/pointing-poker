@@ -1,0 +1,120 @@
+@import '../../utils/colors.scss';
+
+.dropdown__select {
+  display: none;
+}
+
+.select {
+  position: relative;
+  min-width: 263px;
+  width: max-content;
+  border-radius: 10px;
+
+  &.is-active .select__body {
+    display: block;
+
+    & .select__item-bg {
+      display: block;
+    }
+  }
+
+  &.is-active .select__header {
+    border-radius: 10px 10px 0 0;
+  }
+}
+
+.select__header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: $primary;
+  border-radius: 10px;
+  height: 60px;
+  color: #ffffff;
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.select__current {
+  font-size: 24px;
+  line-height: 24px;
+  padding: 15px 20px;
+}
+
+.select__icon {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  height: 40px;
+  margin-left: auto;
+  text-align: center;
+  width: 40px;
+}
+
+.select__body {
+  border-top: 0;
+  display: none;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  border-radius: 0 0 10px 10px;
+  border: 1px solid $primary;
+  background-color: #ffffff;
+}
+
+.select__item-bg {
+  position: absolute;
+  top: 0px;
+  right: 0;
+  left: 0;
+  height: 60px;
+  transition: 0.3s ease all;
+  z-index: 1;
+  display: none;
+}
+
+.select__item {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 24px;
+  padding: 18px 20px;
+  transition: 0.3s ease all;
+  border-bottom: 1px solid $primary;
+  color: $primary;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  $selectItemHeight: 61px;
+
+  @mixin itemHover() {
+    @for $i from 1 through 15 {
+      &:nth-child(#{$i}):hover ~ .select__item-bg {
+        top: $selectItemHeight * ($i - 1);
+        background-color: $primary-disabled;
+      }
+    }
+  }
+
+  @include itemHover();
+
+  &:last-of-type:hover ~ .select__item-bg {
+    background-color: $primary-disabled;
+    border-radius: 0 0 8px 8px;
+  }
+}
