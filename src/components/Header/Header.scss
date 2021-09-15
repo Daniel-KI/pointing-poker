@@ -1,5 +1,7 @@
 @import '../../ui/colors.scss';
 @import '../../ui/containers.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
 
 .header {
   $self: &;
@@ -32,8 +34,8 @@
     }
   }
 
-  @media (max-width: 576px) {
-    &--centered {
+  &--centered {
+    @media (max-width: $screen-sm) {
       & #{ $self }__container {
         justify-content: center;
       }
@@ -63,19 +65,15 @@
   }
 
   &__name {
-    font-size: 1.5rem;
+    font-size: $text-lg;
     font-family: inherit;
     font-weight: 800;
     margin-left: 1rem;
     color: $text-dark;
     transition: 0.3s ease-in-out;
-  }
 
-  @media (max-width: 576px) {
-    .logo {
-      &__name {
-        display: none;
-      }
+    @media (max-width: $screen-sm) {
+      display: none;
     }
   }
 }
