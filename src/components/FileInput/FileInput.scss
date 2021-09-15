@@ -1,6 +1,7 @@
-@import '../../utils/colors.scss';
+@import '../../ui/colors.scss';
 
 .file-input {
+  $self: &;
   padding: 0.375rem 0.75rem;
 
   color: $text-dark-secondary;
@@ -21,168 +22,226 @@
   transition: 0.3s ease-in-out;
   display: inline-block;
 
-  .file-input__container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    column-gap: 0.75rem;
-
-    .file-input__label {
-      max-width: 9.15ch;
-      word-wrap: normal;
-      word-break: normal;
-      overflow-wrap: normal;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      -webkit-hyphens: none;
-      -ms-hyphens: none;
-      hyphens: none;
-    }
-
-    .file-input__field {
-      display: none;
-    }
-  }
-
   &:hover {
     cursor: pointer;
     color: $text-dark;
     border: 1px solid $text-dark;
   }
 
-  &.file-input_filled {
+  &__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.75rem;
+  }
+
+  &__label {
+    max-width: 9.15ch;
+    word-wrap: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  &__field {
+    display: none;
+  }
+
+  &--disabled {
+    pointer-events: none;
+    cursor: none;
     color: $text-light;
     border: 1px solid $text-dark-secondary;
     background-color: $text-dark-secondary;
-
-    &:hover {
-      border: 1px solid $dark;
-      background-color: $dark;
-    }
   }
 
-  &.file-input_small {
+  &--small {
     font-size: 0.875rem;
     line-height: 1.5;
     padding: 0.25rem 0.5rem;
     border-radius: 0.3rem;
 
-    .file-input__container {
+    & #{ $self }__container {
       column-gap: 0.5rem;
     }
   }
 
-  &.file-input_large {
+  &--large {
     font-size: 1.25rem;
     line-height: 1.5;
     padding: 0.5rem 1rem;
     border-radius: 0.4rem;
 
-    .file-input__container {
-      column-gap: 1rem;
+    & #{ $self }__container {
+      column-gap: 0.5rem;
     }
   }
 
-  &.file-input_primary {
+  &--filled {
+    color: $text-light;
+    border: 1px solid $text-dark-secondary;
+    background-color: $text-dark-secondary;
+
+    &:hover {
+      color: $text-light;
+      border: 1px solid $dark;
+      background-color: $dark;
+    }
+  }
+
+  &--primary {
     color: $primary;
     border: 1px solid $primary;
+
     &:hover {
       color: $primary-active;
       border: 1px solid $primary-active;
     }
-    &.file-input_filled {
+
+    &#{ $self }--filled {
       color: $text-light;
       background-color: $primary;
+
       &:hover {
         background-color: $primary-active;
       }
     }
+
+    &#{ $self }--disabled {
+      color: $text-light;
+      background-color: $primary-disabled;
+      border-color: $primary-disabled;
+    }
   }
 
-  &.file-input_warning {
+  &--warning {
     color: $warning;
     border: 1px solid $warning;
+
     &:hover {
       color: $warning-active;
       border: 1px solid $warning-active;
     }
-    &.file-input_filled {
+
+    &#{ $self }--filled {
       color: $text-light;
       background-color: $warning;
+
       &:hover {
         background-color: $warning-active;
       }
     }
+
+    &#{ $self }--disabled {
+      color: $text-light;
+      background-color: $warning-disabled;
+      border-color: $warning-disabled;
+    }
   }
 
-  &.file-input_danger {
+  &--danger {
     color: $danger;
     border: 1px solid $danger;
+
     &:hover {
       color: $danger-active;
       border: 1px solid $danger-active;
     }
-    &.file-input_filled {
+
+    &#{ $self }--filled {
       color: $text-light;
       background-color: $danger;
+
       &:hover {
         background-color: $danger-active;
       }
     }
+
+    &#{ $self }--disabled {
+      color: $text-light;
+      background-color: $danger-disabled;
+      border-color: $danger-disabled;
+    }
   }
 
-  &.file-input_success {
+  &--success {
     color: $success;
     border: 1px solid $success;
+
     &:hover {
       color: $success-active;
       border: 1px solid $success-active;
     }
-    &.file-input_filled {
+
+    &#{ $self }--filled {
       color: $text-light;
       background-color: $success;
+
       &:hover {
         background-color: $success-active;
       }
     }
+
+    &#{ $self }--disabled {
+      color: $text-light;
+      background-color: $success-disabled;
+      border-color: $success-disabled;
+    }
   }
 
-  &.file-input_dark {
+  &--dark {
     color: $dark;
     border: 1px solid $dark;
+
     &:hover {
       color: $dark-active;
       border: 1px solid $dark-active;
     }
-    &.file-input_filled {
+
+    &#{ $self }--filled {
       color: $text-light;
       background-color: $dark;
+
       &:hover {
         background-color: $dark-active;
       }
     }
+
+    &#{ $self }--disabled {
+      color: $text-light;
+      background-color: $dark-disabled;
+      border-color: $dark-disabled;
+    }
   }
 
-  &.file-input_light {
+  &--light {
     color: $light;
     border: 1px solid $light;
+
     &:hover {
       color: $light-active;
       border: 1px solid $light-active;
     }
-    &.file-input_filled {
+
+    &#{ $self }--filled {
       color: $text-light;
       background-color: $light;
+
       &:hover {
         background-color: $light-active;
       }
     }
-  }
 
-  &.file-input_disabled {
-    pointer-events: none;
-    cursor: none;
+    &#{ $self }--disabled {
+      color: $text-dark-secondary;
+      background-color: $light-disabled;
+      border-color: $light-disabled;
+    }
   }
 }
