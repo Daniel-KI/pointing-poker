@@ -1,7 +1,10 @@
-@import '../../utils/colors.scss';
-@import '../../utils/containers.scss';
+@import '../../ui/colors.scss';
+@import '../../ui/containers.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
 
 .header {
+  $self: &;
   width: 100%;
   min-height: 5rem;
 
@@ -11,7 +14,7 @@
 
   background: transparent;
 
-  .header__container {
+  &__container {
     @extend .container_large;
     display: flex;
     flex-direction: row;
@@ -19,36 +22,7 @@
     align-items: center;
   }
 
-  .header__logo {
-    .header__logo-img {
-      width: 1.75rem;
-      height: auto;
-    }
-
-    .header__logo-name {
-      font-size: 1.5rem;
-      font-family: inherit;
-      font-weight: 800;
-      margin-left: 1rem;
-      color: $text-dark;
-      transition: 0.3s ease-in-out;
-    }
-
-    .header__logo-link {
-      text-decoration: none;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-
-      &:hover {
-        .header__logo-name {
-          color: $primary-active;
-        }
-      }
-    }
-  }
-
-  .header__chat {
+  &__chat {
     width: 1.75rem;
     height: auto;
     fill: $text-dark;
@@ -60,23 +34,46 @@
     }
   }
 
-  &.header_centered {
-    @media (max-width: 576px) {
-      .header__container {
+  &--centered {
+    @media (max-width: $screen-sm) {
+      & #{ $self }__container {
         justify-content: center;
       }
     }
   }
+}
 
-  @media (max-width: 576px) {
-    .header__container {
-      .header__logo {
-        .header__logo-link {
-          .header__logo-name {
-            display: none;
-          }
-        }
+.logo {
+  $self: &;
+
+  &__link {
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &:hover {
+      & #{ $self }__name {
+        color: $primary-active;
       }
+    }
+  }
+
+  &__img {
+    width: 1.75rem;
+    height: auto;
+  }
+
+  &__name {
+    font-size: $text-lg;
+    font-family: inherit;
+    font-weight: 800;
+    margin-left: 1rem;
+    color: $text-dark;
+    transition: 0.3s ease-in-out;
+
+    @media (max-width: $screen-sm) {
+      display: none;
     }
   }
 }
