@@ -1,4 +1,5 @@
 @import '../../ui/colors.scss';
+@import '../../ui/fonts.scss';
 
 .text-input {
   $self: &;
@@ -7,8 +8,8 @@
   color: $text-dark-secondary;
   font-family: inherit;
   font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: $text-md;
+  line-height: $line-height-lg;
 
   border: none;
   border-radius: 0.4rem;
@@ -30,13 +31,11 @@
   }
 
   &--small {
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-size: $text-sm;
   }
 
   &--large {
-    font-size: 1.25rem;
-    line-height: 1.5;
+    font-size: $text-lg;
   }
 
   &--bordered {
