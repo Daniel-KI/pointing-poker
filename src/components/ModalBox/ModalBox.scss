@@ -15,17 +15,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.modal {
-  background-color: #ffffff;
-  padding: 30px 90px 50px;
-  border-radius: 15px;
-  cursor: default;
-}
-
-@media (max-width: $screen-md) {
-  .overlay {
+  @media (max-width: $screen-md) {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -38,8 +29,15 @@
     cursor: pointer;
     display: block;
   }
+}
 
-  .modal {
+.modal {
+  background-color: #ffffff;
+  padding: 30px 90px 50px;
+  border-radius: 15px;
+  cursor: default;
+
+  @media (max-width: $screen-md) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,17 +46,13 @@
     min-height: 100%;
     border-radius: 0;
   }
-}
 
-@media (max-width: $screen-sm) {
-  .modal {
+  @media (max-width: $screen-sm) {
     padding: 30px 50px 50px;
     display: block;
   }
-}
 
-@media (max-width: $screen-xsm) {
-  .modal {
+  @media (max-width: $screen-xsm) {
     width: fit-content;
     padding: 30px 20px 50px;
   }
