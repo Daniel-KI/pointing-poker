@@ -9,15 +9,18 @@ import './Toggle.scss';
   <Toggle checked={checked} onChange={toggleChecked} />
 */
 
-const Toggle: React.FC<ToggleProps> = ({ checked, onChange }) => {
+const Toggle: React.FC<ToggleProps> = ({ checked, onChange, children }) => {
   const toggleValue = () => {
     onChange(!checked);
   };
   return (
     <div>
       <label htmlFor='toggle' className='toggle'>
-        <input id='toggle' type='checkbox' checked={checked} onChange={toggleValue} />
-        <span className='toggle__slider toggle__circle' />
+        <div className='toggle__toggle-btn'>
+          <input id='toggle' type='checkbox' checked={checked} onChange={toggleValue} />
+          <span className='toggle__slider toggle__circle' />
+        </div>
+        <div className='toggle__label'>{children}</div>
       </label>
     </div>
   );
