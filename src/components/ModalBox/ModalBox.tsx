@@ -18,9 +18,7 @@ const ModalBox: React.FC<ModalBoxProps> = ({ children, active, setActive }) => {
     <div className='overlay' onClick={outsideClick} role='presentation'>
       <div className='modal'>{children}</div>
     </div>
-  ) : (
-    <></>
-  );
+  ) : null;
 };
 
 export default ModalBox;
