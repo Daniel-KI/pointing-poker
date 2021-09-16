@@ -2,6 +2,6 @@ import { ReactNode } from 'react';
 
 export interface ModalBoxProps {
   children: ReactNode | undefined;
-  className?: string;
+  active: boolean;
   setActive: (value: boolean) => void;
 }

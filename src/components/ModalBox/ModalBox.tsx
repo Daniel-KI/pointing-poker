@@ -7,27 +7,19 @@ import { ModalBoxProps } from './models';
 //   const modalActive = () => {
 //     setActive(true);
 //   };
+// <ModalBox active={isActive} setActive={setActive}>content</ModalBox>
 
-// И появление модального окна в зависимости от нажатия на кнопку
-//   <Button onClick={modalActive}>Modal</Button>
-//   {isActive ? (
-//      <ModalBox setActive={setActive}>
-//        {children}
-//      </ModalBox>
-//    ) : null}
-
-const ModalBox: React.FC<ModalBoxProps> = ({ setActive, children }) => {
-  const modalActive = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    const { overlay } = (event.target as HTMLElement).dataset;
-    if (overlay === 'overlay') {
-      setActive(false);
-    }
+const ModalBox: React.FC<ModalBoxProps> = ({ children, active, setActive }) => {
+  const outsideClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    if (event.target === event.currentTarget) setActive(false);
   };
 
-  return (
-    <div className='overlay' data-overlay='overlay' onClick={modalActive} role='presentation'>
+  return active ? (
+    <div className='overlay' onClick={outsideClick} role='presentation'>
       <div className='modal'>{children}</div>
     </div>
+  ) : (
+    <></>
   );
 };
 
