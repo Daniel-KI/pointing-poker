@@ -1,5 +1,4 @@
 export interface ConnectModalProps {
-  className?: string;
   isActive: boolean;
   setActive: (value: boolean) => void;
   onConfirm: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
