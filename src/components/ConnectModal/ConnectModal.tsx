@@ -24,9 +24,9 @@ import ModalBox from '../ModalBox/ModalBox';
 
 // Появление модального окна при нажатии на кнопку
 //   <Button onClick={modalActive}>Modal</Button>
-//   <ConnectModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm} />
+//   <ConnectModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm} userType='admin | user' />
 
-const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onConfirm, onDecline }) => {
+const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onConfirm, onDecline, userType }) => {
   const [checked, toggleChecked] = useState<boolean>(false);
   const [avatarName, avatarNameSetActive] = useState<string>('');
 
@@ -37,12 +37,16 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onConf
         <form>
           <div className='connect-form__wrapper'>
             <div className='connect-form__text-inputs'>
-              <TextInput placeholder='Your first name' color='light' className='ssss' bordered />
+              <TextInput placeholder='Your first name' color='light' bordered />
               <TextInput placeholder='Your last name' color='light' bordered />
               <TextInput placeholder='Your job position' color='light' bordered />
-              <Toggle checked={checked} onChange={toggleChecked}>
-                Connect as observer
-              </Toggle>
+              {userType === 'admin' ? (
+                <TextInput placeholder='Lobby name' color='light' bordered />
+              ) : (
+                <Toggle checked={checked} onChange={toggleChecked}>
+                  Connect as observer
+                </Toggle>
+              )}
             </div>
             <div className='connect-form__avatar-inputs'>
               <Avatar imgName={avatarName} size='large' className='connect-form__avatar-inputs_avatar' />
