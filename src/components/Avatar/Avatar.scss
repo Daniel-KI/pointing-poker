@@ -1,8 +1,9 @@
 @import '../../ui/colors.scss';
 
 .avatar {
-  width: 80px;
-  height: 80px;
+  $self: &;
+  width: 4rem;
+  height: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,39 +11,43 @@
   overflow: hidden;
   background-color: transparent;
 
-  .avatar__img {
+  &__img {
     width: 100%;
     height: auto;
     object-fit: cover;
   }
 
-  &.avatar_empty {
+  &--empty {
     background-color: $light;
 
-    & .avatar__icon {
-      height: 50px;
-      width: 50px;
+    #{ $self }__icon {
+      height: 2rem;
+      width: 2rem;
       color: $dark;
     }
   }
 
-  &_large {
-    width: 120px;
-    height: 120px;
+  &--large {
+    width: 7rem;
+    height: 7rem;
 
-    &.avatar_empty .avatar__icon {
-      height: 76px;
-      width: 76px;
+    &#{ $self }--empty {
+      #{ $self }__icon {
+        height: 4rem;
+        width: 4rem;
+      }
     }
   }
 
-  &_small {
-    width: 60px;
-    height: 60px;
+  &--small {
+    width: 3rem;
+    height: 3rem;
 
-    &.avatar_empty .avatar__icon {
-      height: 38px;
-      width: 38px;
+    &#{ $self }--empty {
+      #{ $self }__icon {
+        height: 1rem;
+        width: 1rem;
+      }
     }
   }
 }
