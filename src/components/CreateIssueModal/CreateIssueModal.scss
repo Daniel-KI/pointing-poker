@@ -9,6 +9,12 @@
     color: #655be1;
     text-align: center;
     margin-bottom: 20px;
+
+    @media (max-width: $screen-sm) {
+      font-size: $title-md;
+      line-height: 50px;
+      margin-bottom: 20px;
+    }
   }
 
   &__wrapper {
@@ -17,6 +23,13 @@
     justify-content: space-between;
     margin-bottom: 40px;
     column-gap: 20px;
+
+    @media (max-width: $screen-sm) {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 40px;
+      row-gap: 20px;
+    }
   }
 
   &__text-inputs {
@@ -44,33 +57,12 @@
     justify-content: center;
     column-gap: 50px;
 
+    @media (max-width: $screen-sm) {
+      column-gap: 20px;
+    }
+
     &_button {
       width: 150px;
-    }
-  }
-}
-
-@media (max-width: $screen-sm) {
-  .create-issue {
-    &__title {
-      font-size: $title-md;
-      line-height: 50px;
-      margin-bottom: 20px;
-    }
-
-    &__wrapper {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 40px;
-      row-gap: 20px;
-    }
-
-    &__buttons {
-      column-gap: 20px;
-
-      &_button {
-        width: 150px;
-      }
     }
   }
 }
