@@ -6,5 +6,6 @@ export interface ToggleProps {
   children?: ReactNode | undefined;
   id?: string;
   className?: string;
+  inputId?: string;
   name?: string;
 }
