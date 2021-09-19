@@ -1,3 +1,3 @@
-type CardType = undefined | 'new' | 'default';
+type CardType = undefined | 'default';
 
 export default CardType;

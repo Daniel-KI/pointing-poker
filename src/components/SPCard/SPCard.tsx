@@ -1,54 +1,53 @@
 import React from 'react';
 import './SPCard.scss';
-import { IoHelp, IoPencilSharp, IoAdd } from 'react-icons/io5';
+import { IoHelp } from 'react-icons/io5';
+import classNames from 'classnames';
 import { SPCardProps } from './models';
+import DataControlPanel from '../DataControlPanel/DataControlPanel';
 
 // В родительском компоненте:
 
 // Чтобы была карта Unknown:
-// <SPCard />
+// <SPCard editAction={editAction} deleteAction={deleteAction} />
 
 // Чтобы была стандартная карта с цифрами:
-// <SPCard scoreType='SP' cardScore='15' cardType='default' />
+// <SPCard scoreType='SP' cardScore='15' cardType='default' editAction={editAction} deleteAction={deleteAction} />
 
-// Чтобы была карта "добавить новую карту":
-// <SPCard cardType='new' />
+const SPCard: React.FC<SPCardProps> = ({ scoreType, cardScore, cardType, editAction, deleteAction, className, id }) => {
+  const classes = classNames(className);
 
-const SPCard: React.FC<SPCardProps> = ({ scoreType, cardScore, cardType }) => {
+  const onMouseClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const card = event.currentTarget as HTMLElement;
+    if (card.dataset.card === 'card') {
+      card.classList.toggle('sp-card--active');
+    }
+  };
+
   return (
-    <div className='sp-card'>
+    <div className={`${classes} sp-card`} id={id} onClick={onMouseClick} data-card='card' role='presentation'>
+      <div className='sp-card__card-edit'>
+        <DataControlPanel deleteAction={deleteAction} className='sp-card__card-edit_edit-btn' />
+        <DataControlPanel editAction={editAction} className='sp-card__card-edit_edit-btn' />
+      </div>
       <div className='sp-card__inner-border'>
-        {cardType === undefined ? (
-          <div className='sp-card__content'>
-            <div className='sp-card__score-type_top'>
-              <div>Unknown</div>
-              <div className='sp-card__edit-btn'>
-                <IoPencilSharp className='sp-card__edit-btn_pencil' />
-              </div>
-            </div>
-            <div className='sp-card__circle sp-card__circle_question'>
-              <IoHelp className='sp-card__question-icon' />
-            </div>
-            <div className='sp-card__score-type_bottom'>Unknown</div>
-          </div>
-        ) : null}
         {cardType === 'default' ? (
           <div className='sp-card__content'>
             <div className='sp-card__score-type_top'>
               <div>{scoreType}</div>
-              <div className='sp-card__edit-btn'>
-                <IoPencilSharp className='sp-card__edit-btn_pencil' />
-              </div>
             </div>
             <div className='sp-card__card-score'>{cardScore}</div>
             <div className='sp-card__score-type_bottom'>{scoreType}</div>
           </div>
         ) : null}
-        {cardType === 'new' ? (
-          <div className='sp-card__content sp-card__content_new'>
-            <div className='sp-card__circle sp-card__circle_plus'>
-              <IoAdd className='sp-card__question-icon' />
+        {cardType === undefined ? (
+          <div className='sp-card__content'>
+            <div className='sp-card__score-type_top'>
+              <div>Unknown</div>
             </div>
+            <div className='sp-card__circle sp-card__circle_question'>
+              <IoHelp className='sp-card__question-icon' />
+            </div>
+            <div className='sp-card__score-type_bottom'>Unknown</div>
           </div>
         ) : null}
       </div>

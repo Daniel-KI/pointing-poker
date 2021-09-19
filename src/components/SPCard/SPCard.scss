@@ -11,9 +11,12 @@
   color: $dark;
   font-size: 8px;
   font-weight: bold;
+  border: none;
+  position: relative;
+  cursor: pointer;
 
   &__inner-border {
-    width: 100%;
+    width: 88px;
     height: 100%;
     border: 1px solid $light;
     border-radius: 6px;
@@ -48,24 +51,6 @@
     }
   }
 
-  &__edit-btn {
-    width: 16px;
-    height: 16px;
-    background-color: $warning;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ffffff;
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    &_pencil {
-      width: 12px;
-      height: 12px;
-    }
-  }
   &__circle {
     width: 48px;
     height: 48px;
@@ -92,5 +77,29 @@
   &__question-icon {
     width: 38px;
     height: 38px;
+  }
+
+  &__card-edit {
+    position: absolute;
+    width: 100px;
+    height: 160px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff99;
+    z-index: 100;
+    opacity: 0;
+    transition: 0.3s opacity ease;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    gap: 10px;
+  }
+
+  &--active &__card-edit {
+    opacity: 1;
   }
 }
