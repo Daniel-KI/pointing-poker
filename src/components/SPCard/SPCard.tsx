@@ -32,22 +32,22 @@ const SPCard: React.FC<SPCardProps> = ({ scoreType, cardScore, cardType, editAct
       <div className='sp-card__inner-border'>
         {cardType === 'default' ? (
           <div className='sp-card__content'>
-            <div className='sp-card__score-type_top'>
+            <div className='sp-card__type-top'>
               <div>{scoreType}</div>
             </div>
             <div className='sp-card__card-score'>{cardScore}</div>
-            <div className='sp-card__score-type_bottom'>{scoreType}</div>
+            <div className='sp-card__type-bottom'>{scoreType}</div>
           </div>
         ) : null}
         {cardType === undefined ? (
           <div className='sp-card__content'>
-            <div className='sp-card__score-type_top'>
+            <div className='sp-card__type-top'>
               <div>Unknown</div>
             </div>
-            <div className='sp-card__circle sp-card__circle_question'>
+            <div className='sp-card__circle sp-card__circle--question'>
               <IoHelp className='sp-card__question-icon' />
             </div>
-            <div className='sp-card__score-type_bottom'>Unknown</div>
+            <div className='sp-card__type-bottom'>Unknown</div>
           </div>
         ) : null}
       </div>
