@@ -1,5 +1,3 @@
-import CardType from '../../types/CardType';
-
 export interface SPCardProps {
   className?: string;
   id?: string;
@@ -7,5 +5,5 @@ export interface SPCardProps {
   deleteAction?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   scoreType?: string | undefined;
   cardScore?: string;
-  cardType?: CardType | undefined;
+  cardType?: string | undefined;
 }
