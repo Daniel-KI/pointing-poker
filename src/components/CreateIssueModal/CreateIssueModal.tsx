@@ -42,7 +42,7 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ setActive, isActive
                 options={['low', 'medium', 'hight']}
                 selected={priority}
                 setSelected={setPriority}
-                className='create-issue__dropdown_input'
+                className='create-issue__dropdown--input'
               />
             </div>
           </div>
