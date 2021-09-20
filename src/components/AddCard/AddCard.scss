@@ -1,5 +1,6 @@
 @import '../../ui/colors.scss';
 @import '../../ui/fonts.scss';
+@import '../../ui/shadows.scss';
 
 .add-card {
   width: 100px;
@@ -14,6 +15,12 @@
   font-size: 8px;
   font-weight: bold;
   cursor: pointer;
+  box-shadow: $basic-shadow;
+  transition: 1s ease;
+
+  &:hover {
+    box-shadow: $basic-shadow-hover;
+  }
 
   &__inner-border {
     width: 88px;
