@@ -1,0 +1,91 @@
+@import '../../ui/shadows.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/colors.scss';
+
+.issue-creation-card {
+  $self: &;
+  user-select: none;
+
+  width: fit-content;
+  height: fit-content;
+  max-width: 18rem;
+
+  padding: 1rem;
+  margin: 1.5rem 1.5rem;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  grid-gap: 1rem;
+
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: $basic-shadow;
+
+  transition: 1s ease;
+
+  &:hover {
+    box-shadow: $basic-shadow-hover;
+  }
+
+  &__label {
+    width: 9rem;
+    color: $text-dark;
+
+    font-size: $text-md;
+    font-weight: 700;
+    line-height: $line-height-md;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &--primary {
+    background-color: $primary;
+
+    & #{ $self }__label {
+      color: $text-light;
+    }
+  }
+
+  &--warning {
+    background-color: $warning;
+
+    & #{ $self }__label {
+      color: $text-light;
+    }
+  }
+
+  &--danger {
+    background-color: $danger;
+
+    & #{ $self }__label {
+      color: $text-light;
+    }
+  }
+
+  &--success {
+    background-color: $success;
+
+    & #{ $self }__label {
+      color: $text-light;
+    }
+  }
+
+  &--dark {
+    background-color: $dark;
+
+    & #{ $self }__label {
+      color: $text-light;
+    }
+  }
+
+  &--light {
+    background-color: $light;
+
+    & #{ $self }__label {
+      color: $text-dark;
+    }
+  }
+}

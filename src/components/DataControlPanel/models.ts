@@ -3,4 +3,6 @@ export interface DataControlPanelProps {
   editAction?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   deleteAction?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   bordered?: boolean;
+  className?: string;
+  id?: string;
 }
