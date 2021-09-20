@@ -18,8 +18,8 @@ const AddCard: React.FC<AddCardProps> = ({ className, id, onClick }) => {
   return (
     <button type='button' className={`${classes} add-card`} id={id} onClick={onClick}>
       <div className='add-card__inner-border'>
-        <div className='add-card__content add-card__content_new'>
-          <div className='add-card__circle add-card__circle_plus'>
+        <div className='add-card__content add-card__content--new'>
+          <div className='add-card__circle add-card__circle--plus'>
             <IoAdd className='add-card__plus-icon' />
           </div>
         </div>
