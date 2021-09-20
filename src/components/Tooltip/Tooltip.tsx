@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { TooltipProps } from './models';
 
+
+// TOOLTIP FOR INPUT
+
 // valid status - статус валидности input
 // errorMessage - сообщение об ошибке input
 
@@ -27,7 +30,7 @@ import { TooltipProps } from './models';
 //   <TextInput onChange={onInputChange} bordered color='dark' />
 // </Tooltip>
 
-// Basic onHover Tooltip
+// TOOLTIP onHover
 //
 // <Tooltip message='some tooltip text'>
 //   <p>Tooltip</p>
