@@ -4,27 +4,32 @@ import './Avatar.scss';
 import classNames from 'classnames';
 import { AvatarProps } from './models';
 
-// В компоненте обязательный props с именем файла аватарки:
-// <Avatar imgName='' />
-// Если имени файла нет, то применяется аватарка по умолчанию.
-
-const Avatar: React.FC<AvatarProps> = ({ imgName }) => {
-  const classes = classNames({
-    avatar: true,
-    avatar_empty: !imgName.length,
-  });
+const Avatar: React.FC<AvatarProps> = ({ imgName, size, className, id }) => {
+  const classes = classNames(
+    {
+      avatar: true,
+      'avatar--empty': !imgName,
+      [`avatar--${size}`]: size,
+    },
+    className,
+  );
 
   return (
-    <div>
-      <div className={classes}>
-        {imgName.length ? (
-          <img src={`./${imgName}`} alt={imgName} className='avatar__img' />
-        ) : (
-          <IoPerson className='avatar__icon' />
-        )}
-      </div>
+    <div className={classes} id={id}>
+      {imgName ? (
+        <img src={`./${imgName}`} alt={imgName} className='avatar__img' />
+      ) : (
+        <IoPerson className='avatar__icon' />
+      )}
     </div>
   );
+};
+
+Avatar.defaultProps = {
+  imgName: undefined,
+  size: undefined,
+  className: undefined,
+  id: undefined,
 };
 
 export default Avatar;

@@ -1,0 +1,32 @@
+@import '../../ui/colors.scss';
+@import '../../ui/fonts.scss';
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    max-width: 400px;
+    font-size: $text-lg;
+    text-align: center;
+    margin-bottom: 10px;
+    line-height: $line-height-lg;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 40px;
+
+    &_btn {
+      width: 100px;
+    }
+  }
+}
