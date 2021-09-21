@@ -16,7 +16,6 @@ import DataControlPanel from '../DataControlPanel/DataControlPanel';
 // const editAction = () => {
 //   alert('edit');
 // };
-
 // const deleteAction = () => {
 //   alert('del');
 // };
