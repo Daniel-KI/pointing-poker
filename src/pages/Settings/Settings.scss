@@ -1,0 +1,355 @@
+@import '../../ui/colors.scss';
+@import '../../ui/containers.scss';
+@import '../../ui/page.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+@import '../../ui/shadows.scss';
+
+.lobby {
+  @extend .page;
+
+  &__title {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -ms-line-clamp: 2;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    display: -webkit-box;
+    display: box;
+    word-wrap: break-word;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    text-align: center;
+    margin-bottom: 50px;
+
+    &_content {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    @media (max-width: $screen-xl) {
+      padding: 0px 60px;
+    }
+
+    @media (max-width: $screen-lg) {
+      padding: 0px 40px;
+    }
+
+    @media (max-width: $screen-md) {
+      padding: 0px 30px;
+    }
+
+    @media (max-width: $screen-sm) {
+      padding: 0px 20px;
+    }
+  }
+
+  &__scram-master {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 100px;
+    padding: 0px 160px;
+
+    @media (max-width: $screen-xl) {
+      padding: 0px 60px;
+    }
+
+    @media (max-width: $screen-lg) {
+      padding: 0px 40px;
+    }
+
+    @media (max-width: $screen-md) {
+      padding: 0px 30px;
+      gap: 20px;
+    }
+
+    @media (max-width: $screen-sm) {
+      padding: 0px 20px;
+    }
+
+    &_card-field-wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: 130px;
+
+      @media (max-width: $screen-md) {
+        gap: 50px;
+      }
+
+      @media (max-width: $screen-sm) {
+        flex-direction: column;
+        gap: 40px;
+      }
+    }
+
+    &_card-field &_card {
+      margin: 10px 0;
+    }
+
+    &_link-field {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 224px;
+
+      @media (max-width: $screen-sm) {
+        margin-bottom: 40px;
+      }
+    }
+
+    &_link-field &_link-input {
+      margin: 0px 0;
+    }
+
+    &_button-field {
+      display: flex;
+      gap: 50px;
+
+      @media (max-width: $screen-sm) {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  }
+
+  &__members {
+    margin-bottom: 100px;
+    padding: 0px 160px;
+
+    @media (max-width: $screen-xl) {
+      padding: 0px 60px;
+    }
+
+    @media (max-width: $screen-lg) {
+      padding: 0px 40px;
+    }
+
+    @media (max-width: $screen-md) {
+      padding: 0px 30px;
+    }
+
+    @media (max-width: $screen-sm) {
+      padding: 0px 20px;
+    }
+
+    &_title {
+      text-align: center;
+      margin-bottom: 30px;
+
+      @media (max-width: $screen-xl) {
+        padding: 0px 60px;
+      }
+
+      @media (max-width: $screen-lg) {
+        padding: 0px 40px;
+      }
+
+      @media (max-width: $screen-md) {
+        padding: 0px 30px;
+      }
+
+      @media (max-width: $screen-sm) {
+        padding: 0px 20px;
+      }
+    }
+
+    &_members-field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+
+    &_members-field &_card {
+      margin: 0;
+    }
+  }
+
+  &__issues {
+    margin-bottom: 100px;
+    padding: 0 160px;
+
+    @media (max-width: $screen-xl) {
+      padding: 0px 60px;
+    }
+
+    @media (max-width: $screen-lg) {
+      padding: 0px 40px;
+    }
+
+    @media (max-width: $screen-md) {
+      padding: 0px 30px;
+    }
+
+    @media (max-width: $screen-sm) {
+      padding: 0px 20px;
+    }
+
+    &_title {
+      text-align: center;
+      margin-bottom: 30px;
+
+      @media (max-width: $screen-xl) {
+        padding: 0px 60px;
+      }
+
+      @media (max-width: $screen-lg) {
+        padding: 0px 40px;
+      }
+
+      @media (max-width: $screen-md) {
+        padding: 0px 30px;
+      }
+
+      @media (max-width: $screen-sm) {
+        padding: 0px 20px;
+      }
+    }
+
+    &_issues-field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+
+    &_issues-field &_issues {
+      margin: 0;
+    }
+
+    &_issues-field &_create-issue {
+      margin: 0;
+      width: 280px;
+      height: 77px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  &__settings {
+    margin-bottom: 100px;
+    padding: 0 160px;
+
+    @media (max-width: $screen-xl) {
+      padding: 0px 60px;
+    }
+
+    @media (max-width: $screen-lg) {
+      padding: 0px 40px;
+    }
+
+    @media (max-width: $screen-md) {
+      padding: 0px 30px;
+    }
+
+    @media (max-width: $screen-sm) {
+      padding: 0px 20px;
+    }
+
+    &_title {
+      text-align: center;
+      margin-bottom: 30px;
+
+      @media (max-width: $screen-xl) {
+        padding: 0px 60px;
+      }
+
+      @media (max-width: $screen-lg) {
+        padding: 0px 40px;
+      }
+
+      @media (max-width: $screen-md) {
+        padding: 0px 30px;
+      }
+
+      @media (max-width: $screen-sm) {
+        padding: 0px 20px;
+      }
+    }
+
+    &_settings-field {
+      max-width: 1600px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 100px;
+
+      @media (max-width: $screen-sm) {
+        gap: 30px;
+      }
+    }
+
+    &_items {
+      max-width: 700px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 0 auto;
+    }
+
+    &_settings-field &_toggle-item {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      width: 100%;
+
+      @media (max-width: $screen-sm) {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+
+    &_input-item {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      @media (max-width: $screen-sm) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+    }
+
+    &_cards-back {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 20px;
+
+      @media (max-width: $screen-sm) {
+        margin-bottom: 10px;
+      }
+    }
+
+    &_cards-back-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    &_cards-front {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    &_cards-front-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+}
