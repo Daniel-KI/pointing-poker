@@ -1,8 +1,8 @@
 import React from 'react';
-import './AddCard.scss';
+import './SpCreationCard.scss';
 import { IoAdd } from 'react-icons/io5';
 import classNames from 'classnames';
-import { AddCardProps } from './models';
+import { SpCreationCardProps } from './models';
 
 // В родительском компоненте:
 
@@ -12,7 +12,7 @@ import { AddCardProps } from './models';
 
 // <AddCard onClick={onAddCard} />
 
-const AddCard: React.FC<AddCardProps> = ({ className, id, onClick }) => {
+const SpCreationCard: React.FC<SpCreationCardProps> = ({ className, id, onClick }) => {
   const classes = classNames(className);
 
   return (
@@ -28,4 +28,4 @@ const AddCard: React.FC<AddCardProps> = ({ className, id, onClick }) => {
   );
 };
 
-export default AddCard;
+export default SpCreationCard;
