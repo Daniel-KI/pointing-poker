@@ -1,14 +1,14 @@
 import React from 'react';
-import './CardBack.scss';
+import './SpCardBack.scss';
 import classNames from 'classnames';
-import { CardBackProps } from './models';
+import { SpCardBackProps } from './models';
 import CardBack1 from '../../assets/cardBack/card-back-1.svg';
 import CardBack2 from '../../assets/cardBack/card-back-2.svg';
 import CardBack3 from '../../assets/cardBack/card-back-3.svg';
 import CardBack4 from '../../assets/cardBack/card-back-4.svg';
 import CardBack5 from '../../assets/cardBack/card-back-5.svg';
 
-const CardBack: React.FC<CardBackProps> = ({ cardBack, className, id }) => {
+const SpCardBack: React.FC<SpCardBackProps> = ({ cardBack, className, id }) => {
   const classes = classNames(className);
 
   const onMouseClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -33,4 +33,4 @@ const CardBack: React.FC<CardBackProps> = ({ cardBack, className, id }) => {
   );
 };
 
-export default CardBack;
+export default SpCardBack;
