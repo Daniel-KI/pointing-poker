@@ -1,8 +1,8 @@
 import React from 'react';
-import './SPCard.scss';
+import './SpCard.scss';
 import { IoHelp } from 'react-icons/io5';
 import classNames from 'classnames';
-import { SPCardProps } from './models';
+import { SpCardProps } from './models';
 import DataControlPanel from '../DataControlPanel/DataControlPanel';
 
 // В родительском компоненте:
@@ -21,7 +21,7 @@ import DataControlPanel from '../DataControlPanel/DataControlPanel';
 //   alert('del');
 // };
 
-const SPCard: React.FC<SPCardProps> = ({ scoreType, cardScore, editAction, deleteAction, className, id }) => {
+const SpCard: React.FC<SpCardProps> = ({ scoreType, cardScore, editAction, deleteAction, className, id }) => {
   const classes = classNames(
     {
       'sp-card': true,
@@ -55,7 +55,7 @@ const SPCard: React.FC<SPCardProps> = ({ scoreType, cardScore, editAction, delet
   );
 };
 
-SPCard.defaultProps = {
+SpCard.defaultProps = {
   className: undefined,
   id: undefined,
   editAction: undefined,
@@ -64,4 +64,4 @@ SPCard.defaultProps = {
   cardScore: undefined,
 };
 
-export default SPCard;
+export default SpCard;

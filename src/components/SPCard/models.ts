@@ -1,4 +1,4 @@
-export interface SPCardProps {
+export interface SpCardProps {
   editAction?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   deleteAction?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   scoreType?: string | undefined;
