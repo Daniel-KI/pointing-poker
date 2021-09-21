@@ -5,6 +5,7 @@ import { CreateIssueModalProps } from './models';
 import Button from '../Button/Button';
 import Dropdown from '../Dropdown/Dropdown';
 import ModalBox from '../ModalBox/ModalBox';
+import priorityLevels from '../../constants/priorityLevels';
 
 // Родительский компонент:
 // const [isActive, setActive] = useState(false);
@@ -43,7 +44,11 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
               <TextInput placeholder='Link' size='large' color='light' bordered />
             </div>
             <div className='create-issue__dropdown'>
-              <Dropdown options={['low', 'medium', 'hight']} selected={priority} setSelected={setPriority} />
+              <Dropdown
+                options={Object.values(priorityLevels).map(level => level.name)}
+                selected={priority}
+                setSelected={setPriority}
+              />
             </div>
           </div>
           <div className='create-issue__buttons'>
