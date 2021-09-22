@@ -116,7 +116,7 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
                 jobPosition={element.jobPosition}
                 avatar={element.avatar}
                 deleteAction={deleteAction}
-                className={element.className}
+                className='lobby__members_card'
               />
             ))}
           </div>
@@ -133,7 +133,7 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
                   priority={element.priority}
                   deleteAction={element.deleteAction}
                   editAction={element.editAction}
-                  className={element.className}
+                  className='lobby__issues_issue'
                 />
               ))}
               <IssueCreationCard label='Create issue' addAction={addAction} className='lobby__issues_create-issue' />
@@ -196,7 +196,11 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
                   <div>Set card back:</div>
                   <div className='lobby__settings_cards-back-items'>
                     {cardsBack?.map((element: SpCardBackProps, index: number) => (
-                      <SpCardBack key={index.toString()} className={element.className} cardBack={element.cardBack} />
+                      <SpCardBack
+                        key={index.toString()}
+                        className='lobby__settings_cards-back-item'
+                        cardBack={element.cardBack}
+                      />
                     ))}
                   </div>
                 </div>
@@ -206,7 +210,7 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
                     {voteCards?.map((element: SpCardProps, index: number) => (
                       <SpCard
                         key={index.toString()}
-                        className={element.className}
+                        className='lobby__settings_cards-front-item'
                         deleteAction={element.deleteAction}
                         editAction={element.editAction}
                         scoreType={element.scoreType}
@@ -245,89 +249,3 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
 };
 
 export default Settings;
-
-// В родительском компоненте:
-
-// <Lobby
-//        lobbyTitle='Spring 23 planning (issues 13, 533, 5623, 3252, 6623)'
-//        members={members}
-//        issues={issues}
-//        voteCards={voteCards}
-//        cardsBack={cardsBack}
-//      />
-
-//
-// const members = [
-//   {
-//     name: 'Daniil',
-//     surname: 'Korshov',
-//     jobPosition: 'Front-end developer',
-//     avatar: '',
-//     deleteAction,
-//     className: 'lobby__members_card',
-//   },
-//   {
-//     name: 'Daniil',
-//     surname: 'Korshov',
-//     jobPosition: 'Front-end developer',
-//     avatar: '',
-//     deleteAction,
-//     className: 'lobby__members_card',
-//   },
-// ];
-
-// const issues = [
-//   {
-//     name: '2563',
-//     priority: 'low priority',
-//     editAction,
-//     deleteAction,
-//     className: 'lobby__issues_issues',
-//   },
-//   {
-//     name: '2463',
-//     priority: 'high priority',
-//     editAction,
-//     deleteAction,
-//     className: 'lobby__issues_issues',
-//   },
-// ];
-
-// const voteCards = [
-//   {
-//     className: 'lobby__settings_cards-front-item',
-//     editAction,
-//     deleteAction,
-//   },
-//   {
-//     className: 'lobby__settings_cards-front-item',
-//     editAction,
-//     deleteAction,
-//     scoreType: 'SP',
-//     cardScore: '15',
-//     cardType: 'default',
-//   },
-// ];
-
-// const cardsBack = [
-//   {
-//     className: 'lobby__settings_cards-back-item',
-//     cardBack: 'CardBack1',
-//   },
-//   {
-//     className: 'lobby__settings_cards-back-item',
-//     cardBack: 'CardBack2',
-//   },
-//   {
-//     className: 'lobby__settings_cards-back-item',
-//     cardBack: 'CardBack3',
-//   },
-//   {
-//     className: 'lobby__settings_cards-back-item',
-//     cardBack: 'CardBack4',
-//   },
-//   {
-//     className: 'lobby__settings_cards-back-item',
-//     cardBack: 'CardBack5',
-//   },
-// ];
