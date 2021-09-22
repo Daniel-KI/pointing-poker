@@ -40,7 +40,7 @@ const Lobby: React.FC<LobbyProps> = ({ lobbyTitle, master, members }) => {
                 jobPosition={master?.jobPosition}
                 avatar={master?.avatar}
                 color={undefined}
-                className={master?.className}
+                className='lobby__scram-master_card'
               />
             </div>
           </div>
@@ -63,7 +63,7 @@ const Lobby: React.FC<LobbyProps> = ({ lobbyTitle, master, members }) => {
                 jobPosition={element.jobPosition}
                 avatar={element.avatar}
                 deleteAction={deleteAction}
-                className='lobby__scram-master_card'
+                className='lobby__members_card'
               />
             ))}
           </div>
