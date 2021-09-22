@@ -39,14 +39,14 @@
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
-    border: 2px solid $dark-disabled;
+    border: 2px solid $dark;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   &__plus-icon {
-    color: $dark-disabled;
+    color: $dark;
     width: 2rem;
     height: 2rem;
   }
