@@ -74,7 +74,7 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
                 jobPosition={master?.jobPosition}
                 avatar={master?.avatar}
                 color='primary'
-                className={master?.className}
+                className='lobby__scram-master_card'
               />
             </div>
 
