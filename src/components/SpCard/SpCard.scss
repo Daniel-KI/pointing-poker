@@ -8,7 +8,6 @@
   background-color: #ffffff;
   border: none;
   border-radius: 0.5rem;
-  box-shadow: $basic-shadow;
   color: $dark;
   font-size: 0.7rem;
   font-weight: bold;
@@ -94,6 +93,7 @@
   }
 
   &__question-icon {
+    color: $dark;
     width: 2rem;
     height: 2rem;
   }
