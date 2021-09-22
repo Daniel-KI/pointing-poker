@@ -31,13 +31,17 @@ const SpCard: React.FC<SpCardProps> = ({ scoreType, cardScore, editAction, delet
   return (
     <div className={classes} id={id} data-card='card'>
       <div className='sp-card__container'>
-        <div className='sp-card__controls'>
-          <DataControlPanel
-            deleteAction={deleteAction}
-            editAction={editAction}
-            className='sp-card__card-edit_edit-btn'
-          />
-        </div>
+        {editAction || deleteAction ? (
+          <div className='sp-card__controls'>
+            <DataControlPanel
+              deleteAction={deleteAction}
+              editAction={editAction}
+              className='sp-card__card-edit_edit-btn'
+            />
+          </div>
+        ) : (
+          ''
+        )}
         <p className='sp-card__top-text'>{scoreType}</p>
         <div className='sp-card__body'>
           {cardScore ? (
