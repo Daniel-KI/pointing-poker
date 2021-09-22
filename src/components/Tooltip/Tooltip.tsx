@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { TooltipProps } from './models';
 
-
 // TOOLTIP FOR INPUT
 
 // valid status - статус валидности input
