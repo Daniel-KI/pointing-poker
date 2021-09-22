@@ -1,0 +1,12 @@
+@import './colors.scss';
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-areas:
+    'header'
+    'body'
+    'footer';
+  grid-template-rows: min-content auto min-content;
+  background-color: $light-bg;
+}

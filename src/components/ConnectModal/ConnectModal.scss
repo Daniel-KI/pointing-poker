@@ -1,0 +1,71 @@
+@import '../../ui/colors.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+
+.connect-form {
+  &__title {
+    font-size: $title-lg;
+    line-height: 78px;
+    color: #655be1;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    column-gap: 20px;
+  }
+
+  &__text-inputs {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    row-gap: 30px;
+  }
+
+  &__avatar-inputs {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    row-gap: 15px;
+    align-items: center;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    column-gap: 50px;
+
+    &_button {
+      width: 150px;
+    }
+  }
+}
+
+@media (max-width: $screen-sm) {
+  .connect-form {
+    &__title {
+      font-size: $title-md;
+      line-height: 50px;
+      margin-bottom: 20px;
+    }
+
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 40px;
+      row-gap: 20px;
+    }
+
+    &__buttons {
+      column-gap: 20px;
+
+      &_button {
+        width: 150px;
+      }
+    }
+  }
+}
