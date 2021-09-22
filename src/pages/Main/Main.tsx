@@ -10,7 +10,7 @@ import Header from '../../components/Header/Header';
 import Button from '../../components/Button/Button';
 import TextInput from '../../components/TextInput/TextInput';
 import ConnectModal from '../../components/ConnectModal/ConnectModal';
-import { updateSocket } from '../../redux/actions';
+import { updateSocket } from '../../redux/actions/socketActions';
 import UserType from '../../types/UserType';
 import validateURL from '../../api/validateURL';
 

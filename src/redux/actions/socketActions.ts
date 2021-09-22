@@ -2,10 +2,6 @@ import { Socket } from 'socket.io-client';
 
 export const SET_SOCKET = 'SET_SOCKET';
 
-export interface IStore {
-  socket: null | Socket;
-}
-
 export interface ISocketAction {
   type: typeof SET_SOCKET;
   socket: Socket;

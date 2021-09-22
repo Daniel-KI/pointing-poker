@@ -9,10 +9,10 @@ import FileInput from '../FileInput/FileInput';
 import Button from '../Button/Button';
 import Toggle from '../Toggle/Toggle';
 import ModalBox from '../ModalBox/ModalBox';
-import { IStore } from '../../redux/actions';
 import imageToDataURL from '../../utils/imageToDataURL';
 import IUserData from '../../api/models';
 import joinRoom from '../../api/joinRoom';
+import { IState } from '../../redux/models';
 
 // Родительский компонент:
 // const [isActive, setActive] = useState(false);
@@ -33,7 +33,7 @@ import joinRoom from '../../api/joinRoom';
 //   <ConnectModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm} userType='admin | user' />
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onDecline, userType }) => {
-  const socket = useSelector((state: IStore) => state.socket);
+  const socket = useSelector((state: IState) => state.socket.socket);
 
   const [checked, toggleChecked] = useState<boolean>(false);
   const [avatarName, avatarNameSetActive] = useState<string>('');
