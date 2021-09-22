@@ -63,7 +63,7 @@ const Lobby: React.FC<LobbyProps> = ({ lobbyTitle, master, members }) => {
                 jobPosition={element.jobPosition}
                 avatar={element.avatar}
                 deleteAction={deleteAction}
-                className={element.className}
+                className='lobby__scram-master_card'
               />
             ))}
           </div>
