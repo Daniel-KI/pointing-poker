@@ -12,20 +12,28 @@ import { SpCreationCardProps } from './models';
 
 // <AddCard onClick={onAddCard} />
 
-const SpCreationCard: React.FC<SpCreationCardProps> = ({ className, id, onClick }) => {
-  const classes = classNames(className);
+const SpCreationCard: React.FC<SpCreationCardProps> = ({ onClick, className, id }) => {
+  const classes = classNames(
+    {
+      'sp-creation-card': true,
+    },
+    className,
+  );
 
   return (
-    <button type='button' className={`${classes} add-card`} id={id} onClick={onClick}>
-      <div className='add-card__inner-border'>
-        <div className='add-card__content add-card__content--new'>
-          <div className='add-card__circle add-card__circle--plus'>
-            <IoAdd className='add-card__plus-icon' />
-          </div>
+    <button type='button' className={classes} id={id} onClick={onClick}>
+      <div className='sp-creation-card__container'>
+        <div className='sp-creation-card__circle'>
+          <IoAdd className='sp-creation-card__plus-icon' />
         </div>
       </div>
     </button>
   );
+};
+
+SpCreationCard.defaultProps = {
+  className: undefined,
+  id: undefined,
 };
 
 export default SpCreationCard;
