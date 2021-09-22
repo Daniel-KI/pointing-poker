@@ -12,32 +12,23 @@ import priorityLevels from '../../constants/priorityLevels';
 // const modalActive = () => {
 //   setActive(true);
 // };
-// const onConfirm = () => {
-//   setActive(false);
-//   console.log('confirm');
-// };
-// const onDecline = () => {
-//   setActive(false);
-//   console.log('decline');
-// };
 
 // Появление модального окна при нажатии на кнопку
 //   <Button onClick={modalActive}>Modal</Button>
-//   <CreateIssueModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm} />
+//   <CreateIssueModal isActive={isActive} setActive={setActive}  />
 
-const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive, onSubmit, onConfirm, onDecline }) => {
+const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive, onSubmit }) => {
   const [priority, setPriority] = useState<string | undefined>(undefined);
 
-  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    onSubmit(event);
+  const cancelBtnOnClick = () => {
+    setActive(false);
   };
 
   return (
     <ModalBox active={isActive} setActive={setActive}>
       <div className='create-issue'>
         <h2 className='create-issue__title'>Create issue</h2>
-        <form className='create-issue__form' onSubmit={onFormSubmit}>
+        <form className='create-issue__form' onSubmit={onSubmit}>
           <div className='create-issue__wrapper'>
             <div className='create-issue__text-inputs'>
               <TextInput placeholder='Title' size='large' color='light' bordered />
@@ -52,10 +43,10 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
             </div>
           </div>
           <div className='create-issue__buttons'>
-            <Button color='success' size='large' className='create-issue__button' onClick={onConfirm} submit>
+            <Button color='success' size='large' className='create-issue__button' submit>
               Confirm
             </Button>
-            <Button color='danger' size='large' className='create-issue__button' onClick={onDecline}>
+            <Button color='danger' size='large' className='create-issue__button' onClick={cancelBtnOnClick}>
               Cancel
             </Button>
           </div>
@@ -66,9 +57,7 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
 };
 
 CreateIssueModal.defaultProps = {
-  onDecline: undefined,
-  onConfirm: undefined,
-  className: undefined,
+  onSubmit: undefined,
 };
 
 export default CreateIssueModal;
