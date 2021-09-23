@@ -27,8 +27,8 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
   const [changingCard, toggleChangingCard] = useState<boolean>(false);
   const [timerNeeded, toggleTimerNeeded] = useState<boolean>(false);
   const [addNewPlayer, toggleAddNewPlayer] = useState<boolean>(false);
-  const [minutes, setMinutes] = useState<string>('00');
-  const [seconds, setSeconds] = useState<string>('00');
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>(0);
   const [isCreateIssue, setCreateIssue] = useState(false);
   const [isConfirm, setConfirm] = useState(false);
 
