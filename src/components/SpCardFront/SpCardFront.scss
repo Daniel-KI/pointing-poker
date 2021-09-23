@@ -1,0 +1,93 @@
+@import '../../ui/colors.scss';
+@import '../../ui/shadows.scss';
+@import '../../ui/fonts.scss';
+
+.sp-card-front {
+  $self: &;
+  width: 8rem;
+  height: 12rem;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  color: $dark;
+  font-size: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: $basic-shadow;
+  transition: 1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    box-shadow: $basic-shadow-hover;
+  }
+
+  &__container {
+    width: 7rem;
+    height: 11rem;
+    border: 2px solid $light-active;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  &__top-text {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: hidden;
+    word-wrap: normal;
+    white-space: nowrap;
+    text-overflow: clip;
+  }
+
+  &__bottom-text {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    transform: rotate(180deg);
+    z-index: 1;
+    overflow: hidden;
+    word-wrap: normal;
+    white-space: nowrap;
+    text-overflow: clip;
+  }
+
+  &__content {
+    width: 100%;
+    font-size: $title-md;
+    font-weight: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__score {
+    max-width: 100%;
+    overflow: hidden;
+    word-wrap: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__circle {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 2px solid $dark;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__icon {
+    color: $dark;
+    width: 2rem;
+    height: 2rem;
+  }
+}
