@@ -1,6 +1,11 @@
 export interface TimerProps {
   className?: string;
   id?: string;
-  minutes?: string;
-  seconds?: string;
+  minutes?: number;
+  seconds?: number;
+  isGameOn?: boolean;
+  setMinutes?: (value: number) => void;
+  setSeconds?: (value: number) => void;
+  setGameOn?: (value: boolean) => void;
+  disabled?: boolean;
 }
