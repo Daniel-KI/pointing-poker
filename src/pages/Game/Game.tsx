@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Game.scss';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
@@ -18,8 +18,9 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
   const [isConfirm, setConfirm] = useState(false);
   const [isCreateIssue, setCreateIssue] = useState(false);
   const [isTimeOut, setTimeOut] = useState(false);
-  const [minutes, setMinutes] = useState<string>('00');
-  const [seconds, setSeconds] = useState<string>('00');
+  const [isGameOn, setGameOn] = useState(false);
+  const [minutes, setMinutes] = useState<number>(2);
+  const [seconds, setSeconds] = useState<number>(0);
 
   const onConfirm = () => {
     setConfirm(false);
@@ -38,6 +39,16 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
   };
   const onSubmit = () => {
     setConfirm(false);
+  };
+
+  const runRound = () => {
+    if (!isGameOn) {
+      setGameOn(true);
+    } else {
+      setGameOn(false);
+      setMinutes(2);
+      setSeconds(0);
+    }
   };
 
   return (
@@ -68,11 +79,21 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
                 </Button>
               </div>
               <div className='game__scram-master_timer'>
-                <Timer id='timer' minutes={minutes} seconds={seconds} className='lobby__settings_timer' />
+                <Timer
+                  id='timer'
+                  minutes={minutes}
+                  seconds={seconds}
+                  setMinutes={setMinutes}
+                  setSeconds={setSeconds}
+                  isGameOn={isGameOn}
+                  setGameOn={setGameOn}
+                  className='lobby__settings_timer'
+                  disabled
+                />
               </div>
               <div className='game__scram-master_timer-btn'>
-                <Button color='dark' size='large'>
-                  Run round
+                <Button color='dark' size='large' onClick={runRound}>
+                  {isGameOn ? 'Restart round' : 'Run round'}
                 </Button>
               </div>
             </div>
@@ -125,36 +146,22 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
             </table>
           </div>
         </div>
-
-        {/* <div className='game__members'>
-          <h3 className='game__members_title'>Members</h3>
-
-          <div className='game__members_members-field'>
-            {members?.map((element: UserCardProps, index: number) => (
-              <UserCard
-                key={index.toString()}
-                name={element.name}
-                surname={element.surname}
-                jobPosition={element.jobPosition}
-                avatar={element.avatar}
-                deleteAction={deleteAction}
-                className={element.className}
-              />
-            ))}
-          </div>
-        </div> */}
       </div>
       <Footer />
 
       {isConfirm ? (
         <ConfirmModal isActive={isConfirm} setActive={setConfirm} onDecline={onDecline} onConfirm={onConfirm}>
-          <div>
-            <p>
-              <b>Daniil Korshov</b> want to remove <b>Ekaterina Kotliarenko</b>.
-            </p>
-            <br />
-            <p>Do you agree with it?</p>
-          </div>
+          {isMaster ? (
+            <div>Remove Daniil Korshov from lobby?</div>
+          ) : (
+            <div>
+              <p>
+                <b>Daniil Korshov</b> want to remove <b>Ekaterina Kotliarenko</b>.
+              </p>
+              <br />
+              <p>Do you agree with it?</p>
+            </div>
+          )}
         </ConfirmModal>
       ) : null}
     </div>
