@@ -13,6 +13,7 @@ const Timer: React.FC<TimerProps> = ({
   disabled,
   isGameOn,
   setGameOn,
+  setTimeOut,
 }) => {
   const classes = classNames(className);
 
@@ -33,6 +34,7 @@ const Timer: React.FC<TimerProps> = ({
 
   const updateTime = () => {
     if (minutes === 0 && seconds === 0) {
+      if (setTimeOut) setTimeOut(true);
       if (setMinutes) setMinutes(0);
       if (setSeconds) setSeconds(0);
       if (setGameOn) setGameOn(false);

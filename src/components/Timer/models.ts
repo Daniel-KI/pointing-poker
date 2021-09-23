@@ -7,5 +7,6 @@ export interface TimerProps {
   setMinutes?: (value: number) => void;
   setSeconds?: (value: number) => void;
   setGameOn?: (value: boolean) => void;
+  setTimeOut?: (value: boolean) => void;
   disabled?: boolean;
 }
