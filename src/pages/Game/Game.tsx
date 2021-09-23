@@ -19,8 +19,8 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
   const [isCreateIssue, setCreateIssue] = useState(false);
   const [isTimeOut, setTimeOut] = useState(false);
   const [isGameOn, setGameOn] = useState(false);
-  const [minutes, setMinutes] = useState<number>(2);
-  const [seconds, setSeconds] = useState<number>(0);
+  const [minutes, setMinutes] = useState<number>(0);
+  const [seconds, setSeconds] = useState<number>(3);
 
   const onConfirm = () => {
     setConfirm(false);
@@ -42,12 +42,19 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
   };
 
   const runRound = () => {
-    if (!isGameOn) {
-      setGameOn(true);
-    } else {
+    if (isGameOn && !isTimeOut) {
+      setMinutes(0);
+      setSeconds(3);
       setGameOn(false);
-      setMinutes(2);
-      setSeconds(0);
+      setTimeOut(false);
+    }
+    if (!isGameOn && !isTimeOut) {
+      setGameOn(true);
+    }
+    if (!isGameOn && isTimeOut) {
+      setTimeOut(false);
+      setMinutes(0);
+      setSeconds(3);
     }
   };
 
@@ -87,14 +94,29 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
                   setSeconds={setSeconds}
                   isGameOn={isGameOn}
                   setGameOn={setGameOn}
+                  setTimeOut={setTimeOut}
                   className='lobby__settings_timer'
-                  disabled
+                  disabled={!isMaster}
                 />
               </div>
               <div className='game__scram-master_timer-btn'>
                 <Button color='dark' size='large' onClick={runRound}>
-                  {isGameOn ? 'Restart round' : 'Run round'}
+                  {/* {!isGameOn && !isTimeOut && 'Run round'}
+                  {isGameOn && !isTimeOut && 'Restart round'}
+                  {!isGameOn && isTimeOut && 'Restart round'} */}
+                  {!isGameOn && !isTimeOut
+                    ? 'Run round'
+                    : [
+                        isGameOn && !isTimeOut
+                          ? 'Restart round'
+                          : [!isGameOn && isTimeOut ? 'Restart round' : 'Restart round'],
+                      ]}
                 </Button>
+                {isTimeOut ? (
+                  <Button color='dark' size='large'>
+                    Next issue
+                  </Button>
+                ) : null}
               </div>
             </div>
             <div className='game__issues'>
