@@ -1,4 +1,4 @@
-export interface Priority {
+export interface PriorityLevel {
   name: string;
   label: string;
 }
@@ -13,8 +13,8 @@ const priorityLevels = {
     label: 'Medium priority',
   },
   hight: {
-    name: 'Hight',
-    label: 'Hight priority',
+    name: 'High',
+    label: 'High priority',
   },
 };
 
