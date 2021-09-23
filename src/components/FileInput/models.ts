@@ -10,5 +10,6 @@ export interface FileInputProps {
   name?: string;
   multiply?: boolean;
   accept?: string;
+  required?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
