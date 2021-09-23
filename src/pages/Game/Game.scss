@@ -1,0 +1,298 @@
+@import '../../ui/colors.scss';
+@import '../../ui/containers.scss';
+@import '../../ui/page.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+@import '../../ui/shadows.scss';
+
+.game {
+  @extend .page;
+
+  &__wrapper {
+    padding: 0px 10%;
+  }
+
+  &__title {
+    text-align: center;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    &_content {
+      -ms-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      -ms-line-clamp: 2;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      display: -webkit-box;
+      display: box;
+      word-wrap: break-word;
+      -webkit-box-orient: vertical;
+      box-orient: vertical;
+    }
+  }
+
+  &__scram-master {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 50px;
+    margin-bottom: 100px;
+
+    @media (max-width: $screen-xl) {
+      flex-direction: column;
+    }
+
+    &_card-field-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+
+      @media (max-width: $screen-md) {
+        gap: 50px;
+      }
+
+      @media (max-width: $screen-sm) {
+        flex-direction: column;
+        gap: 40px;
+      }
+    }
+
+    &_card-field {
+      display: grid;
+      justify-content: left;
+      grid-template-columns: fit-content 1fr;
+      gap: 50px;
+      grid-template-areas:
+        'card-master card-master-btn'
+        'timer timer-btn';
+
+      @media (max-width: $screen-sm) {
+        grid-template-areas:
+          'card-master'
+          'card-master-btn'
+          'timer'
+          'timer-btn';
+        gap: 20px;
+        justify-content: center;
+      }
+
+      & * {
+        @media (max-width: $screen-sm) {
+          margin: 0 auto;
+        }
+      }
+    }
+
+    &_card-master {
+      grid-area: card-master;
+    }
+
+    &_card-master-btn {
+      grid-area: card-master-btn;
+      padding-top: 30px;
+      @media (max-width: $screen-sm) {
+        padding-top: 0;
+        margin-bottom: 30px;
+      }
+    }
+
+    &_timer {
+      grid-area: timer;
+    }
+
+    &_timer-btn {
+      grid-area: timer-btn;
+    }
+
+    &_card-field &_card {
+      margin: 10px 0 0;
+    }
+
+    &_button-field {
+      display: flex;
+      gap: 50px;
+
+      @media (max-width: $screen-sm) {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+
+    &_score-wrapper {
+      @media (max-width: $screen-xl) {
+        margin: 0 auto;
+      }
+    }
+
+    &_score {
+      width: fit-content;
+    }
+  }
+
+  &__members {
+    margin-bottom: 100px;
+    padding: 0px 160px;
+
+    &_title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    &_members-field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+
+    &_members-field &_card {
+      margin: 0;
+    }
+  }
+
+  &__issues {
+    margin-bottom: 100px;
+
+    @media (max-width: $screen-xl) {
+      margin-bottom: 0;
+    }
+
+    &_title {
+      margin-bottom: 30px;
+      @media (max-width: $screen-md) {
+        text-align: center;
+      }
+    }
+
+    &_issues-field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+
+    &_issues-field &_issue {
+      margin: 0;
+    }
+
+    &_issues-field &_create-issue {
+      margin: 0;
+      width: 280px;
+      height: 77px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  &__scram-master_score-title {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  table {
+    border: 1px solid #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+
+    @media (max-width: $screen-sm) {
+      border: none;
+    }
+
+    thead {
+      @media (max-width: $screen-sm) {
+        display: none;
+      }
+    }
+
+    & tr:last-child td:first-child {
+      border-bottom-left-radius: 10px;
+      @media (max-width: $screen-sm) {
+        border-radius: 0;
+      }
+    }
+
+    & tr:last-child td:last-child {
+      border-bottom-right-radius: 10px;
+      @media (max-width: $screen-sm) {
+        border-radius: 0;
+      }
+    }
+
+    & tr:first-child th:first-child {
+      border-top-left-radius: 10px;
+    }
+
+    & tr:first-child th:last-child {
+      border-top-right-radius: 10px;
+    }
+
+    th {
+      border: 1px solid #ffffff;
+      background-color: #d4d4e6;
+      padding: 20px 10px;
+    }
+
+    td {
+      border: 1px solid #ffffff;
+      background-color: #ececf5;
+
+      &:first-child {
+        @media (max-width: $screen-sm) {
+          border-bottom: none;
+        }
+      }
+
+      &::before {
+        @media (max-width: $screen-sm) {
+          content: attr(data-label);
+          display: flex;
+          justify-content: left;
+          font-weight: 500;
+          color: $text-dark-secondary;
+        }
+      }
+    }
+  }
+
+  &__members_tr {
+    @media (max-width: $screen-sm) {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+  }
+
+  &__members_table-score {
+    min-width: 140px;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  &__members_table-score,
+  &__members_table-card {
+    padding: 10px 4px;
+
+    @media (max-width: $screen-sm) {
+      padding: 4px;
+    }
+  }
+
+  &__members_table-card &__members_card {
+    margin: 8px;
+    padding: 8px;
+
+    @media (max-width: $screen-sm) {
+      margin: 4px;
+    }
+  }
+}
