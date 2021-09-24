@@ -1,22 +1,20 @@
-import { IUsersState } from '../models';
+import { IUser } from '../models';
 import { ADD_USER, REMOVE_USER, UsersActionsType } from '../actions/usersActions';
 
-const initialState: IUsersState = {
-  users: [],
-};
+const initialState: IUser[] = [];
 
-const usersReducer = (state = initialState, action: UsersActionsType): IUsersState => {
+const usersReducer = (state = initialState, action: UsersActionsType): IUser[] => {
   switch (action.type) {
     case ADD_USER: {
-      const newUsers = [...state.users];
+      const newUsers = [...state];
       newUsers.push(action.user);
-      return { ...state, users: newUsers };
+      return newUsers;
     }
     case REMOVE_USER: {
-      const removedIndex = state.users.findIndex(({ id }) => id === action.user.id);
-      const newUsers = [...state.users];
+      const removedIndex = state.findIndex(({ id }) => id === action.user.id);
+      const newUsers = [...state];
       newUsers.splice(removedIndex, 1);
-      return { ...state, users: newUsers };
+      return newUsers;
     }
     default:
       return state;

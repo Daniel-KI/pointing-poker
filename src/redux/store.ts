@@ -5,6 +5,8 @@ import roomReducer from './reducers/roomReducer';
 import currentUserReducer from './reducers/currentUserReducer';
 import usersReducer from './reducers/usersReducer';
 import issuesReducer from './reducers/issuesReducer';
+import settingsReducer from './reducers/settingsReducer';
+import messagesReducer from './reducers/messagesReduser';
 
 const rootReducer = combineReducers({
   socket: socketReducer,
@@ -12,6 +14,8 @@ const rootReducer = combineReducers({
   currentUser: currentUserReducer,
   users: usersReducer,
   issues: issuesReducer,
+  settings: settingsReducer,
+  messages: messagesReducer,
 });
 
 const store = createStore(rootReducer);

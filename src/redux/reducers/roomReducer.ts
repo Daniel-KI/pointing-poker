@@ -1,14 +1,16 @@
-import { IRoomState } from '../models';
+import { IRoom } from '../models';
 import { IRoomAction, SET_ROOM } from '../actions/roomActions';
 
-const initialState: IRoomState = {
-  room: null,
+const initialState: IRoom = {
+  id: undefined,
+  name: undefined,
+  admin: undefined,
 };
 
-const roomReducer = (state = initialState, action: IRoomAction): IRoomState => {
+const roomReducer = (state = initialState, action: IRoomAction): IRoom => {
   switch (action.type) {
     case SET_ROOM:
-      return { ...state, room: action.room };
+      return { ...action.room };
     default:
       return state;
   }

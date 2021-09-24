@@ -10,7 +10,7 @@ interface IAddIssueAction {
 }
 
 interface IUpdateIssueAction {
-  type: typeof ADD_ISSUE;
+  type: typeof UPDATE_ISSUE;
   issue: IIssue;
 }
 
@@ -19,7 +19,7 @@ interface IRemoveIssueAction {
   issue: IIssue;
 }
 
-export type IssuesActionsType = IAddIssueAction | IRemoveIssueAction;
+export type IssuesActionsType = IAddIssueAction | IUpdateIssueAction | IRemoveIssueAction;
 
 export const addIssue = (issue: IIssue): IAddIssueAction => {
   return {

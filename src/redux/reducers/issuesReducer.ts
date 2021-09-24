@@ -1,28 +1,26 @@
-import { IIssuesState } from '../models';
+import { IIssue } from '../models';
 import { ADD_ISSUE, IssuesActionsType, REMOVE_ISSUE, UPDATE_ISSUE } from '../actions/issuesActions';
 
-const initialState: IIssuesState = {
-  issues: [],
-};
+const initialState: IIssue[] = [];
 
-const issuesReducer = (state = initialState, action: IssuesActionsType): IIssuesState => {
+const issuesReducer = (state = initialState, action: IssuesActionsType): IIssue[] => {
   switch (action.type) {
     case ADD_ISSUE: {
-      const newIssues = [...state.issues];
+      const newIssues = [...state];
       newIssues.push(action.issue);
-      return { ...state, issues: newIssues };
+      return newIssues;
     }
     case UPDATE_ISSUE: {
-      const updatedIndex = state.issues.findIndex(({ id }) => id === action.issue.id);
-      const newIssues = [...state.issues];
+      const updatedIndex = state.findIndex(({ id }) => id === action.issue.id);
+      const newIssues = [...state];
       newIssues[updatedIndex] = action.issue;
-      return { ...state, issues: newIssues };
+      return newIssues;
     }
     case REMOVE_ISSUE: {
-      const removedIndex = state.issues.findIndex(({ id }) => id === action.issue.id);
-      const newIssues = [...state.issues];
+      const removedIndex = state.findIndex(({ id }) => id === action.issue.id);
+      const newIssues = [...state];
       newIssues.splice(removedIndex, 1);
-      return { ...state, issues: newIssues };
+      return newIssues;
     }
     default:
       return state;

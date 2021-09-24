@@ -1,14 +1,14 @@
 import UserType from '../types/UserType';
 
-interface IUserData {
+interface IConnectionData {
   firstName: string;
   lastName: string;
   position: string;
-  isPlayer?: 'isPlayer';
-  avatar: 'string';
+  isObserver?: boolean;
+  avatar: string;
   role: UserType;
   roomName?: string;
-  roomId?: string;
+  roomId?: string | null;
 }
 
-export default IUserData;
+export default IConnectionData;

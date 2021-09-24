@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './ConnectModal.scss';
 
 import TextInput from '../TextInput/TextInput';
@@ -10,54 +10,100 @@ import Button from '../Button/Button';
 import Toggle from '../Toggle/Toggle';
 import ModalBox from '../ModalBox/ModalBox';
 import imageToDataURL from '../../utils/imageToDataURL';
-import IUserData from '../../api/models';
+import IConnectionData from '../../api/models';
 import joinRoom from '../../api/joinRoom';
 import { IState } from '../../redux/models';
+import getRoomData from '../../api/getRoomData';
+import { updateRoom } from '../../redux/actions/roomActions';
 
 // Родительский компонент:
 // const [isActive, setActive] = useState(false);
 // const modalActive = () => {
 //   setActive(true);
 // };
-// const onConfirm = () => {
-//   setActive(false);
-//   console.log('confirm');
-// };
-// const onDecline = () => {
-//   setActive(false);
-//   console.log('decline');
-// };
 
 // Появление модального окна при нажатии на кнопку
 //   <Button onClick={modalActive}>Modal</Button>
 //   <ConnectModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm} userType='admin | user' />
 
-const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onDecline, userType }) => {
-  const socket = useSelector((state: IState) => state.socket.socket);
+const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
+  const dispatch = useDispatch();
 
-  const [checked, toggleChecked] = useState<boolean>(false);
-  const [avatarName, avatarNameSetActive] = useState<string>('');
+  const socket = useSelector((state: IState) => state.socket);
+  const roomId = useSelector((state: IState) => state.room.id);
 
-  const onAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.currentTarget;
-    if (!input.files) return;
-    const imageURL = await imageToDataURL(input.files[0]);
-    avatarNameSetActive(imageURL);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [position, setPosition] = useState<string>('');
+  const [isObserver, setObserverStatus] = useState<boolean>(false);
+  const [roomName, setRoomName] = useState<string>('');
+  const [avatar, setAvatar] = useState<string>('');
+
+  useEffect(() => {
+    if (!isActive) {
+      setAvatar('');
+    }
+  }, [isActive]);
+
+  const resetData = () => {
+    setAvatar('');
+    setFirstName('');
+    setLastName('');
+    setPosition('');
+    setObserverStatus(false);
+    setRoomName('');
   };
 
-  const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const getUserData = (): IConnectionData => ({
+    firstName,
+    lastName,
+    position,
+    avatar,
+    role: userType,
+    isObserver,
+    roomName,
+  });
+
+  const onFirstNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFirstName(event.currentTarget.value);
+  const onLastNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setLastName(event.currentTarget.value);
+  const onPositionInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setPosition(event.currentTarget.value);
+  const onAvatarInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    if (!input.files || !input.files[0]) {
+      setAvatar('');
+    } else {
+      const imageURL = await imageToDataURL(input.files[0]);
+      setAvatar(imageURL);
+    }
+  };
+  const onRoomNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setRoomName(event.currentTarget.value);
+
+  const onFormSubmitAdmin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const user = getUserData();
+    joinRoom(socket, user);
+    dispatch(updateRoom({ id: socket?.id, name: user.roomName, admin: user }));
+    resetData();
+    setActive(false);
+    // redirect to lobby page
+  };
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const file = formData.get('avatar') as File;
-    const imageURL = await imageToDataURL(file);
-    formData.set('avatar', imageURL);
-    formData.set('role', userType);
-    const data = Object.fromEntries(formData) as unknown as IUserData;
+  const onFormSubmitUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const user = { ...getUserData(), roomId };
+    joinRoom(socket, user);
+    const roomData = await getRoomData(roomId);
+    if (roomData) {
+      dispatch(updateRoom(roomData));
+      resetData();
+      setActive(false);
+      // redirect to lobby page
+    }
+  };
 
-    joinRoom(socket, data);
-
+  const cancelBtnOnClick = () => {
+    resetData();
     setActive(false);
   };
 
@@ -65,28 +111,56 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onDecl
     <ModalBox active={isActive} setActive={setActive}>
       <div className='connect-form'>
         <h2 className='connect-form__title'>Connect to lobby</h2>
-        <form onSubmit={onFormSubmit}>
+        <form onSubmit={userType === 'admin' ? onFormSubmitAdmin : onFormSubmitUser}>
           <div className='connect-form__wrapper'>
             <div className='connect-form__text-inputs'>
-              <TextInput name='firstName' placeholder='Your first name' color='light' required bordered />
-              <TextInput name='lastName' placeholder='Your last name' color='light' required bordered />
-              <TextInput name='position' placeholder='Your job position' color='light' required bordered />
+              <TextInput
+                name='firstName'
+                placeholder='Your first name'
+                color='light'
+                required
+                bordered
+                onChange={onFirstNameInputChange}
+              />
+              <TextInput
+                name='lastName'
+                placeholder='Your last name'
+                color='light'
+                required
+                bordered
+                onChange={onLastNameInputChange}
+              />
+              <TextInput
+                name='position'
+                placeholder='Your job position'
+                color='light'
+                required
+                bordered
+                onChange={onPositionInputChange}
+              />
               {userType === 'admin' ? (
-                <TextInput name='roomName' placeholder='Lobby name' color='light' required bordered />
+                <TextInput
+                  name='roomName'
+                  placeholder='Lobby name'
+                  color='light'
+                  required
+                  bordered
+                  onChange={onRoomNameInputChange}
+                />
               ) : (
-                <Toggle name='isPlayer' checked={checked} onChange={toggleChecked}>
+                <Toggle name='isPlayer' checked={isObserver} onChange={setObserverStatus}>
                   Connect as observer
                 </Toggle>
               )}
             </div>
             <div className='connect-form__avatar-inputs'>
-              <Avatar imgName={avatarName} size='large' className='connect-form__avatar-inputs_avatar' />
+              <Avatar imgName={avatar} size='large' className='connect-form__avatar-inputs_avatar' />
               <FileInput
                 name='avatar'
                 color='success'
                 size='large'
                 className='connect-form__avatar-inputs_file-input'
-                onChange={onAvatarChange}
+                onChange={onAvatarInputChange}
               />
             </div>
           </div>
@@ -94,7 +168,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, onDecl
             <Button color='success' size='large' className='connect-form__buttons_button' submit>
               Confirm
             </Button>
-            <Button color='danger' size='large' className='connect-form__buttons_button' onClick={onDecline}>
+            <Button color='danger' size='large' className='connect-form__buttons_button' onClick={cancelBtnOnClick}>
               Cancel
             </Button>
           </div>

@@ -1,17 +1,19 @@
-import dotenv from 'dotenv';
+import { ENDPOINT, URL } from './constants';
 
-dotenv.config();
+const validateURL = async (link: string): Promise<string | undefined> => {
+  const name = link.replace(/^https?:\/\//i, '');
+  if (!name.startsWith(URL.replace(/^https?:\/\//i, ''))) {
+    return undefined;
+  }
 
-const validateURL = async (url: string): Promise<boolean> => {
-  const ENDPOINT = process.env.ENDPOINT || 'http://localhost:4000/';
-  const body = { url };
-  const res = await fetch(`${ENDPOINT}auth`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  const response = await res.json();
-  return response;
+  const id = link.slice(link.lastIndexOf('/') + 1);
+  try {
+    const res = await fetch(`${ENDPOINT}auth/${id}`);
+    const response = await res.json();
+    return response;
+  } catch (error) {
+    return undefined;
+  }
 };
 
 export default validateURL;

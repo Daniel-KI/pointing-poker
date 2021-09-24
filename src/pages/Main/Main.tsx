@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { io } from 'socket.io-client';
-import dotenv from 'dotenv';
 import './Main.scss';
 
 import { ReactComponent as TeamImg } from '../../assets/team.svg';
@@ -13,8 +11,8 @@ import ConnectModal from '../../components/ConnectModal/ConnectModal';
 import { updateSocket } from '../../redux/actions/socketActions';
 import UserType from '../../types/UserType';
 import validateURL from '../../api/validateURL';
-
-dotenv.config();
+import connectSocket from '../../api/connectSocket';
+import { updateRoom } from '../../redux/actions/roomActions';
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,8 +21,7 @@ const Main: React.FC = () => {
   const [currentUserType, setUserType] = useState((): UserType => 'user');
 
   useEffect(() => {
-    const ENDPOINT = process.env.ENDPOINT || 'http://localhost:4000/';
-    const newSocket = io(ENDPOINT, { transports: ['websocket', 'polling'] });
+    const newSocket = connectSocket();
     dispatch(updateSocket(newSocket));
   }, []);
 
@@ -37,10 +34,6 @@ const Main: React.FC = () => {
     setUserType('user');
   };
 
-  const onDecline = () => {
-    setActive(false);
-  };
-
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -51,6 +44,7 @@ const Main: React.FC = () => {
     const res = await validateURL(url);
     if (res) {
       setActive(true);
+      dispatch(updateRoom({ id: res, name: undefined, admin: undefined }));
     }
   };
 
@@ -80,12 +74,7 @@ const Main: React.FC = () => {
               Join
             </Button>
           </form>
-          <ConnectModal
-            userType={currentUserType}
-            isActive={isModalActive}
-            setActive={setActive}
-            onDecline={onDecline}
-          />
+          <ConnectModal userType={currentUserType} isActive={isModalActive} setActive={setActive} />
           <div className='main__image-container'>
             <TeamImg className='main__image' />
           </div>

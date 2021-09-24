@@ -7,7 +7,7 @@ export interface IRoomAction {
   room: IRoom;
 }
 
-export const updateCurrentUser = (room: IRoom): IRoomAction => {
+export const updateRoom = (room: IRoom): IRoomAction => {
   return {
     type: SET_ROOM,
     room,
