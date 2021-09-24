@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import './Main.scss';
 
@@ -8,10 +8,8 @@ import Header from '../../components/Header/Header';
 import Button from '../../components/Button/Button';
 import TextInput from '../../components/TextInput/TextInput';
 import ConnectModal from '../../components/ConnectModal/ConnectModal';
-import { updateSocket } from '../../redux/actions/socketActions';
 import UserType from '../../types/UserType';
 import validateURL from '../../api/validateURL';
-import connectSocket from '../../api/connectSocket';
 import { updateRoom } from '../../redux/actions/roomActions';
 
 const Main: React.FC = () => {
@@ -19,11 +17,6 @@ const Main: React.FC = () => {
 
   const [isModalActive, setActive] = useState(false);
   const [currentUserType, setUserType] = useState((): UserType => 'user');
-
-  useEffect(() => {
-    const newSocket = connectSocket();
-    dispatch(updateSocket(newSocket));
-  }, []);
 
   const onCreateBtnClick = () => {
     setUserType('admin');

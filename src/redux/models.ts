@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import PriorityLevels from '../types/priorityLevels';
+import PriorityLevel from '../types/PriorityLevel';
 
 import UserType from '../types/UserType';
 
@@ -9,13 +9,13 @@ export interface IUser {
   lastName: string;
   position: string;
   avatar: string;
-  isPlayer?: 'isPlayer';
+  isObserver?: boolean;
 }
 
 export interface IIssue {
   id: number;
   name: string;
-  priority: PriorityLevels;
+  priority: PriorityLevel;
 }
 
 export interface IRoom {
@@ -34,7 +34,7 @@ export interface ISettings {
   timer: null | string;
   scoreType: string;
   scoreTypeShort: string;
-  cardValues: number[];
+  cardValues: string[];
   cardBack: string;
   addNewPlayersAutomatically: boolean;
   cardsFlipAutomatically: boolean;
@@ -46,7 +46,7 @@ export interface IMessage {
 }
 
 export interface IState {
-  socket: Socket | null;
+  socket: Socket;
   room: IRoom;
   currentUser: ICurrentUser;
   users: IUser[];

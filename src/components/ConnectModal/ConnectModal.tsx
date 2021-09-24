@@ -15,6 +15,7 @@ import joinRoom from '../../api/joinRoom';
 import { IState } from '../../redux/models';
 import getRoomData from '../../api/getRoomData';
 import { updateRoom } from '../../redux/actions/roomActions';
+import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 
 // Родительский компонент:
 // const [isActive, setActive] = useState(false);
@@ -83,7 +84,8 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     event.preventDefault();
     const user = getUserData();
     joinRoom(socket, user);
-    dispatch(updateRoom({ id: socket?.id, name: user.roomName, admin: user }));
+    dispatch(updateCurrentUser({ id: socket.id, role: userType }));
+    dispatch(updateRoom({ id: socket.id, name: user.roomName, admin: user }));
     resetData();
     setActive(false);
     // redirect to lobby page
@@ -93,6 +95,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     event.preventDefault();
     const user = { ...getUserData(), roomId };
     joinRoom(socket, user);
+    dispatch(updateCurrentUser({ id: socket.id, role: userType }));
     const roomData = await getRoomData(roomId);
     if (roomData) {
       dispatch(updateRoom(roomData));
@@ -148,7 +151,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                   onChange={onRoomNameInputChange}
                 />
               ) : (
-                <Toggle name='isPlayer' checked={isObserver} onChange={setObserverStatus}>
+                <Toggle name='isObserver' checked={isObserver} onChange={setObserverStatus}>
                   Connect as observer
                 </Toggle>
               )}

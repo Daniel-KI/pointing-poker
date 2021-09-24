@@ -1,9 +1,10 @@
-import { Socket } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
+import { ENDPOINT } from '../../api/constants';
 import { ISocketAction, SET_SOCKET } from '../actions/socketActions';
 
-const initialState: Socket | null = null;
+const initialState: Socket = io(ENDPOINT, { transports: ['websocket', 'polling'] });
 
-const socketReducer = (state = initialState, action: ISocketAction): Socket | null => {
+const socketReducer = (state = initialState, action: ISocketAction): Socket => {
   switch (action.type) {
     case SET_SOCKET:
       return action.socket;
