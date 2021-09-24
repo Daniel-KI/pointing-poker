@@ -1,5 +1,6 @@
 import { IssueCardProps } from '../../components/IssueCard/models';
-import { SpCardProps } from '../../components/SpCard/models';
+import { SpCardBackProps } from '../../components/SpCardBack/models';
+import { SpOptionCardProps } from '../../components/SpOptionCard/models';
 import { UserCardProps } from '../../components/UserCard/models';
 
 export interface SettingsProps {
@@ -8,6 +9,6 @@ export interface SettingsProps {
   master?: UserCardProps;
   members?: UserCardProps[];
   issues?: IssueCardProps[];
-  voteCards?: SpCardProps[];
-  cardsBack?: SpCardProps[];
+  voteCards?: SpOptionCardProps[];
+  cardsBack?: SpCardBackProps[];
 }

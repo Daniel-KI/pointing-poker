@@ -8,40 +8,29 @@
 .lobby {
   @extend .page;
 
+  &__wrapper {
+    padding: 0 10%;
+  }
+
   &__title {
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    -ms-line-clamp: 2;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    display: -webkit-box;
-    display: box;
-    word-wrap: break-word;
-    -webkit-box-orient: vertical;
-    box-orient: vertical;
     text-align: center;
     margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 
     &_content {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    @media (max-width: $screen-xl) {
-      padding: 0px 60px;
-    }
-
-    @media (max-width: $screen-lg) {
-      padding: 0px 40px;
-    }
-
-    @media (max-width: $screen-md) {
-      padding: 0px 30px;
-    }
-
-    @media (max-width: $screen-sm) {
-      padding: 0px 20px;
+      -ms-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      -ms-line-clamp: 2;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      display: -webkit-box;
+      display: box;
+      word-wrap: break-word;
+      -webkit-box-orient: vertical;
+      box-orient: vertical;
     }
   }
 
@@ -52,23 +41,9 @@
     align-items: center;
     gap: 50px;
     margin-bottom: 100px;
-    padding: 0px 160px;
-
-    @media (max-width: $screen-xl) {
-      padding: 0px 60px;
-    }
-
-    @media (max-width: $screen-lg) {
-      padding: 0px 40px;
-    }
 
     @media (max-width: $screen-md) {
-      padding: 0px 30px;
       gap: 20px;
-    }
-
-    @media (max-width: $screen-sm) {
-      padding: 0px 20px;
     }
 
     &_card-field-wrapper {
@@ -118,43 +93,10 @@
 
   &__members {
     margin-bottom: 100px;
-    padding: 0px 160px;
-
-    @media (max-width: $screen-xl) {
-      padding: 0px 60px;
-    }
-
-    @media (max-width: $screen-lg) {
-      padding: 0px 40px;
-    }
-
-    @media (max-width: $screen-md) {
-      padding: 0px 30px;
-    }
-
-    @media (max-width: $screen-sm) {
-      padding: 0px 20px;
-    }
 
     &_title {
       text-align: center;
       margin-bottom: 30px;
-
-      @media (max-width: $screen-xl) {
-        padding: 0px 60px;
-      }
-
-      @media (max-width: $screen-lg) {
-        padding: 0px 40px;
-      }
-
-      @media (max-width: $screen-md) {
-        padding: 0px 30px;
-      }
-
-      @media (max-width: $screen-sm) {
-        padding: 0px 20px;
-      }
     }
 
     &_members-field {
@@ -174,43 +116,10 @@
 
   &__issues {
     margin-bottom: 100px;
-    padding: 0 160px;
-
-    @media (max-width: $screen-xl) {
-      padding: 0px 60px;
-    }
-
-    @media (max-width: $screen-lg) {
-      padding: 0px 40px;
-    }
-
-    @media (max-width: $screen-md) {
-      padding: 0px 30px;
-    }
-
-    @media (max-width: $screen-sm) {
-      padding: 0px 20px;
-    }
 
     &_title {
       text-align: center;
       margin-bottom: 30px;
-
-      @media (max-width: $screen-xl) {
-        padding: 0px 60px;
-      }
-
-      @media (max-width: $screen-lg) {
-        padding: 0px 40px;
-      }
-
-      @media (max-width: $screen-md) {
-        padding: 0px 30px;
-      }
-
-      @media (max-width: $screen-sm) {
-        padding: 0px 20px;
-      }
     }
 
     &_issues-field {
@@ -238,43 +147,10 @@
 
   &__settings {
     margin-bottom: 100px;
-    padding: 0 160px;
-
-    @media (max-width: $screen-xl) {
-      padding: 0px 60px;
-    }
-
-    @media (max-width: $screen-lg) {
-      padding: 0px 40px;
-    }
-
-    @media (max-width: $screen-md) {
-      padding: 0px 30px;
-    }
-
-    @media (max-width: $screen-sm) {
-      padding: 0px 20px;
-    }
 
     &_title {
       text-align: center;
       margin-bottom: 30px;
-
-      @media (max-width: $screen-xl) {
-        padding: 0px 60px;
-      }
-
-      @media (max-width: $screen-lg) {
-        padding: 0px 40px;
-      }
-
-      @media (max-width: $screen-md) {
-        padding: 0px 30px;
-      }
-
-      @media (max-width: $screen-sm) {
-        padding: 0px 20px;
-      }
     }
 
     &_settings-field {
