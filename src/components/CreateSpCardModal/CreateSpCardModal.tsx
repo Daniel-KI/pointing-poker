@@ -25,7 +25,7 @@ const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActi
   return (
     <ModalBox active={isActive} setActive={setActive}>
       <div className='create-sp-card-modal'>
-        <h2 className='create-sp-card-modal__title'>Create issue</h2>
+        <h2 className='create-sp-card-modal__title'>Create vote card</h2>
         <form className='create-sp-card-modal__form' onSubmit={onSubmit}>
           <div className='create-sp-card-modal__text-inputs'>
             <TextInput
