@@ -1,6 +1,6 @@
 import React from 'react';
 import './SpCardBack.scss';
-import { IoChevronDown } from 'react-icons/io5';
+import { IoChevronDownCircle } from 'react-icons/io5';
 import classNames from 'classnames';
 import { SpCardBackProps } from './models';
 import spCardBacks from '../../constants/spCardBacks';
@@ -19,7 +19,7 @@ const SpCardBack: React.FC<SpCardBackProps> = ({ type, onClick, isSelected, clas
     <button className={classes} id={id} onClick={onClick} type='button'>
       <div className='sp-card-back__mark'>
         <div className='sp-card-back__circle'>
-          <IoChevronDown className='sp-card-back__mark-icon' />
+          <IoChevronDownCircle className='sp-card-back__mark-icon' />
         </div>
       </div>
       <div className='sp-card-back__container'>
