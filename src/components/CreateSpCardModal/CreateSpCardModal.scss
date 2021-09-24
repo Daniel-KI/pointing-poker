@@ -1,0 +1,51 @@
+@import '../../ui/colors.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+
+.create-sp-card-modal {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center ;
+  align-items: center;
+  gap: 1.5rem;
+
+  &__title {
+    font-size: $title-lg;
+    line-height: $line-height-sm;
+    text-align: center;
+    color: $primary;
+
+    @media (max-width: $screen-sm) {
+      font-size: $title-md;
+    }
+  }
+
+  &__text-inputs {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    row-gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    column-gap: 2rem;
+
+    @media (max-width: $screen-sm) {
+      column-gap: 0.5rem;
+    }
+
+    @media (max-width: $screen-xsm) {
+      row-gap: 1rem;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__button {
+    width: 10rem;
+  }
+}
