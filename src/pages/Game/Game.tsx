@@ -1,20 +1,22 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './Game.scss';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
-import { GameProps, GameResultProps } from './models';
+import { GameProps, GameResultProps, StatisticsCardsProps } from './models';
 import UserCard from '../../components/UserCard/UserCard';
 import Button from '../../components/Button/Button';
-import { UserCardProps } from '../../components/UserCard/models';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import DataControlPanel from '../../components/DataControlPanel/DataControlPanel';
 import Timer from '../../components/Timer/Timer';
 import { IssueCardProps } from '../../components/IssueCard/models';
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueCreationCard from '../../components/IssueCreationCard/IssueCreationCard';
+import { SpCardFrontProps } from '../../components/SpCardFront/models';
+import SpCardFront from '../../components/SpCardFront/SpCardFront';
+import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 
-const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issues, gameResult }) => {
+const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, percent, issues, gameResult, statisticsCards }) => {
   const [isConfirm, setConfirm] = useState(false);
   const [isCreateIssue, setCreateIssue] = useState(false);
   const [isTimeOut, setTimeOut] = useState(false);
@@ -39,6 +41,9 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
   };
   const onSubmit = () => {
     setConfirm(false);
+  };
+  const onClick = (event: any) => {
+    console.log('click');
   };
 
   const runRound = () => {
@@ -95,15 +100,12 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
                   isGameOn={isGameOn}
                   setGameOn={setGameOn}
                   setTimeOut={setTimeOut}
-                  className='lobby__settings_timer'
+                  className='game__settings_timer'
                   disabled={!isMaster}
                 />
               </div>
               <div className='game__scram-master_timer-btn'>
                 <Button color='dark' size='large' onClick={runRound}>
-                  {/* {!isGameOn && !isTimeOut && 'Run round'}
-                  {isGameOn && !isTimeOut && 'Restart round'}
-                  {!isGameOn && isTimeOut && 'Restart round'} */}
                   {!isGameOn && !isTimeOut
                     ? 'Run round'
                     : [
@@ -128,13 +130,33 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
                     name={element.name}
                     priority={element.priority}
                     deleteAction={element.deleteAction}
-                    editAction={element.editAction}
                     className='game__issues_issue'
+                    color={element.color}
                   />
                 ))}
                 <IssueCreationCard label='Create issue' addAction={addAction} className='game__issues_create-issue' />
               </div>
             </div>
+            {isTimeOut ? (
+              <div className='game__statistics'>
+                <h3 className='game__statistics_title'>Statistics</h3>
+                <div className='game__statistics_statistic-field'>
+                  {statisticsCards?.map((element: StatisticsCardsProps, index: number) => (
+                    <div>
+                      <SpCardFront
+                        key={index.toString()}
+                        className='game__statistics_cards-front-item'
+                        score={element.score}
+                        units={element.units}
+                        onClick={onClick}
+                        size='small'
+                      />
+                      <div className='game__statistics_percent'>{element.percent}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
           <div className='game__scram-master_score-wrapper'>
             <h3 className='game__scram-master_score-title'>Score table</h3>
@@ -185,6 +207,10 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, members, issu
             </div>
           )}
         </ConfirmModal>
+      ) : null}
+
+      {isCreateIssue ? (
+        <CreateIssueModal isActive={isCreateIssue} setActive={setCreateIssue} onSubmit={onSubmit} />
       ) : null}
     </div>
   );

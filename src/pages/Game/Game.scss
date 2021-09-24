@@ -10,6 +10,10 @@
 
   &__wrapper {
     padding: 0px 10%;
+
+    @media (max-width: $screen-sm) {
+      padding: 0px 20px;
+    }
   }
 
   &__title {
@@ -44,12 +48,22 @@
 
     @media (max-width: $screen-xl) {
       flex-direction: column;
+      gap: 100px;
+    }
+
+    @media (max-width: $screen-md) {
+      gap: 50px;
+    }
+
+    &_score-title {
+      text-align: center;
+      margin-bottom: 6px;
     }
 
     &_card-field-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 50px;
+      gap: 100px;
 
       @media (max-width: $screen-md) {
         gap: 50px;
@@ -94,6 +108,7 @@
     &_card-master-btn {
       grid-area: card-master-btn;
       padding-top: 30px;
+
       @media (max-width: $screen-sm) {
         padding-top: 0;
         margin-bottom: 30px;
@@ -106,6 +121,9 @@
 
     &_timer-btn {
       grid-area: timer-btn;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     &_card-field &_card {
@@ -158,8 +176,6 @@
   }
 
   &__issues {
-    margin-bottom: 100px;
-
     @media (max-width: $screen-xl) {
       margin-bottom: 0;
     }
@@ -187,15 +203,10 @@
 
     &_issues-field &_create-issue {
       margin: 0;
-      width: 280px;
       height: 77px;
       display: flex;
       justify-content: space-between;
     }
-  }
-  &__scram-master_score-title {
-    text-align: center;
-    margin-bottom: 6px;
   }
 
   table {
@@ -264,35 +275,65 @@
     }
   }
 
-  &__members_tr {
-    @media (max-width: $screen-sm) {
+  &__members {
+    &_tr {
+      @media (max-width: $screen-sm) {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+    }
+
+    &_table-score {
+      min-width: 140px;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    &_table-score,
+    &_table-card {
+      padding: 10px 4px;
+
+      @media (max-width: $screen-sm) {
+        padding: 4px;
+      }
+    }
+
+    &_table-card &_card {
+      margin: 8px;
+      padding: 8px;
+
+      @media (max-width: $screen-sm) {
+        margin: 4px;
+      }
+    }
+  }
+
+  &__statistics {
+    &_title {
+      margin-bottom: 30px;
+
+      @media (max-width: $screen-md) {
+        text-align: center;
+      }
+    }
+
+    &_statistic-field {
       display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
     }
-  }
 
-  &__members_table-score {
-    min-width: 140px;
-    white-space: nowrap;
-    text-align: center;
-  }
-
-  &__members_table-score,
-  &__members_table-card {
-    padding: 10px 4px;
-
-    @media (max-width: $screen-sm) {
-      padding: 4px;
-    }
-  }
-
-  &__members_table-card &__members_card {
-    margin: 8px;
-    padding: 8px;
-
-    @media (max-width: $screen-sm) {
-      margin: 4px;
+    &_percent {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      font-size: $text-lg;
+      font-weight: 500;
     }
   }
 }
