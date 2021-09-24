@@ -235,9 +235,7 @@ const Settings: React.FC<SettingsProps> = ({ lobbyTitle, master, members, issues
       ) : null}
 
       {isCreateIssue ? (
-        <CreateIssueModal isActive={isCreateIssue} setActive={setCreateIssue} onSubmit={onSubmit}>
-          Remove Daniil Korshov from lobby?
-        </CreateIssueModal>
+        <CreateIssueModal isActive={isCreateIssue} setActive={setCreateIssue} onSubmit={onSubmit} />
       ) : null}
     </div>
   );
