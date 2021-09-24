@@ -5,10 +5,11 @@ import classNames from 'classnames';
 import { SpCardBackProps } from './models';
 import spCardBacks from '../../constants/spCardBacks';
 
-const SpCardBack: React.FC<SpCardBackProps> = ({ type, onClick, isSelected, className, id }) => {
+const SpCardBack: React.FC<SpCardBackProps> = ({ type, onClick, isSelected, size, className, id }) => {
   const classes = classNames(
     {
       'sp-card-back': true,
+      [`sp-card-back--${size}`]: size,
       'sp-card-back--selected': isSelected,
     },
     className,
@@ -32,6 +33,7 @@ const SpCardBack: React.FC<SpCardBackProps> = ({ type, onClick, isSelected, clas
 SpCardBack.defaultProps = {
   onClick: undefined,
   isSelected: false,
+  size: undefined,
   className: undefined,
   id: undefined,
 };

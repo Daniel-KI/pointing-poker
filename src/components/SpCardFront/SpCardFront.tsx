@@ -4,10 +4,11 @@ import { IoChevronDownCircle, IoHelp } from 'react-icons/io5';
 import classNames from 'classnames';
 import { SpCardFrontProps } from './models';
 
-const SpCardFront: React.FC<SpCardFrontProps> = ({ units, score, onClick, isSelected, className, id }) => {
+const SpCardFront: React.FC<SpCardFrontProps> = ({ units, score, onClick, isSelected, size, className, id }) => {
   const classes = classNames(
     {
       'sp-card-front': true,
+      [`sp-card-front--${size}`]: size,
       'sp-card-front--selected': isSelected,
     },
     className,
@@ -42,6 +43,7 @@ SpCardFront.defaultProps = {
   score: undefined,
   onClick: undefined,
   isSelected: false,
+  size: undefined,
   className: undefined,
   id: undefined,
 };

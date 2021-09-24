@@ -128,4 +128,53 @@
       background-color: rgba(38, 193, 170, 0.6);
     }
   }
+
+  &--small {
+    width: 7rem;
+    height: 10.5rem;
+    font-size: 0.5rem;
+
+    & #{ $self }__container {
+      width: 6rem;
+      height: 9.5rem;
+    }
+
+    & #{ $self }__content {
+      font-size: $text-lg;
+    }
+
+    & #{ $self }__circle,
+    & #{ $self }__mark-circle {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    & #{ $self }__mark-icon {
+      color: #ffffff;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &--large {
+    width: 9rem;
+    height: 13.5rem;
+
+    & #{ $self }__container {
+      width: 8rem;
+      height: 12.5rem;
+    }
+
+    & #{ $self }__circle,
+    & #{ $self }__mark-circle {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    & #{ $self }__mark-icon {
+      color: #ffffff;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
 }
