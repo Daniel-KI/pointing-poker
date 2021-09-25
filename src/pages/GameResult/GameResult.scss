@@ -32,6 +32,17 @@
     box-orient: vertical;
   }
 
+  &__download-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+
+  &__download-btn {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+  }
   &__statistics {
     display: flex;
     flex-wrap: wrap;
