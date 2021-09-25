@@ -1,0 +1,75 @@
+@import '../../ui/colors.scss';
+@import '../../ui/containers.scss';
+@import '../../ui/page.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+@import '../../ui/shadows.scss';
+
+.game-result {
+  @extend .page;
+
+  &__wrapper {
+    padding: 0px 10%;
+    margin-bottom: 100px;
+  }
+
+  &__title {
+    text-align: center;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -ms-line-clamp: 2;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    display: -webkit-box;
+    display: box;
+    word-wrap: break-word;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+  }
+
+  &__statistics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px 120px;
+
+    @media (max-width: $screen-md) {
+      justify-content: center;
+    }
+
+    &_statistic-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+    &_statistic-wrapper &_issue {
+      margin: 0;
+      @media (max-width: $screen-md) {
+        margin: 0 auto;
+      }
+    }
+    &_cards-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      // justify-content: center;
+      gap: 20px;
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+    &_percent {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      font-size: $text-lg;
+      font-weight: 500;
+    }
+  }
+}
