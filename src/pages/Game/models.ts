@@ -9,13 +9,13 @@ export interface GameProps {
   master?: UserCardProps;
   members?: UserCardProps[];
   issues?: IssueCardProps[];
-  gameResult: GameResultProps[];
+  gameScore: GameScoreProps[];
   statisticsCards?: StatisticsCardsProps[];
   percent?: string;
   voteCards?: SpVoteCardProps[];
 }
 
-export interface GameResultProps {
+export interface GameScoreProps {
   score: string;
   player: UserCardProps;
 }

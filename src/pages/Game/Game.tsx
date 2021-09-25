@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './Game.scss';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
-import { GameProps, GameResultProps, StatisticsCardsProps } from './models';
+import { GameProps, GameScoreProps, StatisticsCardsProps } from './models';
 import UserCard from '../../components/UserCard/UserCard';
 import Button from '../../components/Button/Button';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
@@ -17,15 +17,7 @@ import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal
 import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
 import { SpVoteCardProps } from '../../components/SpVoteCard/models';
 
-const Game: React.FC<GameProps> = ({
-  isMaster,
-  lobbyTitle,
-  master,
-  issues,
-  gameResult,
-  statisticsCards,
-  voteCards,
-}) => {
+const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameScore, statisticsCards, voteCards }) => {
   const [isConfirm, setConfirm] = useState(false);
   const [isCreateIssue, setCreateIssue] = useState(false);
   const [isTimeOut, setTimeOut] = useState(false);
@@ -198,7 +190,7 @@ const Game: React.FC<GameProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {gameResult?.map((element: GameResultProps, index: number) => (
+                {gameScore?.map((element: GameScoreProps, index: number) => (
                   <tr className='game__members_tr'>
                     <td data-label='Score' className='game__members_table-score'>
                       {isTimeOut ? element.score : 'In progress'}
