@@ -114,7 +114,9 @@
         margin-bottom: 30px;
       }
     }
-
+    &_exit-btn {
+      min-width: 140px;
+    }
     &_timer {
       grid-area: timer;
     }
@@ -334,6 +336,30 @@
       margin-top: 10px;
       font-size: $text-lg;
       font-weight: 500;
+    }
+  }
+
+  &__vote {
+    &_title {
+      margin-bottom: 30px;
+
+      @media (max-width: $screen-md) {
+        text-align: center;
+      }
+    }
+
+    &_vote-field {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      @media (max-width: $screen-md) {
+        justify-content: center;
+      }
+    }
+
+    &_vote-field &_cards-front-item {
+      margin: 0;
     }
   }
 }

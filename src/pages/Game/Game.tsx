@@ -12,15 +12,24 @@ import Timer from '../../components/Timer/Timer';
 import { IssueCardProps } from '../../components/IssueCard/models';
 import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueCreationCard from '../../components/IssueCreationCard/IssueCreationCard';
-import { SpCardFrontProps } from '../../components/SpCardFront/models';
 import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
+import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
+import { SpVoteCardProps } from '../../components/SpVoteCard/models';
 
-const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, percent, issues, gameResult, statisticsCards }) => {
+const Game: React.FC<GameProps> = ({
+  isMaster,
+  lobbyTitle,
+  master,
+  issues,
+  gameResult,
+  statisticsCards,
+  voteCards,
+}) => {
   const [isConfirm, setConfirm] = useState(false);
   const [isCreateIssue, setCreateIssue] = useState(false);
   const [isTimeOut, setTimeOut] = useState(false);
-  const [isGameOn, setGameOn] = useState(false);
+  const [isGameOn, setGameOn] = useState(true);
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(3);
 
@@ -86,8 +95,8 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, percent, issu
                 />
               </div>
               <div className='game__scram-master_card-master-btn'>
-                <Button color='danger' size='large'>
-                  Stop game
+                <Button color='danger' size='large' className='game__scram-master_exit-btn'>
+                  {isMaster ? 'Stop game' : 'Exit'}
                 </Button>
               </div>
               <div className='game__scram-master_timer'>
@@ -104,22 +113,24 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, percent, issu
                   disabled={!isMaster}
                 />
               </div>
-              <div className='game__scram-master_timer-btn'>
-                <Button color='dark' size='large' onClick={runRound}>
-                  {!isGameOn && !isTimeOut
-                    ? 'Run round'
-                    : [
-                        isGameOn && !isTimeOut
-                          ? 'Restart round'
-                          : [!isGameOn && isTimeOut ? 'Restart round' : 'Restart round'],
-                      ]}
-                </Button>
-                {isTimeOut ? (
-                  <Button color='dark' size='large'>
-                    Next issue
+              {isMaster ? (
+                <div className='game__scram-master_timer-btn'>
+                  <Button color='dark' size='large' onClick={runRound}>
+                    {!isGameOn && !isTimeOut
+                      ? 'Run round'
+                      : [
+                          isGameOn && !isTimeOut
+                            ? 'Restart round'
+                            : [!isGameOn && isTimeOut ? 'Restart round' : 'Restart round'],
+                        ]}
                   </Button>
-                ) : null}
-              </div>
+                  {isTimeOut ? (
+                    <Button color='dark' size='large'>
+                      Next issue
+                    </Button>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
             <div className='game__issues'>
               <h3 className='game__issues_title'>Issues</h3>
@@ -129,12 +140,31 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, percent, issu
                     key={index.toString()}
                     name={element.name}
                     priority={element.priority}
-                    deleteAction={element.deleteAction}
+                    deleteAction={isMaster ? element.deleteAction : undefined}
                     className='game__issues_issue'
                     color={element.color}
                   />
                 ))}
-                <IssueCreationCard label='Create issue' addAction={addAction} className='game__issues_create-issue' />
+                {isMaster ? (
+                  <IssueCreationCard label='Create issue' addAction={addAction} className='game__issues_create-issue' />
+                ) : null}
+              </div>
+            </div>
+            <div className='game__vote'>
+              <h3 className='game__vote_title'>Vote</h3>
+              <div className='game__vote_vote-field'>
+                {voteCards?.map((element: SpVoteCardProps, index: number) => (
+                  <div>
+                    <SpVoteCard
+                      key={index.toString()}
+                      className='game__vote_cards-front-item'
+                      score={element.score}
+                      units={element.units}
+                      onClick={onClick}
+                      size='large'
+                    />
+                  </div>
+                ))}
               </div>
             </div>
             {isTimeOut ? (
