@@ -1,10 +1,15 @@
 import React, { ReactElement } from 'react';
 
 import './App.scss';
-import Main from './Main/Main';
+import Lobby from './Lobby/Lobby';
+// import Main from './Main/Main';
 
 function App(): ReactElement {
-  return <Main />;
+  return (
+    <div className='App'>
+      <Lobby />
+    </div>
+  );
 }
 
 export default App;
