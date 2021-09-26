@@ -37,4 +37,14 @@
     transition: 0.5s opacity ease;
     pointer-events: none;
   }
+
+  &--small {
+    width: 7rem;
+    height: 10.5rem;
+  }
+
+  &--large {
+    width: 9rem;
+    height: 13.5rem;
+  }
 }

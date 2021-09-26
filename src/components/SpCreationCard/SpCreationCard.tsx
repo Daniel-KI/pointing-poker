@@ -4,18 +4,11 @@ import { IoAdd } from 'react-icons/io5';
 import classNames from 'classnames';
 import { SpCreationCardProps } from './models';
 
-// В родительском компоненте:
-
-// const onAddCard = () => {
-//   console.log('add card');
-// };
-
-// <AddCard onClick={onAddCard} />
-
-const SpCreationCard: React.FC<SpCreationCardProps> = ({ onClick, className, id }) => {
+const SpCreationCard: React.FC<SpCreationCardProps> = ({ onClick, size, className, id }) => {
   const classes = classNames(
     {
       'sp-creation-card': true,
+      [`sp-creation-card--${size}`]: size,
     },
     className,
   );
@@ -24,7 +17,7 @@ const SpCreationCard: React.FC<SpCreationCardProps> = ({ onClick, className, id 
     <button type='button' className={classes} id={id} onClick={onClick}>
       <div className='sp-creation-card__container'>
         <div className='sp-creation-card__circle'>
-          <IoAdd className='sp-creation-card__plus-icon' />
+          <IoAdd className='sp-creation-card__icon' />
         </div>
       </div>
     </button>
@@ -32,6 +25,7 @@ const SpCreationCard: React.FC<SpCreationCardProps> = ({ onClick, className, id 
 };
 
 SpCreationCard.defaultProps = {
+  size: undefined,
   className: undefined,
   id: undefined,
 };
