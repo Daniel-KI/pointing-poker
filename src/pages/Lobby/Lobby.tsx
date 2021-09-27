@@ -1,12 +1,11 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
 import './Lobby.scss';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { IState, IUser } from '../../redux/models';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import UserCard from '../../components/UserCard/UserCard';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import store from '../../redux/store';
-import { IUser } from '../../redux/models';
 
 const Lobby: React.FC = () => {
   const [isActiveVoteModal, setVoteModalActiveStatus] = useState<boolean>(false);
@@ -19,10 +18,10 @@ const Lobby: React.FC = () => {
   const [userForDeletion, setUserForDeletion] = useState<IUser>();
 
   // Get data from state
-  const lobbyTitle = store.getState().room.name;
-  const master = store.getState().room.admin;
-  const members = store.getState().users;
-  const { currentUser } = store.getState();
+  const lobbyTitle = useSelector((state: IState) => state.room.name);
+  const master = useSelector((state: IState) => state.room.admin);
+  const members = useSelector((state: IState) => state.users);
+  const currentUser = useSelector((state: IState) => state.currentUser);
   const currentUserData = members.find(user => user.id === currentUser.id);
 
   const exitBtnOnClick = () => {
