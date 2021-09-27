@@ -127,7 +127,6 @@ const Lobby: React.FC = () => {
           </div>
         </div>
       </div>
-
       <Footer />
 
       <ConfirmModal
