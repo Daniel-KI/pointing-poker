@@ -52,7 +52,11 @@ const Lobby: React.FC = () => {
     const { length } = members;
     const isAdmin = Boolean(members.find(member => member.id === master?.id));
     const isCurrentUser = Boolean(members.find(member => member.id === currentUserData?.id));
-    return (length === 2 && isAdmin && isCurrentUser) || (length === 1 && isAdmin) || (length === 1 && isCurrentUser);
+    return (length === 2 && isAdmin && isCurrentUser) || length === 1 || !length;
+  };
+
+  const checkIsNotAdminOrCurrentUser = (user: IUser) => {
+    return user.id !== currentUser.id && user.id !== master?.id;
   };
 
   return (
@@ -104,7 +108,7 @@ const Lobby: React.FC = () => {
                 <p className='lobby__empty-text'>No members</p>
               ) : (
                 members?.map(user =>
-                  user.id !== currentUser.id && user.id !== master?.id ? (
+                  checkIsNotAdminOrCurrentUser(user) ? (
                     <UserCard
                       key={user.firstName}
                       name={user.firstName}
