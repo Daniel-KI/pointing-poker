@@ -23,21 +23,13 @@
   }
 
   &__title {
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    -ms-line-clamp: 2;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    display: -webkit-box;
-    display: box;
-    word-wrap: break-word;
-    -webkit-box-orient: vertical;
-    box-orient: vertical;
+    display: block;
+    width: 100%;
     text-align: center;
-    font-size: $title-md;
-    color: $text-dark;
-    margin-bottom: 3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 2rem 0 3rem;
   }
 
   &__empty-text {
@@ -57,6 +49,10 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+
+    @media (max-width: $screen-md) {
+      flex-direction: column;
+    }
   }
 
   &__scram-master,
@@ -66,7 +62,7 @@
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
   }
 
   &__members {
@@ -80,7 +76,7 @@
 
   &__members_container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
