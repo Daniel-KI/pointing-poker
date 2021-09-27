@@ -21,8 +21,8 @@ const Lobby: React.FC = () => {
   const lobbyTitle = useSelector((state: IState) => state.room.name);
   const master = useSelector((state: IState) => state.room.admin);
   const members = useSelector((state: IState) => state.users);
-  const currentUser = useSelector((state: IState) => state.currentUser);
-  const currentUserData = members.find(user => user.id === currentUser.id);
+  const currentUserData = useSelector((state: IState) => state.currentUser);
+  const currentUser = members.find(user => user.id === currentUserData.id);
 
   const exitBtnOnClick = () => {
     setExitModalActiveStatus(true);
@@ -47,15 +47,19 @@ const Lobby: React.FC = () => {
     // start voting for the removal of member
   };
 
-  const isOnlyMasterAndOrCurrentUser = (): boolean => {
-    const { length } = members;
+  const isOnlyMasterAndCurrentUser = (): boolean => {
+    let commonUsersAmount = members.length;
     const isAdmin = Boolean(members.find(member => member.id === master?.id));
-    const isCurrentUser = Boolean(members.find(member => member.id === currentUserData?.id));
-    return (length === 2 && isAdmin && isCurrentUser) || length === 1 || !length;
+    const isCurrentUser = Boolean(members.find(member => member.id === currentUser?.id));
+    if (isAdmin) commonUsersAmount -= 1;
+    if (isCurrentUser) commonUsersAmount -= 1;
+    return commonUsersAmount === 0;
   };
 
-  const checkIsNotAdminOrCurrentUser = (user: IUser) => {
-    return user.id !== currentUser.id && user.id !== master?.id;
+  const checkIsAdminOrCurrentUser = (user: IUser) => {
+    const isAdmin = user.id === master?.id;
+    const isCurrentUser = user.id === currentUser?.id;
+    return isAdmin || isCurrentUser;
   };
 
   return (
@@ -71,7 +75,7 @@ const Lobby: React.FC = () => {
               {master ? (
                 <UserCard
                   name={master.firstName}
-                  surname={master.firstName}
+                  surname={master.lastName}
                   jobPosition={master.position}
                   avatar={master.avatar}
                   color='primary'
@@ -84,12 +88,12 @@ const Lobby: React.FC = () => {
 
             <div className='lobby__current-user'>
               <h3 className='lobby__section-title'>Current user:</h3>
-              {currentUser && currentUserData ? (
+              {currentUserData && currentUser ? (
                 <UserCard
-                  name={currentUserData?.firstName}
-                  surname={currentUserData?.firstName}
-                  jobPosition={currentUserData?.position}
-                  avatar={currentUserData?.avatar}
+                  name={currentUser?.firstName}
+                  surname={currentUser?.lastName}
+                  jobPosition={currentUser?.position}
+                  avatar={currentUser?.avatar}
                   color='success'
                   className='lobby__scram-master-card'
                   deleteAction={exitBtnOnClick}
@@ -103,11 +107,11 @@ const Lobby: React.FC = () => {
           <div className='lobby__members'>
             <h3 className='lobby__section-title'>Other members</h3>
             <div className='lobby__members_container'>
-              {isOnlyMasterAndOrCurrentUser() ? (
+              {isOnlyMasterAndCurrentUser() === true ? (
                 <p className='lobby__empty-text'>There is no members</p>
               ) : (
                 members?.map(user =>
-                  checkIsNotAdminOrCurrentUser(user) ? (
+                  checkIsAdminOrCurrentUser(user) === true ? (
                     <UserCard
                       key={user.firstName}
                       name={user.firstName}

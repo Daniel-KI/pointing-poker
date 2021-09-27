@@ -1,13 +1,11 @@
 import React, { ReactElement } from 'react';
 
 import './App.scss';
-import Lobby from './Lobby/Lobby';
-// import Main from './Main/Main';
 
 function App(): ReactElement {
   return (
     <div className='App'>
-      <Lobby />
+      <h1>Pointing poker</h1>
     </div>
   );
 }
