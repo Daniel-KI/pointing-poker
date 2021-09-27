@@ -13,6 +13,7 @@ const FileInput: React.FC<FileInputProps> = ({
   name,
   multiply,
   accept,
+  required,
   onChange,
 }) => {
   const [files, setFiles] = useState<FileList | null>(null);
@@ -59,8 +60,9 @@ const FileInput: React.FC<FileInputProps> = ({
           type='file'
           disabled={disabled}
           multiple={multiply}
-          onChange={onInputChange}
           accept={accept}
+          required={required}
+          onChange={onInputChange}
         />
       </span>
     </label>
@@ -76,6 +78,7 @@ FileInput.defaultProps = {
   multiply: false,
   name: undefined,
   accept: undefined,
+  required: false,
   onChange: undefined,
 };
 
