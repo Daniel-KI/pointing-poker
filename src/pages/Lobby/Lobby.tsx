@@ -96,7 +96,7 @@ const Lobby: React.FC = () => {
                   deleteAction={exitBtnOnClick}
                 />
               ) : (
-                <p className='lobby__empty-text'>You are not authorized</p>
+                <p className='lobby__empty-text'>There is no authorized user</p>
               )}
             </div>
           </div>
@@ -105,7 +105,7 @@ const Lobby: React.FC = () => {
             <h3 className='lobby__section-title'>Other members</h3>
             <div className='lobby__members_container'>
               {isOnlyMasterAndOrCurrentUser() ? (
-                <p className='lobby__empty-text'>No members</p>
+                <p className='lobby__empty-text'>There is no members</p>
               ) : (
                 members?.map(user =>
                   checkIsNotAdminOrCurrentUser(user) ? (
