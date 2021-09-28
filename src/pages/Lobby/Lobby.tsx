@@ -8,14 +8,7 @@ import UserCard from '../../components/UserCard/UserCard';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 
 const Lobby: React.FC = () => {
-  const [isActiveVoteModal, setVoteModalActiveStatus] = useState<boolean>(false);
-  const [initiatorOfVoting] = useState<IUser>();
-  const [userToRemoveByVoting] = useState<IUser>();
-
   const [isActiveExitModal, setExitModalActiveStatus] = useState<boolean>(false);
-
-  const [isActiveDeleteModal, setDeleteModalActiveStatus] = useState<boolean>(false);
-  const [userForDeletion, setUserForDeletion] = useState<IUser>();
 
   // Get data from state
   const lobbyTitle = useSelector((state: IState) => state.room.name);
@@ -34,17 +27,6 @@ const Lobby: React.FC = () => {
   const onConfirmExit = () => {
     setExitModalActiveStatus(false);
     // delete currentUser & currentUserData
-  };
-
-  const deleteUserBtnOnClick = () => {
-    setDeleteModalActiveStatus(true);
-  };
-  const onDeclineUserDeletion = () => {
-    setDeleteModalActiveStatus(false);
-  };
-  const onConfirmUserDeletion = () => {
-    setDeleteModalActiveStatus(false);
-    // start voting for the removal of member
   };
 
   const isOnlyMasterAndCurrentUser = (): boolean => {
@@ -119,10 +101,6 @@ const Lobby: React.FC = () => {
                       jobPosition={user.position}
                       avatar={user.avatar}
                       className='lobby__member_card'
-                      deleteAction={() => {
-                        setUserForDeletion(user);
-                        deleteUserBtnOnClick();
-                      }}
                     />
                   ) : null,
                 )
@@ -134,37 +112,12 @@ const Lobby: React.FC = () => {
       <Footer />
 
       <ConfirmModal
-        isActive={isActiveDeleteModal}
-        setActive={setDeleteModalActiveStatus}
-        onDecline={onDeclineUserDeletion}
-        onConfirm={onConfirmUserDeletion}
-      >
-        <p>
-          Are you sure you want to start voting for the removal of member
-          <span>{` ${userForDeletion?.firstName} ${userForDeletion?.lastName}`}</span>
-        </p>
-      </ConfirmModal>
-
-      <ConfirmModal
         isActive={isActiveExitModal}
         setActive={setExitModalActiveStatus}
         onDecline={onDeclineExit}
         onConfirm={onConfirmExit}
       >
         <p>Are you sure you want to leave the room?</p>
-      </ConfirmModal>
-
-      <ConfirmModal
-        isActive={isActiveVoteModal}
-        setActive={setVoteModalActiveStatus}
-        onDecline={onDeclineUserDeletion}
-        onConfirm={onConfirmUserDeletion}
-      >
-        <p>
-          <span>{`${initiatorOfVoting?.firstName} ${initiatorOfVoting?.lastName}`}</span> want to remove
-          <span>{` ${userToRemoveByVoting?.firstName} ${userToRemoveByVoting?.lastName}`}</span>.
-        </p>
-        <p>Do you agree with it?</p>
       </ConfirmModal>
     </div>
   );
