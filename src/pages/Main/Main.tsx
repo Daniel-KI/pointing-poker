@@ -9,14 +9,15 @@ import Button from '../../components/Button/Button';
 import TextInput from '../../components/TextInput/TextInput';
 import ConnectModal from '../../components/ConnectModal/ConnectModal';
 import UserType from '../../types/UserType';
-import validateURL from '../../api/validateURL';
+import validateConnection from '../../api/validateConnection';
 import { updateRoom } from '../../redux/actions/roomActions';
+import validateLobbyId from '../../utils/validation/validateLobbyId';
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
-
-  const [isModalActive, setActive] = useState(false);
-  const [currentUserType, setUserType] = useState((): UserType => 'user');
+  const [isPending, setPendingStatus] = useState<boolean>(false);
+  const [isModalActive, setActive] = useState<boolean>(false);
+  const [currentUserType, setUserType] = useState<UserType>('user');
 
   const onCreateBtnClick = () => {
     setUserType('admin');
@@ -29,16 +30,35 @@ const Main: React.FC = () => {
 
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const url = formData.get('url') as string;
+    const id = formData.get('id') as string;
 
-    const res = await validateURL(url);
-    if (res) {
+    setPendingStatus(true);
+    const validateConnectionMessage = await validateConnection(id);
+    setPendingStatus(false);
+
+    if (!validateConnectionMessage) {
       setActive(true);
-      dispatch(updateRoom({ id: res, name: undefined, admin: undefined }));
+      dispatch(
+        updateRoom({
+          id,
+          name: undefined,
+          admin: undefined,
+        }),
+      );
+    } else {
+      const textInput = form.elements[0] as HTMLInputElement;
+      textInput.setCustomValidity(validateConnectionMessage);
+      textInput.reportValidity();
     }
+  };
+
+  const onChangeIdField = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    const validationMessage = validateLobbyId(input.value);
+    input.setCustomValidity(validationMessage);
+    input.reportValidity();
   };
 
   return (
@@ -55,15 +75,21 @@ const Main: React.FC = () => {
             <TextInput
               bordered
               color='light'
-              placeholder='Enter lobby url here...'
-              name='url'
+              placeholder='Enter lobby ID here...'
+              name='id'
               className='main__url-input'
-              required
+              onChange={onChangeIdField}
             />
             <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
               Create
             </Button>
-            <Button color='success' className='main__btn main__btn--join' onClick={onJoinBtnClick} submit>
+            <Button
+              color='success'
+              className='main__btn main__btn--join'
+              onClick={onJoinBtnClick}
+              submit
+              disabled={isPending}
+            >
               Join
             </Button>
           </form>
