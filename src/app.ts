@@ -22,15 +22,23 @@ app.use(cors());
 storage.init();
 
 app.get('/auth/:id', async (req, res) => {
-  const { id } = req.params;
-  const result = await storage.getItem(id);
-  res.json(result.id);
+  try {
+    const { id } = req.params;
+    const result = await storage.getItem(id);
+    res.json(result.id);
+  } catch (err) {
+    res.status(404).send('No room matches this ID');
+  }
 });
 
 app.get('/rooms/:id', async (req, res) => {
-  const { id } = req.params;
-  const result = await storage.getItem(id);
-  res.json(result);
+  try {
+    const { id } = req.params;
+    const result = await storage.getItem(id);
+    res.json(result);
+  } catch (err) {
+    res.status(404).send('No room matches this ID');
+  }
 });
 
 io.on('connection', (socket: Socket) => {
