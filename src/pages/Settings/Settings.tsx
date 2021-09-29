@@ -91,7 +91,7 @@ const Settings: React.FC = () => {
   const linkToLobby = `${BASE_URL}${roomId}`;
 
   const onUserModalConfirm = () => {
-    if (deletingUser) {
+    if (deletingUser !== null) {
       dispatch(removeUser(deletingUser.id));
       setUserModalActive(false);
     }
@@ -130,7 +130,7 @@ const Settings: React.FC = () => {
     setCreateIssueActive(!isCreateIssueActive);
   };
   const onCreateIssueSubmit = (name: string, priority: PriorityLevel) => {
-    const id = issues.length;
+    const id = issues.length > 0 ? issues[issues.length - 1].id + 1 : 1;
     dispatch(addIssue({ id, name, priority }));
     setCreateIssueActive(false);
   };
@@ -141,7 +141,8 @@ const Settings: React.FC = () => {
   const onCardBackClick = (element: SpCardBackType) => setCardBack(element);
 
   const deleteCardAction = (index: number) => {
-    const newCardValues = [...cardValues].splice(index, 1);
+    const newCardValues = [...cardValues];
+    newCardValues.splice(index, 1);
     setCardValues(newCardValues);
   };
   const editCardAction = (index: number) => {
@@ -153,9 +154,9 @@ const Settings: React.FC = () => {
     const formData = new FormData(event.currentTarget);
     const value = formData.get('score') as string;
     const newCardValues = [...cardValues];
-    if (formData.get('isUnknown') && cardEditIndex) {
+    if (formData.get('isUnknown') && cardEditIndex !== null) {
       newCardValues[cardEditIndex] = '';
-    } else if (value && cardEditIndex) {
+    } else if (value && cardEditIndex !== null) {
       newCardValues[cardEditIndex] = value;
     }
     setCardValues(newCardValues);
