@@ -17,7 +17,7 @@ const Avatar: React.FC<AvatarProps> = ({ imgName, size, className, id }) => {
   return (
     <div className={classes} id={id}>
       {imgName ? (
-        <img src={`./${imgName}`} alt={imgName} className='avatar__img' />
+        <img src={imgName} alt='User avatar' className='avatar__img' />
       ) : (
         <IoPerson className='avatar__icon' />
       )}

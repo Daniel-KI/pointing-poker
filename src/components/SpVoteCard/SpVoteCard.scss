@@ -1,0 +1,50 @@
+.sp-vote-card {
+  margin: 1rem;
+  $self: &;
+  position: relative;
+  width: 8rem;
+  height: 12rem;
+  perspective: 50rem;
+
+  &__container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: all;
+  }
+
+  &__back {
+    transform: rotateY(180deg);
+    position: absolute;
+    backface-visibility: hidden;
+    transition: 1s ease;
+  }
+
+  &__front {
+    transform: rotateY(0deg);
+    position: absolute;
+    backface-visibility: hidden;
+    transition: 1s ease;
+  }
+
+  &--flipped {
+    & #{ $self }__front {
+      transform: rotateY(-180deg) !important;
+    }
+    & #{ $self }__back {
+      transform: rotateY(0deg) !important;
+    }
+  }
+
+  &--small {
+    width: 7rem;
+    height: 10.5rem;
+    perspective: 40rem;
+  }
+
+  &--large {
+    width: 9rem;
+    height: 13.5rem;
+    perspective: 60rem;
+  }
+}
