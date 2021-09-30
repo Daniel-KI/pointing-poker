@@ -69,13 +69,13 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
       <Header isAuthorized />
       <div className='game__wrapper'>
         <h2 className='game__title'>
-          <div className='game__title_content'>{lobbyTitle}</div>
-          {isMaster ? <DataControlPanel editAction={editAction} /> : null}
+          <div className='game__title-content'>{lobbyTitle}</div>
+          {/* TODO: {isMaster ? <DataControlPanel editAction={editAction} /> : null} */}
         </h2>
-        <div className='game__scram-master'>
-          <div className='game__scram-master_card-field-wrapper'>
-            <div className='game__scram-master_card-field'>
-              <div className='game__scram-master_card-master'>
+        <div className='scram-master'>
+          <div className='scram-master__card-field-wrapper'>
+            <div className='scram-master__card-field'>
+              <div className='scram-master__card-master'>
                 <div>Scram master:</div>
                 <UserCard
                   name={master?.name}
@@ -83,15 +83,15 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
                   jobPosition={master?.jobPosition}
                   avatar={master?.avatar}
                   color={isMaster ? 'primary' : undefined}
-                  className='game__scram-master_card'
+                  className='scram-master__card'
                 />
               </div>
-              <div className='game__scram-master_card-master-btn'>
-                <Button color='danger' size='large' className='game__scram-master_exit-btn'>
+              <div className='scram-master__card-master-btn'>
+                <Button color='danger' size='large' className='scram-master__exit-btn'>
                   {isMaster ? 'Stop game' : 'Exit'}
                 </Button>
               </div>
-              <div className='game__scram-master_timer'>
+              <div className='scram-master__timer'>
                 <Timer
                   id='timer'
                   minutes={minutes}
@@ -125,31 +125,31 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
               ) : null}
             </div>
             <div className='game__issues'>
-              <h3 className='game__issues_title'>Issues</h3>
-              <div className='game__issues_issues-field'>
+              <h3 className='game__issues-title'>Issues</h3>
+              <div className='game__issues-field'>
                 {issues?.map((element: IssueCardProps, index: number) => (
                   <IssueCard
                     key={index.toString()}
                     name={element.name}
                     priority={element.priority}
                     deleteAction={isMaster ? element.deleteAction : undefined}
-                    className='game__issues_issue'
+                    className='game__issue'
                     color={element.color}
                   />
                 ))}
                 {isMaster ? (
-                  <IssueCreationCard label='Create issue' addAction={addAction} className='game__issues_create-issue' />
+                  <IssueCreationCard label='Create issue' addAction={addAction} className='game__create-issue' />
                 ) : null}
               </div>
             </div>
             <div className='game__vote'>
-              <h3 className='game__vote_title'>Vote</h3>
-              <div className='game__vote_vote-field'>
+              <h3 className='game__vote-title'>Vote</h3>
+              <div className='game__vote-field'>
                 {voteCards?.map((element: SpVoteCardProps, index: number) => (
                   <div>
                     <SpVoteCard
                       key={index.toString()}
-                      className='game__vote_cards-front-item'
+                      className='game__vote-front'
                       score={element.score}
                       units={element.units}
                       onClick={onClick}
@@ -161,8 +161,8 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
             </div>
             {isTimeOut ? (
               <div className='game__statistics'>
-                <h3 className='game__statistics_title'>Statistics</h3>
-                <div className='game__statistics_statistic-field'>
+                <h3 className='game__statistics-title'>Statistics</h3>
+                <div className='game__statistics-field'>
                   {statisticsCards?.map((element: StatisticsCardsProps, index: number) => (
                     <div>
                       <SpCardFront
@@ -173,29 +173,29 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
                         onClick={onClick}
                         size='small'
                       />
-                      <div className='game__statistics_percent'>{element.percent}</div>
+                      <div className='game__statistics-percent'>{element.percent}</div>
                     </div>
                   ))}
                 </div>
               </div>
             ) : null}
           </div>
-          <div className='game__scram-master_score-wrapper'>
-            <h3 className='game__scram-master_score-title'>Score table</h3>
+          <div className='game__score-wrapper'>
+            <h3 className='game__score-title'>Score table</h3>
             <table>
               <thead>
                 <tr>
-                  <th className='game__scram-master_score'>Score</th>
+                  <th className='game__score'>Score</th>
                   <th>Player</th>
                 </tr>
               </thead>
               <tbody>
                 {gameScore?.map((element: GameScoreProps, index: number) => (
-                  <tr className='game__members_tr'>
-                    <td data-label='Score' className='game__members_table-score'>
+                  <tr className='game__score-tr'>
+                    <td data-label='Score' className='game__table-score'>
                       {isTimeOut ? element.score : 'In progress'}
                     </td>
-                    <td data-label='Player' className='game__members_table-card'>
+                    <td data-label='Player' className='game__table-card'>
                       <UserCard
                         key={index.toString()}
                         name={element.player.name}
@@ -203,7 +203,7 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
                         jobPosition={element.player.jobPosition}
                         avatar={element.player.avatar}
                         deleteAction={deleteAction}
-                        className='game__members_card'
+                        className='game__user-card'
                       />
                     </td>
                   </tr>
