@@ -9,87 +9,76 @@
   @extend .page;
 
   &__wrapper {
-    padding: 0 10%;
+    height: 100%;
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__container {
+    @extend .container;
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    -ms-line-clamp: 2;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    display: -webkit-box;
-    display: box;
-    word-wrap: break-word;
-    -webkit-box-orient: vertical;
-    box-orient: vertical;
+    display: block;
+    width: 100%;
     text-align: center;
-    margin-bottom: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 2rem 0 3rem;
   }
 
-  &__scram-master {
+  &__empty-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
+  }
+
+  &__section-title {
+    font-size: $text-lg;
+    font-weight: 500;
+    line-height: $line-height-md;
+    color: $text-dark;
+  }
+
+  &__main-members {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    @media (max-width: $screen-md) {
+      flex-direction: column;
+    }
+  }
+
+  &__scram-master,
+  &__current-user {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 50px;
-    margin-bottom: 100px;
-
-    @media (max-width: $screen-md) {
-      gap: 20px;
-    }
-
-    &_card-field-wrapper {
-      display: flex;
-      flex-direction: row;
-      gap: 130px;
-
-      @media (max-width: $screen-md) {
-        gap: 50px;
-      }
-
-      @media (max-width: $screen-sm) {
-        flex-direction: column;
-        gap: 40px;
-      }
-    }
-
-    &_card-field &_card {
-      margin: 10px 0;
-    }
-
-    &_button-field {
-      display: flex;
-      gap: 50px;
-
-      @media (max-width: $screen-sm) {
-        flex-direction: column;
-        gap: 20px;
-      }
-    }
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
 
   &__members {
-    margin-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
 
-    &_title {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    &_members-field {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
-    }
-
-    &_members-field &_card {
-      margin: 0;
-    }
+  &__members_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
   }
 }
