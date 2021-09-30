@@ -1,19 +1,44 @@
 @import '../../ui/colors.scss';
 
 .chat {
+  max-height: calc(100vh - 80px - 80px);
+  min-height: 270px;
   padding: 20px;
-  background-color: $light-bg;
+  background-color: #f3f2f8;
   border-radius: 10px;
-  min-width: 310px;
+  min-width: 220px;
   max-width: 600px;
-  width: 50%;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
   border: 2px solid #ffffff;
+  overflow: hidden;
+
+  &__items {
+    padding: 10px 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    gap: 20px;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
 
   &__item {
+    width: 90%;
     display: flex;
     flex-direction: row;
     gap: 10px;
