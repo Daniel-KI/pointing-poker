@@ -1,12 +1,15 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { IMessage, IState } from '../../redux/models';
 import ChatMessage from '../ChatMessage/ChatMessage';
-import { MessageProps } from '../ChatMessage/models';
 import TextInput from '../TextInput/TextInput';
 import './Chat.scss';
 import { ChatProps } from './models';
 
-const Chat: React.FC<ChatProps> = ({ chatMessage, className }) => {
+const Chat: React.FC<ChatProps> = ({ className }) => {
+  const messages = useSelector((state: IState) => state.messages);
+
   const [isCurrentUser, setIsCurrentUser] = useState(true);
   const [isLastUserMessage, setIsLastUserMessage] = useState(false);
   const [isFirstMessage, setIsFirstMessage] = useState(true);
@@ -23,16 +26,16 @@ const Chat: React.FC<ChatProps> = ({ chatMessage, className }) => {
   };
   return (
     <div className={classes}>
-      {chatMessage.map((element: MessageProps, index, arr) => {
+      {messages.map((element: IMessage, index, arr) => {
         // setIsLastUserMessage(element.userId === arr[index + 1].userId);
         // setIsFirstMessage(element.userId === arr[index - 1].userId);
 
         return (
           <div className='chat__item'>
             <ChatMessage
-              name={element.name}
-              userId={element.userId}
+              name={`${element.user.firstName} ${element.user.lastName}`}
               text={element.text}
+              imgName={element.user.avatar}
               className='chat__message'
               isCurrentUser={isCurrentUser}
               isLastUserMessage={isLastUserMessage}
