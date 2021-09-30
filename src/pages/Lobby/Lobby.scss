@@ -45,7 +45,7 @@
     color: $text-dark;
   }
 
-  .lobby__main-members {
+  &__main-members {
     display: flex;
     justify-content: space-around;
     align-items: center;
