@@ -3,11 +3,18 @@ import Avatar from '../Avatar/Avatar';
 import './ChatMessage.scss';
 import { MessageProps } from './models';
 
-const ChatMessage: React.FC<MessageProps> = ({ name, text, isCurrentUser, isLastUserMessage, isFirstMessage }) => {
+const ChatMessage: React.FC<MessageProps> = ({
+  name,
+  text,
+  imgName,
+  isCurrentUser,
+  isLastUserMessage,
+  isFirstMessage,
+}) => {
   return (
     <div className={!isCurrentUser ? 'chat-message members' : 'chat-message current-user'}>
       {!isCurrentUser && isLastUserMessage ? (
-        <Avatar className='chat-message__avatar' />
+        <Avatar className='chat-message__avatar' imgName={imgName} />
       ) : (
         <div className='chat-message__avatar_empty-box' />
       )}
