@@ -11,7 +11,7 @@
   max-width: 18rem;
 
   padding: 1rem;
-  margin: 1.5rem 1.5rem;
+  margin: 1rem;
 
   display: flex;
   justify-content: flex-start;
@@ -41,7 +41,7 @@
   &__surname {
     font-size: $text-md;
     font-weight: 700;
-    line-height: $line-height-sm;
+    line-height: $line-height-md;
 
     white-space: nowrap;
     overflow: hidden;
@@ -51,7 +51,7 @@
   &__position {
     font-size: $text-sm;
     font-weight: 400;
-    line-height: $line-height-sm;
+    line-height: $line-height-md;
 
     white-space: nowrap;
     overflow: hidden;

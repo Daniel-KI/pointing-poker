@@ -1,10 +1,13 @@
 import React, { ReactElement } from 'react';
 
 import './App.scss';
-import Main from './Main/Main';
 
 function App(): ReactElement {
-  return <Main />;
+  return (
+    <div className='App'>
+      <h1>Pointing poker</h1>
+    </div>
+  );
 }
 
 export default App;
