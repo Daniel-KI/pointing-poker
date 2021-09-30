@@ -28,37 +28,51 @@ const Main: React.FC = () => {
     setUserType('user');
   };
 
+  const validateIdInput = (input: HTMLInputElement) => {
+    const validationMessage = validateLobbyId(input.value);
+    input.setCustomValidity(validationMessage);
+  };
+
+  const onIdFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    validateIdInput(input);
+    input.reportValidity();
+  };
+
   const onFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
     const id = formData.get('id') as string;
+    const textInput = form.elements[0] as HTMLInputElement;
+
+    const validateMessage = validateLobbyId(textInput.value);
+    if (validateMessage) {
+      textInput.setCustomValidity(validateMessage);
+      textInput.reportValidity();
+      return;
+    }
 
     setPendingStatus(true);
     const validateConnectionMessage = await validateConnection(id);
     setPendingStatus(false);
 
-    if (!validateConnectionMessage) {
-      setActive(true);
-      dispatch(
-        updateRoom({
-          id,
-          name: undefined,
-          admin: undefined,
-        }),
-      );
-    } else {
-      const textInput = form.elements[0] as HTMLInputElement;
-      textInput.setCustomValidity(validateConnectionMessage);
-      textInput.reportValidity();
+    if (validateConnectionMessage && validateConnectionMessage !== '') {
+      if (textInput) {
+        textInput.setCustomValidity(validateConnectionMessage);
+        textInput.reportValidity();
+      }
+      return;
     }
-  };
 
-  const onChangeIdField = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.currentTarget;
-    const validationMessage = validateLobbyId(input.value);
-    input.setCustomValidity(validationMessage);
-    input.reportValidity();
+    setActive(true);
+    dispatch(
+      updateRoom({
+        id,
+        name: undefined,
+        admin: undefined,
+      }),
+    );
   };
 
   return (
@@ -78,7 +92,7 @@ const Main: React.FC = () => {
               placeholder='Enter lobby ID here...'
               name='id'
               className='main__url-input'
-              onChange={onChangeIdField}
+              onChange={onIdFieldChange}
             />
             <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
               Create
