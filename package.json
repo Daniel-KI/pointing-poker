@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node dist/app.js",
-    "watch": "nodemon"
+    "watch": "nodemon",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -14,10 +15,12 @@
     "node": "16.x"
   },
   "dependencies": {
+    "@types/node-persist": "^3.1.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
+    "node-persist": "^3.1.0",
     "socket.io": "^4.2.0",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
