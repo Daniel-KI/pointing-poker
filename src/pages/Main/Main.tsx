@@ -91,7 +91,7 @@ const Main: React.FC = () => {
               color='light'
               placeholder='Enter lobby ID here...'
               name='id'
-              className='main__url-input'
+              className='main__id-input'
               onChange={onIdFieldChange}
             />
             <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
