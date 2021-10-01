@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './Game.scss';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
-import { GameProps, GameScoreProps, StatisticsCardsProps } from './models';
+import { GameProps, GameScoreProps, StatisticsCardsProps, VoteStatistics } from './models';
 import UserCard from '../../components/UserCard/UserCard';
 import Button from '../../components/Button/Button';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
@@ -42,6 +42,7 @@ const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) =>
   const [seconds, setSeconds] = useState<number>(0);
   const [isCreateIssueActive, setCreateIssueActive] = useState(false);
   const [isCurrentIssue, setIsCurrentIssue] = useState(false);
+  const [statistics, setStatistics] = useState<Array<VoteStatistics>>([]);
 
   const exitBtnOnClick = () => {
     setExitModalActiveStatus(true);
@@ -67,9 +68,6 @@ const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) =>
   };
   const deleteAction = () => {
     setConfirm(!isConfirm);
-  };
-  const onClick = (event: any) => {
-    console.log('click');
   };
 
   const runRound = () => {
@@ -171,18 +169,24 @@ const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) =>
             <div className='game__vote'>
               <h3 className='game__vote-title'>Vote</h3>
               <div className='game__vote-field'>
-                {voteCards?.map((element: SpVoteCardProps, index: number) => (
-                  <div>
-                    <SpVoteCard
-                      key={index.toString()}
-                      className='game__vote-front'
-                      score={element.score}
-                      units={element.units}
-                      onClick={onClick}
-                      size='large'
-                    />
-                  </div>
-                ))}
+                {voteCards?.map((element: SpVoteCardProps, index: number) => {
+                  const voteStats = [...statistics, { score: element.score, user: currentUser }];
+
+                  return (
+                    <div>
+                      <SpVoteCard
+                        key={index.toString()}
+                        className='game__vote-front'
+                        score={element.score}
+                        units={element.units}
+                        onClick={() => {
+                          setStatistics(voteStats);
+                        }}
+                        size='large'
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
             {isTimeOut ? (
@@ -196,7 +200,9 @@ const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) =>
                         className='game__statistics_cards-front-item'
                         score={element.score}
                         units={element.units}
-                        onClick={onClick}
+                        onClick={() => {
+                          console.log('statistic card');
+                        }}
                         size='small'
                       />
                       <div className='game__statistics-percent'>{element.percent}</div>

@@ -1,3 +1,4 @@
+import { IUser } from './../../redux/models';
 import { SpVoteCardProps } from '../../components/SpVoteCard/models';
 import { IssueCardProps } from '../../components/IssueCard/models';
 import { SpCardFrontProps } from '../../components/SpCardFront/models';
@@ -5,7 +6,6 @@ import { UserCardProps } from '../../components/UserCard/models';
 
 export interface GameProps {
   lobbyTitle: string;
-  isMaster: boolean;
   master?: UserCardProps;
   members?: UserCardProps[];
   issues?: IssueCardProps[];
@@ -22,4 +22,9 @@ export interface GameScoreProps {
 
 export interface StatisticsCardsProps extends SpCardFrontProps {
   percent?: string;
+}
+
+export interface VoteStatistics {
+  score?: string;
+  user?: IUser;
 }
