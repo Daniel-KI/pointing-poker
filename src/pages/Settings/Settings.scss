@@ -41,6 +41,7 @@
   }
 
   &__section-title {
+    cursor: pointer;
     font-size: $text-lg;
     font-weight: 500;
     line-height: $line-height-md;

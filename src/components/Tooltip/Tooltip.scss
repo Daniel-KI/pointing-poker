@@ -17,27 +17,28 @@
     cursor: none;
     pointer-events: none;
     opacity: 1;
-    transition: 0.5s ease-in-out;
+    transition: transform .5s, opacity .5s ease-in-out;
     z-index: 10;
   }
 
   &__message {
     font-family: inherit;
-    font-size: $text-sm;
+    font-size: $text-md;
     line-height: $line-height-md;
     display: block;
     width: auto;
     min-height: 2rem;
     min-width: 3rem;
-    padding: 0.5rem;
+    padding: 1rem;
     border-radius: 0.4rem;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #ffffff;
     color: $text-dark;
-    box-shadow: $basic-shadow;
-    transition: 0.5s ease-in-out;
+    box-shadow: $tooltip-shadow;
+    text-align: center;
+    transition: transform .5s, opacity .5s ease-in-out;
   }
 
   &__triangle {
@@ -47,16 +48,17 @@
     background-color: #ffffff;
     position: absolute;
     bottom: -0.5rem;
-    left: 1rem;
+    left: calc(50% - 0.5rem);
     clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
     transform: rotate(-45deg);
     border-radius: 0 0 0 0.2em;
+    transition: transform .5s, opacity .5s ease-in-out;
   }
 
   &--hidden {
     & #{ $self }__content {
       opacity: 0;
-      transition: 0s;
+      transition: transform .3s, opacity .3s ease-in-out;
     }
   }
 
@@ -107,16 +109,6 @@
     }
     & #{ $self }__triangle {
       background-color: $dark;
-    }
-  }
-
-  &--light {
-    & #{ $self }__message {
-      background-color: $light;
-      color: $text-dark;
-    }
-    & #{ $self }__triangle {
-      background-color: $light;
     }
   }
 }

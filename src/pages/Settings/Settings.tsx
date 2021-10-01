@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './Settings.scss';
 
@@ -25,6 +25,7 @@ import { addIssue, removeIssue, updateIssue } from '../../redux/actions/issuesAc
 import PriorityLevel from '../../types/PriorityLevel';
 import { removeUser } from '../../redux/actions/usersActions';
 import FileInput from '../../components/FileInput/FileInput';
+import Tooltip from '../../components/Tooltip/Tooltip';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -66,6 +67,35 @@ const Settings: React.FC = () => {
   const [isActiveStartConfirmModal, setActiveStatusStartConfirmModal] = useState(false);
   const [isActiveStopConfirmModal, setActiveStatusStopConfirmModal] = useState(false);
 
+  const [isVisibleIssuesTooltip, setVisibilityIssuesTooltip] = useState(false);
+  const [isVisibleIVoteCardsTooltip, setVisibilityIVoteCardsTooltip] = useState(false);
+  const [isVisibleSettingsTooltip, setVisibilitySettingsTooltip] = useState(false);
+  const [isVisibleMembersTooltip, setVisibilityMembersTooltip] = useState(false);
+  const [isVisibleCardBacksTooltip, setVisibilityCardBacksTooltip] = useState(false);
+
+  const [isValidIssues, setIssuesValidStatus] = useState(true);
+  const [isValidSettings, setSettingsValidStatus] = useState(true);
+  const [isValidVoteCards, setVoteCardsValidStatus] = useState(true);
+
+  useEffect(() => {
+    if (voteCardValues.length >= 2) {
+      console.log(voteCardValues);
+      setVoteCardsValidStatus(true);
+    }
+  }, [voteCardValues]);
+
+  useEffect(() => {
+    if (issues.length >= 1) {
+      setIssuesValidStatus(true);
+    }
+  }, [issues]);
+
+  useEffect(() => {
+    if (scoreType) {
+      setSettingsValidStatus(true);
+    }
+  }, [scoreType]);
+
   const getSettingsData = (): ISettings => ({
     isAdminObserver: !masterAsPlayer,
     timer: isTimer ? { minutes: timerMinutes, seconds: timerSeconds } : null,
@@ -85,10 +115,38 @@ const Settings: React.FC = () => {
   };
   const onStartModalConfirm = () => {
     const settingsData = getSettingsData();
-    localStorage.setItem('settings', JSON.stringify(settingsData));
-    dispatch(updateSettings(settingsData));
+
+    const isValidIssuesCheck = issues.length >= 1;
+    const isValidSettingsCheck = settingsData.scoreType || false;
+    const isValidVoteCardsCheck = settingsData.cardValues.length >= 2;
+    if (isValidIssuesCheck && isValidSettingsCheck && isValidVoteCardsCheck) {
+      localStorage.setItem('settings', JSON.stringify(settingsData));
+      dispatch(updateSettings(settingsData));
+      setActiveStatusStartConfirmModal(false);
+      setIssuesValidStatus(true);
+      setSettingsValidStatus(true);
+      setVoteCardsValidStatus(true);
+      // start game here
+    } else {
+      let element: HTMLElement | null = null;
+      if (!isValidIssuesCheck) {
+        setIssuesValidStatus(false);
+        element = document.getElementById('lobby__issues');
+      } else if (!isValidSettingsCheck) {
+        setSettingsValidStatus(false);
+        element = document.getElementById('lobby__settings');
+      } else if (!isValidVoteCardsCheck) {
+        setVoteCardsValidStatus(false);
+        element = document.getElementById('lobby__card-fronts');
+      }
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }
+    }
     setActiveStatusStartConfirmModal(false);
-    // start game here
   };
   const onStartModalDecline = () => {
     setActiveStatusStartConfirmModal(false);
@@ -272,8 +330,14 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          <div className='lobby__members'>
-            <h3 className='lobby__section-title'>Members</h3>
+          <div className='lobby__members' id='lobby__members'>
+            <Tooltip
+              message='All participants are displayed in this list'
+              visibility={isVisibleMembersTooltip}
+              setVisibilityStatus={setVisibilityMembersTooltip}
+            >
+              <h3 className='lobby__section-title'>Members list</h3>
+            </Tooltip>
             <div className='lobby__members-container'>
               {users && users.length ? (
                 users.map((element, index: number) => (
@@ -293,8 +357,15 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          <div className='lobby__issues'>
-            <h3 className='lobby__section-title'>Issues</h3>
+          <div className='lobby__issues' id='lobby__issues'>
+            <Tooltip
+              message={`You can't start the game without issues`}
+              visibility={!isValidIssues || isVisibleIssuesTooltip}
+              setVisibilityStatus={setVisibilityIssuesTooltip}
+              color={!isValidIssues ? 'danger' : 'light'}
+            >
+              <h3 className='lobby__section-title'>Project issues list</h3>
+            </Tooltip>
             <div className='lobby__issues-file'>
               <p className='lobby__empty-text'>Click here to load json file with issues data</p>
               <div className='lobby__send-file-card'>
@@ -326,8 +397,15 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          <div className='lobby__settings'>
-            <h3 className='lobby__section-title'>Game settings</h3>
+          <div className='lobby__settings' id='lobby__settings'>
+            <Tooltip
+              message='All fields must be filled'
+              visibility={!isValidSettings || isVisibleSettingsTooltip}
+              setVisibilityStatus={setVisibilitySettingsTooltip}
+              color={!isValidSettings ? 'danger' : 'light'}
+            >
+              <h3 className='lobby__section-title'>Game settings</h3>
+            </Tooltip>
             <form className='lobby__settings_form'>
               <Toggle checked={masterAsPlayer} inputId='scramMasterToggle' onChange={setMasterAsPlayer}>
                 Scram master as player
@@ -365,8 +443,14 @@ const Settings: React.FC = () => {
               ) : null}
             </form>
 
-            <div className='lobby__card-backs'>
-              <h3 className='lobby__section-title'>Set card back:</h3>
+            <div className='lobby__card-backs' id='lobby__card-backs'>
+              <Tooltip
+                message='Choose the most beautiful card design for you'
+                visibility={isVisibleCardBacksTooltip}
+                setVisibilityStatus={setVisibilityCardBacksTooltip}
+              >
+                <h3 className='lobby__section-title'>Vote card backs:</h3>
+              </Tooltip>
               <div className='lobby__card-backs-container'>
                 {cardBacks?.map((element, index) => (
                   <SpCardBack
@@ -380,8 +464,15 @@ const Settings: React.FC = () => {
               </div>
             </div>
 
-            <div className='lobby__card-fronts'>
-              <h3 className='lobby__section-title'>Add card values:</h3>
+            <div className='lobby__card-fronts' id='lobby__card-fronts'>
+              <Tooltip
+                message='You cannot start the game without at least two card values'
+                visibility={!isValidVoteCards || isVisibleIVoteCardsTooltip}
+                setVisibilityStatus={setVisibilityIVoteCardsTooltip}
+                color={!isValidVoteCards ? 'danger' : 'light'}
+              >
+                <h3 className='lobby__section-title'>Vote card values:</h3>
+              </Tooltip>
               <div className='lobby__card-fronts-container'>
                 {voteCardValues?.map((element, index) => (
                   <SpOptionCard

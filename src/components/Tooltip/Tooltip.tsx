@@ -35,21 +35,15 @@ import { TooltipProps } from './models';
 //   <p>Tooltip</p>
 // </Tooltip>
 
-const Tooltip: React.FC<TooltipProps> = ({ children, message, visible, color, className, id }) => {
-  const [visibility, setVisibility] = useState<boolean>(false);
-  const [tooltipMessage, setTooltipMessage] = useState<string>(message);
-
-  useEffect(() => {
-    if (visible && message) {
-      setTooltipMessage(message);
-      setVisibility(true);
-    }
-    if (!message) {
-      setVisibility(false);
-      setTooltipMessage('');
-    }
-  }, [message, visible]);
-
+const Tooltip: React.FC<TooltipProps> = ({
+  children,
+  message,
+  visibility,
+  setVisibilityStatus,
+  color,
+  className,
+  id,
+}) => {
   const classes = classNames(
     {
       tooltip: true,
@@ -60,27 +54,27 @@ const Tooltip: React.FC<TooltipProps> = ({ children, message, visible, color, cl
   );
 
   const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
-    if (event.currentTarget.contains(event.target) && tooltipMessage) {
-      setVisibility(true);
+    if (event.currentTarget.contains(event.target) && message) {
+      setVisibilityStatus(true);
     }
   };
 
   const handleBlur = () => {
-    setVisibility(false);
+    setVisibilityStatus(false);
   };
 
   const onMouseEnter = () => {
-    if (tooltipMessage) setVisibility(true);
+    if (message) setVisibilityStatus(true);
   };
 
   const onMouseLeave = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!event.currentTarget.contains(document.activeElement)) setVisibility(false);
+    if (!event.currentTarget.contains(document.activeElement)) setVisibilityStatus(false);
   };
 
   return (
     <div id={id} className={classes}>
       <div className='tooltip__content'>
-        <p className='tooltip__message'>{tooltipMessage}</p>
+        <p className='tooltip__message'>{message}</p>
         <div className='tooltip__triangle' />
       </div>
       <div
@@ -97,7 +91,6 @@ const Tooltip: React.FC<TooltipProps> = ({ children, message, visible, color, cl
 };
 
 Tooltip.defaultProps = {
-  visible: false,
   color: undefined,
   className: undefined,
   id: undefined,
