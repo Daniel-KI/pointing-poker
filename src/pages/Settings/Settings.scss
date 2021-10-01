@@ -30,6 +30,13 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     margin: 2rem 0 3rem;
+    color: $text-dark;
+  }
+
+  &__empty-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
   }
 
   &__section-title {
@@ -46,6 +53,7 @@
     align-items: center;
     gap: 2rem;
     margin-bottom: 4rem;
+    color: $text-dark;
   }
 
   &__room-info {

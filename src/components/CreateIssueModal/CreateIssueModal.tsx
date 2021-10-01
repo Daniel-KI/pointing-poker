@@ -23,6 +23,7 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
 
   const cancelBtnOnClick = () => {
     setActive(false);
+    setPriority(undefined);
   };
 
   const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,6 +32,7 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
     const name = formData.get('name') as string;
     if (priority && name) {
       onSubmit(name, priority as PriorityLevel);
+      setPriority(undefined);
     }
   };
 

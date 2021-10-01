@@ -62,6 +62,9 @@ const Settings: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [selectedVoteCard, setSelectedVoteCard] = useState<number | null>(null);
 
+  const [isActiveStartConfirmModal, setActiveStatusStartConfirmModal] = useState(false);
+  const [isActiveStopConfirmModal, setActiveStatusStopConfirmModal] = useState(false);
+
   const getSettingsData = (): ISettings => ({
     isAdminObserver: !masterAsPlayer,
     timer: isTimer ? { minutes: timerMinutes, seconds: timerSeconds } : null,
@@ -77,9 +80,28 @@ const Settings: React.FC = () => {
   };
 
   const onStartGameClick = () => {
+    setActiveStatusStartConfirmModal(true);
+  };
+  const onStartModalConfirm = () => {
     const settingsData = getSettingsData();
     localStorage.setItem('settings', JSON.stringify(settingsData));
     dispatch(updateSettings(settingsData));
+    setActiveStatusStartConfirmModal(false);
+    // start game here
+  };
+  const onStartModalDecline = () => {
+    setActiveStatusStartConfirmModal(false);
+  };
+
+  const onStopGameClick = () => {
+    setActiveStatusStopConfirmModal(true);
+  };
+  const onStopModalConfirm = () => {
+    // stop game here
+    setActiveStatusStopConfirmModal(false);
+  };
+  const onStopModalDecline = () => {
+    setActiveStatusStopConfirmModal(false);
   };
 
   const onScoreTypeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,8 +174,8 @@ const Settings: React.FC = () => {
     if (selectedVoteCard !== null) {
       const newCardValues = [...voteCardValues];
       newCardValues.splice(selectedVoteCard, 1);
-      setSelectedVoteCard(null);
       setVoteCardValues(newCardValues);
+      setSelectedVoteCard(null);
     }
     setActiveStatusDeleteVoteCardModal(false);
   };
@@ -225,7 +247,7 @@ const Settings: React.FC = () => {
               <Button color='success' size='large' onClick={onStartGameClick}>
                 Start game
               </Button>
-              <Button color='danger' size='large'>
+              <Button color='danger' size='large' onClick={onStopGameClick}>
                 Cancel game
               </Button>
             </div>
@@ -234,17 +256,21 @@ const Settings: React.FC = () => {
           <div className='lobby__members'>
             <h3 className='lobby__section-title'>Members</h3>
             <div className='lobby__members-container'>
-              {users?.map((element, index: number) => (
-                <UserCard
-                  key={index.toString()}
-                  name={element.firstName}
-                  surname={element.lastName}
-                  jobPosition={element.position}
-                  avatar={element.avatar}
-                  deleteAction={() => deleteUserAction(element)}
-                  className='lobby__member_card'
-                />
-              ))}
+              {users && users.length ? (
+                users.map((element, index: number) => (
+                  <UserCard
+                    key={index.toString()}
+                    name={element.firstName}
+                    surname={element.lastName}
+                    jobPosition={element.position}
+                    avatar={element.avatar}
+                    deleteAction={() => deleteUserAction(element)}
+                    className='lobby__member_card'
+                  />
+                ))
+              ) : (
+                <p className='lobby__empty-text'>There is no members</p>
+              )}
             </div>
           </div>
 
@@ -345,6 +371,24 @@ const Settings: React.FC = () => {
       <Footer />
 
       <ConfirmModal
+        isActive={isActiveStartConfirmModal}
+        setActive={setActiveStatusStartConfirmModal}
+        onDecline={onStartModalDecline}
+        onConfirm={onStartModalConfirm}
+      >
+        Start game with current settings?
+      </ConfirmModal>
+
+      <ConfirmModal
+        isActive={isActiveStopConfirmModal}
+        setActive={setActiveStatusStopConfirmModal}
+        onDecline={onStopModalDecline}
+        onConfirm={onStopModalConfirm}
+      >
+        Stop this game ?
+      </ConfirmModal>
+
+      <ConfirmModal
         isActive={isActiveDeleteUserModal}
         setActive={setActiveStatusDeleteUserModal}
         onDecline={onUserDeleteModalDecline}
@@ -368,9 +412,11 @@ const Settings: React.FC = () => {
         onDecline={onVoteCardDeleteModalDecline}
         onConfirm={onVoteCardDeleteModalConfirm}
       >
-        {`Remove vote card with ${
-          selectedVoteCard && voteCardValues[selectedVoteCard] !== '' ? `"${voteCardValues[selectedVoteCard]}"` : ''
-        } score from lobby?`}
+        {`Remove vote card with "${
+          selectedVoteCard !== null && voteCardValues[selectedVoteCard] !== ''
+            ? voteCardValues[selectedVoteCard]
+            : 'unknown'
+        }" score from lobby?`}
       </ConfirmModal>
 
       <CreateIssueModal
@@ -395,7 +441,7 @@ const Settings: React.FC = () => {
         isActive={isActiveEditVoteCardModal}
         setActive={setActiveStatusEditVoteCardModal}
         onSubmit={onVoteCardEditModalConfirm}
-        score={selectedVoteCard !== null ? voteCardValues[selectedVoteCard] : ''}
+        score={selectedVoteCard !== null ? voteCardValues[selectedVoteCard] : voteCardValues[selectedVoteCard || 0]}
       />
     </div>
   );
