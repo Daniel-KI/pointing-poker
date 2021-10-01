@@ -242,6 +242,19 @@
   gap: 50px;
   margin-bottom: 100px;
 
+  &__section-title {
+    font-size: $text-lg;
+    font-weight: 500;
+    line-height: $line-height-md;
+    color: $text-dark;
+  }
+
+  &__empty-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
+  }
+
   @media (max-width: $screen-xl) {
     flex-direction: column;
     gap: 100px;
@@ -298,7 +311,7 @@
 
   &__card-master-btn {
     grid-area: card-master-btn;
-    padding-top: 30px;
+    padding-top: 34px;
 
     @media (max-width: $screen-sm) {
       padding-top: 0;

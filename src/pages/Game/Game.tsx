@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './Game.scss';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
@@ -16,32 +17,56 @@ import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
 import { SpVoteCardProps } from '../../components/SpVoteCard/models';
+import { IState } from '../../redux/models';
+import { addIssue, removeIssue } from '../../redux/actions/issuesActions';
+import PriorityLevel from '../../types/PriorityLevel';
+import UserType from '../../types/UserType';
 
-const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameScore, statisticsCards, voteCards }) => {
+const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) => {
+  const dispatch = useDispatch();
+
+  const gameTitle = useSelector((state: IState) => state.room.name);
+  const master = useSelector((state: IState) => state.room.admin);
+  const members = useSelector((state: IState) => state.users);
+  const currentUserData = useSelector((state: IState) => state.currentUser);
+  const currentUser = members.find(user => user.id === currentUserData.id);
+  const issues = useSelector((state: IState) => state.issues);
+  // const currentIssueData = useSelector((state: IState) => state.currentIssue);
+  // const currentIssue = issues.find(issue => issue.id === currentIssueData.id);
+
+  const [isActiveExitModal, setExitModalActiveStatus] = useState<boolean>(false);
   const [isConfirm, setConfirm] = useState(false);
-  const [isCreateIssue, setCreateIssue] = useState(false);
   const [isTimeOut, setTimeOut] = useState(false);
   const [isGameOn, setGameOn] = useState(true);
   const [minutes, setMinutes] = useState<number>(0);
-  const [seconds, setSeconds] = useState<number>(3);
+  const [seconds, setSeconds] = useState<number>(0);
+  const [isCreateIssueActive, setCreateIssueActive] = useState(false);
+  const [isCurrentIssue, setIsCurrentIssue] = useState(false);
 
+  const exitBtnOnClick = () => {
+    setExitModalActiveStatus(true);
+  };
+  const deleteIssueAction = (id: number) => {
+    dispatch(removeIssue(id));
+  };
+  const addIssueAction = () => {
+    setCreateIssueActive(!isCreateIssueActive);
+  };
+  const onCreateIssueSubmit = (name: string, priority: PriorityLevel) => {
+    const id = issues.length > 0 ? issues[issues.length - 1].id + 1 : 1;
+    dispatch(addIssue({ id, name, priority }));
+    setCreateIssueActive(false);
+  };
   const onConfirm = () => {
     setConfirm(false);
+    setExitModalActiveStatus(false);
   };
   const onDecline = () => {
     setConfirm(false);
+    setExitModalActiveStatus(false);
   };
   const deleteAction = () => {
     setConfirm(!isConfirm);
-  };
-  const editAction = () => {
-    console.log('edit');
-  };
-  const addAction = () => {
-    setCreateIssue(!isCreateIssue);
-  };
-  const onSubmit = () => {
-    setConfirm(false);
   };
   const onClick = (event: any) => {
     console.log('click');
@@ -69,26 +94,26 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
       <Header isAuthorized />
       <div className='game__wrapper'>
         <h2 className='game__title'>
-          <div className='game__title-content'>{lobbyTitle}</div>
-          {/* TODO: {isMaster ? <DataControlPanel editAction={editAction} /> : null} */}
+          <div className='game__title-content'>{gameTitle || 'Game'}</div>
+          {/* TODO: {master ? <DataControlPanel editAction={editAction} /> : null} */}
         </h2>
         <div className='scram-master'>
           <div className='scram-master__card-field-wrapper'>
             <div className='scram-master__card-field'>
               <div className='scram-master__card-master'>
-                <div>Scram master:</div>
+                <h3 className='scram-master__section-title'>Scram master:</h3>
                 <UserCard
-                  name={master?.name}
-                  surname={master?.surname}
-                  jobPosition={master?.jobPosition}
+                  name={master?.firstName}
+                  surname={master?.lastName}
+                  jobPosition={master?.position}
                   avatar={master?.avatar}
-                  color={isMaster ? 'primary' : undefined}
+                  color={master ? 'primary' : undefined}
                   className='scram-master__card'
                 />
               </div>
               <div className='scram-master__card-master-btn'>
-                <Button color='danger' size='large' className='scram-master__exit-btn'>
-                  {isMaster ? 'Stop game' : 'Exit'}
+                <Button color='danger' size='large' className='scram-master__exit-btn' onClick={exitBtnOnClick}>
+                  {master ? 'Stop game' : 'Exit'}
                 </Button>
               </div>
               <div className='scram-master__timer'>
@@ -102,11 +127,11 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
                   setGameOn={setGameOn}
                   setTimeOut={setTimeOut}
                   className='game__settings_timer'
-                  disabled={!isMaster}
+                  disabled={!master}
                 />
               </div>
-              {isMaster ? (
-                <div className='game__scram-master_timer-btn'>
+              {master ? (
+                <div className='scram-master__timer-btn'>
                   <Button color='dark' size='large' onClick={runRound}>
                     {!isGameOn && !isTimeOut
                       ? 'Run round'
@@ -127,18 +152,19 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
             <div className='game__issues'>
               <h3 className='game__issues-title'>Issues</h3>
               <div className='game__issues-field'>
-                {issues?.map((element: IssueCardProps, index: number) => (
+                {issues?.map((element, index: number) => (
                   <IssueCard
+                    id={element.id.toString()}
                     key={index.toString()}
                     name={element.name}
                     priority={element.priority}
-                    deleteAction={isMaster ? element.deleteAction : undefined}
+                    deleteAction={master ? () => deleteIssueAction(element.id) : undefined}
                     className='game__issue'
-                    color={element.color}
+                    color={isCurrentIssue ? 'primary' : undefined}
                   />
                 ))}
-                {isMaster ? (
-                  <IssueCreationCard label='Create issue' addAction={addAction} className='game__create-issue' />
+                {master ? (
+                  <IssueCreationCard label='Create issue' addAction={addIssueAction} className='game__create-issue' />
                 ) : null}
               </div>
             </div>
@@ -217,12 +243,12 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
 
       {isConfirm ? (
         <ConfirmModal isActive={isConfirm} setActive={setConfirm} onDecline={onDecline} onConfirm={onConfirm}>
-          {isMaster ? (
-            <div>Remove Daniil Korshov from lobby?</div>
+          {master ? (
+            <div>Remove Name Surname from lobby?</div>
           ) : (
             <div>
               <p>
-                <b>Daniil Korshov</b> want to remove <b>Ekaterina Kotliarenko</b>.
+                <b>Name Surname</b> want to remove <b>Name Surname</b>.
               </p>
               <br />
               <p>Do you agree with it?</p>
@@ -231,8 +257,18 @@ const Game: React.FC<GameProps> = ({ isMaster, lobbyTitle, master, issues, gameS
         </ConfirmModal>
       ) : null}
 
-      {isCreateIssue ? (
-        <CreateIssueModal isActive={isCreateIssue} setActive={setCreateIssue} onSubmit={onSubmit} />
+      {isActiveExitModal ? (
+        <ConfirmModal isActive={isActiveExitModal} setActive={setConfirm} onDecline={onDecline} onConfirm={onConfirm}>
+          {master ? <p>Are you sure you want to stop the game?</p> : <p>Are you sure you want to exit the game?</p>}
+        </ConfirmModal>
+      ) : null}
+
+      {isCreateIssueActive ? (
+        <CreateIssueModal
+          isActive={isCreateIssueActive}
+          setActive={setCreateIssueActive}
+          onSubmit={onCreateIssueSubmit}
+        />
       ) : null}
     </div>
   );
