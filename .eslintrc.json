@@ -32,6 +32,7 @@
         "labelAttributes": ["label"],
         "controlComponents": ["CustomInput"],
         "depth": 3
-      }]
+      }],
+      "no-param-reassign": "off"
   }
 }

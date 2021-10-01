@@ -24,6 +24,7 @@ import SpOptionCard from '../../components/SpOptionCard/SpOptionCard';
 import { addIssue, removeIssue, updateIssue } from '../../redux/actions/issuesActions';
 import PriorityLevel from '../../types/PriorityLevel';
 import { removeUser } from '../../redux/actions/usersActions';
+import FileInput from '../../components/FileInput/FileInput';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -215,6 +216,24 @@ const Settings: React.FC = () => {
     setActiveStatusCreateVoteCardModal(false);
   };
 
+  const fileInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.currentTarget;
+    const file = files && files[0] ? files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = () => {
+        const json: IIssue[] = JSON.parse(reader.result as string);
+        if (json) {
+          json.forEach(issue => {
+            dispatch(addIssue(issue));
+          });
+        }
+      };
+    }
+    event.currentTarget.value = '';
+  };
+
   return (
     <div className='lobby'>
       <Header isAuthorized />
@@ -276,6 +295,18 @@ const Settings: React.FC = () => {
 
           <div className='lobby__issues'>
             <h3 className='lobby__section-title'>Issues</h3>
+            <div className='lobby__issues-file'>
+              <p className='lobby__empty-text'>Click here to load json file with issues data</p>
+              <div className='lobby__send-file-card'>
+                <FileInput
+                  color='success'
+                  accept='application/json'
+                  name='issues-file'
+                  onChange={fileInputOnChange}
+                  required
+                />
+              </div>
+            </div>
             <div className='lobby__issues-container'>
               {issues?.map((element, index) => (
                 <IssueCard
