@@ -222,7 +222,7 @@ const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) =>
                 </tr>
               </thead>
               <tbody>
-                {gameScore?.map((element: GameScoreProps, index: number) => (
+                {/* {gameScore?.map((element: GameScoreProps, index: number) => (
                   <tr className='game__score-tr'>
                     <td data-label='Score' className='game__table-score'>
                       {isTimeOut ? element.score : 'In progress'}
@@ -234,6 +234,25 @@ const Game: React.FC<GameProps> = ({ gameScore, statisticsCards, voteCards }) =>
                         surname={element.player.surname}
                         jobPosition={element.player.jobPosition}
                         avatar={element.player.avatar}
+                        deleteAction={deleteAction}
+                        className='game__user-card'
+                      />
+                    </td>
+                  </tr>
+                ))} */}
+                {statistics?.map((element: VoteStatistics, index: number) => (
+                  <tr className='game__score-tr'>
+                    <td data-label='Score' className='game__table-score'>
+                      {isTimeOut ? element.score : 'In progress'}
+                    </td>
+                    <td data-label='Player' className='game__table-card'>
+                      <UserCard
+                        key={index.toString()}
+                        name={element.user?.firstName}
+                        surname={element.user?.lastName}
+                        jobPosition={element.user?.position}
+                        avatar={element.user?.avatar}
+                        color={element.user?.isObserver ? 'warning' : undefined}
                         deleteAction={deleteAction}
                         className='game__user-card'
                       />
