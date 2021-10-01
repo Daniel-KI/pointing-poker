@@ -19,14 +19,20 @@ const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActi
   const [isUnknown, setUnknownStatus] = useState<boolean>(false);
 
   const cancelBtnOnClick = () => {
+    setUnknownStatus(false);
     setActive(false);
   };
 
+  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    if (onSubmit) onSubmit(event);
+    setUnknownStatus(false);
+  };
+
   return (
-    <ModalBox active={isActive} setActive={setActive}>
+    <ModalBox active={isActive} setActive={cancelBtnOnClick}>
       <div className='create-sp-card-modal'>
         <h2 className='create-sp-card-modal__title'>Create vote card</h2>
-        <form className='create-sp-card-modal__form' onSubmit={onSubmit}>
+        <form className='create-sp-card-modal__form' onSubmit={onFormSubmit}>
           <div className='create-sp-card-modal__text-inputs'>
             <TextInput
               name='score'
