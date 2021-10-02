@@ -17,6 +17,7 @@ const TextInput: React.FC<TextInputProps> = ({
   required,
   name,
   onChange,
+  onInvalid,
 }) => {
   const [inputValue, setInputValue] = useState<string>(value || '');
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +43,7 @@ const TextInput: React.FC<TextInputProps> = ({
       autoComplete={autocomplete}
       disabled={disabled}
       onChange={onInputChange}
+      onInvalid={onInvalid}
       placeholder={placeholder}
       maxLength={maxlength}
       value={inputValue}
@@ -65,6 +67,7 @@ TextInput.defaultProps = {
   required: false,
   name: '',
   onChange: undefined,
+  onInvalid: undefined,
 };
 
 export default TextInput;

@@ -1,0 +1,93 @@
+@import '../../ui/colors.scss';
+@import '../../ui/shadows.scss';
+
+.sp-creation-card {
+  $self: &;
+  width: 8rem;
+  height: 12rem;
+  background-color: #ffffff;
+  border: none;
+  outline: none;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: $basic-shadow;
+  transition: 1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    box-shadow: $basic-shadow-hover;
+  }
+
+  &__container {
+    width: 7rem;
+    height: 11rem;
+    border: 2px solid $light-active;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  &__circle {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 2px solid $dark;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__icon {
+    color: $dark;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  &--small {
+    width: 7rem;
+    height: 10.5rem;
+
+    & #{ $self }__container {
+      width: 6rem;
+      height: 9.5rem;
+    }
+
+    & #{ $self }__circle {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    & #{ $self }__icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &--large {
+    width: 9rem;
+    height: 13.5rem;
+
+    & #{ $self }__container {
+      width: 8rem;
+      height: 12.5rem;
+    }
+
+    & #{ $self }__circle {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    & #{ $self }__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+}
