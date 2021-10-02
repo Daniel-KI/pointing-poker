@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io-client';
 import PriorityLevel from '../types/PriorityLevel';
+import SpCardBackType from '../types/SpCardBackType';
 
 import UserType from '../types/UserType';
 
@@ -29,13 +30,17 @@ export interface ICurrentUser {
   role: UserType;
 }
 
+export interface ITimer {
+  minutes: number;
+  seconds: number;
+}
+
 export interface ISettings {
   isAdminObserver: boolean;
-  timer: null | string;
+  timer: null | ITimer;
   scoreType: string;
-  scoreTypeShort: string;
   cardValues: string[];
-  cardBack: string;
+  cardBack: SpCardBackType;
   addNewPlayersAutomatically: boolean;
   cardsFlipAutomatically: boolean;
 }
@@ -57,4 +62,5 @@ export interface IState {
   users: IUser[];
   issues: IIssue[];
   messages: IMessage[];
+  settings: ISettings;
 }

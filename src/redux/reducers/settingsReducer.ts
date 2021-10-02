@@ -5,9 +5,8 @@ const initialState: ISettings = {
   isAdminObserver: true,
   timer: null,
   scoreType: '',
-  scoreTypeShort: '',
   cardValues: [],
-  cardBack: '',
+  cardBack: 'type1',
   addNewPlayersAutomatically: true,
   cardsFlipAutomatically: true,
 };

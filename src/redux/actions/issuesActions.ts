@@ -1,7 +1,7 @@
 import { IIssue } from '../models';
 
 export const ADD_ISSUE = 'ADD_ISSUE';
-export const UPDATE_ISSUE = 'ADD_ISSUE';
+export const UPDATE_ISSUE = 'UPDATE_ISSUE';
 export const REMOVE_ISSUE = 'REMOVE_ISSUE';
 
 interface IAddIssueAction {
@@ -16,7 +16,7 @@ interface IUpdateIssueAction {
 
 interface IRemoveIssueAction {
   type: typeof REMOVE_ISSUE;
-  issue: IIssue;
+  id: number;
 }
 
 export type IssuesActionsType = IAddIssueAction | IUpdateIssueAction | IRemoveIssueAction;
@@ -35,9 +35,9 @@ export const updateIssue = (issue: IIssue): IUpdateIssueAction => {
   };
 };
 
-export const removeIssue = (issue: IIssue): IRemoveIssueAction => {
+export const removeIssue = (id: number): IRemoveIssueAction => {
   return {
     type: REMOVE_ISSUE,
-    issue,
+    id,
   };
 };
