@@ -4,7 +4,8 @@ import Color from '../../types/Color';
 export interface TooltipProps {
   children: ReactNode | undefined;
   message: string;
-  visible?: boolean;
+  visibility: boolean;
+  setVisibilityStatus: (value: boolean) => void;
   color?: Color;
   className?: string;
   id?: string;
