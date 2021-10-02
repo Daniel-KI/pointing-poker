@@ -1,23 +1,16 @@
 import './Lobby.scss';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { IMessage, ISettings, IState, IUser } from '../../redux/models';
+import { IState, IUser } from '../../redux/models';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import UserCard from '../../components/UserCard/UserCard';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
-import { updateUsers } from '../../redux/actions/usersActions';
-import { addMessage } from '../../redux/actions/messagesActions';
-import { updateSettings } from '../../redux/actions/settingsActions';
 import leaveRoom from '../../api/leaveRoom';
-import useLeaveRoom from '../../hooks/useLeaveRoom';
+import useLobby from '../../hooks/useLobby';
 
 const Lobby: React.FC = () => {
-  const dispatch = useDispatch();
-  const history = useHistory();
-
   const [isActiveExitModal, setExitModalActiveStatus] = useState<boolean>(false);
 
   // Get data from state
@@ -29,26 +22,7 @@ const Lobby: React.FC = () => {
   const currentUserData = useSelector((state: IState) => state.currentUser);
   const currentUser = members.find(user => user.id === currentUserData.id);
 
-  useLeaveRoom();
-
-  useEffect(() => {
-    socket.on('users', (users: IUser[]) => {
-      dispatch(updateUsers(users));
-    });
-
-    socket.on('newMessage', (message: IMessage) => {
-      dispatch(addMessage(message));
-    });
-
-    socket.on('settings', (settingsData: ISettings) => {
-      dispatch(updateSettings(settingsData));
-      history.push(`/game/${roomId}`);
-    });
-
-    return () => {
-      socket.offAny();
-    };
-  }, []);
+  useLobby();
 
   const exitBtnOnClick = () => {
     setExitModalActiveStatus(true);

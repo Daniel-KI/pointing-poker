@@ -19,6 +19,8 @@ import { updateRoom } from '../../redux/actions/roomActions';
 import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 import validateFullName from '../../utils/validation/validateFullName';
 import emptyStringValidation from '../../utils/validation/emptyStringValidation';
+import { updateSettings } from '../../redux/actions/settingsActions';
+import { updateIssues } from '../../redux/actions/issuesActions';
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
@@ -142,14 +144,19 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     const user = { ...getUserData(), roomId };
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
     const roomData = await getRoomData(roomId);
-    if (roomData) {
-      dispatch(updateRoom(roomData));
-      resetData();
-      setActive(false);
-      // redirect to lobby page
-      history.push(`/lobby/${roomId}`);
-      joinRoom(socket, user);
+    if (!roomData) {
+      return;
     }
+    dispatch(updateRoom(roomData));
+    if (roomData.isGameStarted && roomData.settings && roomData.issues) {
+      dispatch(updateSettings(roomData.settings));
+      dispatch(updateIssues(roomData.issues));
+    }
+    resetData();
+    setActive(false);
+    // redirect to lobby page
+    history.push(roomData.isGameStarted ? `/game/${roomId}` : `/lobby/${roomId}`);
+    joinRoom(socket, user);
   };
 
   const cancelBtnOnClick = () => {

@@ -23,6 +23,9 @@ export interface IRoom {
   id: string | undefined;
   name: string | undefined;
   admin: IUser | undefined;
+  isGameStarted?: boolean;
+  settings?: ISettings;
+  issues?: IIssue[];
 }
 
 export interface ICurrentUser {

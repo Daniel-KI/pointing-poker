@@ -23,13 +23,16 @@ import CreateSpCardModal from '../../components/CreateSpCardModal/CreateSpCardMo
 import SpOptionCard from '../../components/SpOptionCard/SpOptionCard';
 import { addIssue, removeIssue, updateIssue } from '../../redux/actions/issuesActions';
 import PriorityLevel from '../../types/PriorityLevel';
-import { removeUser } from '../../redux/actions/usersActions';
 import FileInput from '../../components/FileInput/FileInput';
 import Tooltip from '../../components/Tooltip/Tooltip';
+import leaveRoom from '../../api/leaveRoom';
+import sendSettingsData from '../../api/sendSettingsData';
+import useLobby from '../../hooks/useLobby';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
 
+  const socket = useSelector((state: IState) => state.socket);
   const roomId = useSelector((state: IState) => state.room.id);
   const roomName = useSelector((state: IState) => state.room.name);
   const admin = useSelector((state: IState) => state.room.admin);
@@ -76,6 +79,8 @@ const Settings: React.FC = () => {
   const [isValidIssues, setIssuesValidStatus] = useState(true);
   const [isValidSettings, setSettingsValidStatus] = useState(true);
   const [isValidVoteCards, setVoteCardsValidStatus] = useState(true);
+
+  useLobby();
 
   useEffect(() => {
     if (voteCardValues.length >= 2) {
@@ -127,6 +132,7 @@ const Settings: React.FC = () => {
       setSettingsValidStatus(true);
       setVoteCardsValidStatus(true);
       // start game here
+      sendSettingsData(socket, settingsData, issues);
     } else {
       let element: HTMLElement | null = null;
       if (!isValidIssuesCheck) {
@@ -179,8 +185,8 @@ const Settings: React.FC = () => {
     setActiveStatusDeleteUserModal(false);
   };
   const onUserDeleteModalConfirm = () => {
-    if (selectedUser) {
-      dispatch(removeUser(selectedUser.id));
+    if (selectedUser && roomId) {
+      leaveRoom(socket, selectedUser.id, roomId);
       setSelectedUser(null);
       setActiveStatusDeleteUserModal(false);
     }
@@ -507,7 +513,7 @@ const Settings: React.FC = () => {
         onDecline={onStopModalDecline}
         onConfirm={onStopModalConfirm}
       >
-        Stop this game ?
+        Cancel this game and exit?
       </ConfirmModal>
 
       <ConfirmModal
