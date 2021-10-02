@@ -13,7 +13,7 @@ const usersReducer = (state = initialState, action: UsersActionsType): IUser[] =
     }
     case REMOVE_USER: {
       // send removed user to server
-      const removedIndex = state.findIndex(({ id }) => id === action.user.id);
+      const removedIndex = state.findIndex(({ id }) => id === action.id);
       const newUsers = [...state];
       newUsers.splice(removedIndex, 1);
       return newUsers;

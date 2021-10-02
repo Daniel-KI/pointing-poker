@@ -10,7 +10,7 @@ interface IAddUserAction {
 
 interface IRemoveUserAction {
   type: typeof REMOVE_USER;
-  user: IUser;
+  id: string;
 }
 
 export type UsersActionsType = IAddUserAction | IRemoveUserAction;
@@ -22,9 +22,9 @@ export const addUser = (user: IUser): IAddUserAction => {
   };
 };
 
-export const removeUser = (user: IUser): IRemoveUserAction => {
+export const removeUser = (id: string): IRemoveUserAction => {
   return {
     type: REMOVE_USER,
-    user,
+    id,
   };
 };

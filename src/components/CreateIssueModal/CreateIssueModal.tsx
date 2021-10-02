@@ -6,6 +6,7 @@ import Button from '../Button/Button';
 import Dropdown from '../Dropdown/Dropdown';
 import ModalBox from '../ModalBox/ModalBox';
 import priorityLevels from '../../constants/priorityLevels';
+import PriorityLevel from '../../types/PriorityLevel';
 
 // Родительский компонент:
 // const [isActive, setActive] = useState(false);
@@ -22,17 +23,27 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
 
   const cancelBtnOnClick = () => {
     setActive(false);
+    setPriority(undefined);
+  };
+
+  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get('name') as string;
+    if (priority && name) {
+      onSubmit(name, priority as PriorityLevel);
+      setPriority(undefined);
+    }
   };
 
   return (
     <ModalBox active={isActive} setActive={setActive}>
       <div className='create-issue'>
         <h2 className='create-issue__title'>Create issue</h2>
-        <form className='create-issue__form' onSubmit={onSubmit}>
+        <form className='create-issue__form' onSubmit={onFormSubmit}>
           <div className='create-issue__wrapper'>
             <div className='create-issue__text-inputs'>
-              <TextInput placeholder='Title' size='large' color='light' bordered />
-              <TextInput placeholder='Link' size='large' color='light' bordered />
+              <TextInput name='name' placeholder='Title' size='large' color='light' bordered />
             </div>
             <div className='create-issue__dropdown'>
               <Dropdown
@@ -54,10 +65,6 @@ const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive
       </div>
     </ModalBox>
   );
-};
-
-CreateIssueModal.defaultProps = {
-  onSubmit: undefined,
 };
 
 export default CreateIssueModal;

@@ -48,6 +48,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
   };
 
   const getUserData = (): IConnectionData => ({
+    id: socket.id,
     firstName,
     lastName,
     position,

@@ -20,7 +20,7 @@ const issuesReducer = (state = initialState, action: IssuesActionsType): IIssue[
     }
     case REMOVE_ISSUE: {
       // send deleted issue to server
-      const removedIndex = state.findIndex(({ id }) => id === action.issue.id);
+      const removedIndex = state.findIndex(({ id }) => id === action.id);
       const newIssues = [...state];
       newIssues.splice(removedIndex, 1);
       return newIssues;
