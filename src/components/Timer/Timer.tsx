@@ -18,15 +18,16 @@ const Timer: React.FC<TimerProps> = ({
   const classes = classNames(className);
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, maxLength } = event.target;
+    const { value } = event.target;
     if (event.target.value.match('[0-9]') != null) {
-      const val = value.slice(0, maxLength);
-      if (+val >= 0 && +val <= 59) {
+      if (+value >= 0 && +value <= 99) {
         if (event.target.dataset.type === 'minutes') {
-          if (setMinutes) setMinutes(+val);
+          if (setMinutes) setMinutes(+value);
         }
+      }
+      if (+value >= 0 && +value <= 59) {
         if (event.target.dataset.type === 'seconds') {
-          if (setSeconds) setSeconds(+val);
+          if (setSeconds) setSeconds(+value);
         }
       }
     }
