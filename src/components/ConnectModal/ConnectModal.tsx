@@ -16,16 +16,8 @@ import { IState } from '../../redux/models';
 import getRoomData from '../../api/getRoomData';
 import { updateRoom } from '../../redux/actions/roomActions';
 import { updateCurrentUser } from '../../redux/actions/currentUserActions';
-
-// Родительский компонент:
-// const [isActive, setActive] = useState(false);
-// const modalActive = () => {
-//   setActive(true);
-// };
-
-// Появление модального окна при нажатии на кнопку
-//   <Button onClick={modalActive}>Modal</Button>
-//   <ConnectModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm} userType='admin | user' />
+import validateFullName from '../../utils/validation/validateFullName';
+import emptyStringValidation from '../../utils/validation/emptyStringValidation';
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
@@ -66,10 +58,61 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     roomName,
   });
 
-  const onFirstNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setFirstName(event.currentTarget.value);
-  const onLastNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setLastName(event.currentTarget.value);
-  const onPositionInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setPosition(event.currentTarget.value);
+  const validateFullNameInputs = (input: HTMLInputElement) => {
+    const validationMessage = validateFullName(input.value);
+    input.setCustomValidity(validationMessage);
+  };
+
+  const validatePositionInput = (input: HTMLInputElement) => {
+    const validationMessage = !emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
+    input.setCustomValidity(validationMessage);
+  };
+
+  const validateRoomNameInput = (input: HTMLInputElement) => {
+    const validationMessage = !emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
+    input.setCustomValidity(validationMessage);
+  };
+
+  const onFirstNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    validateFullNameInputs(input);
+    input.reportValidity();
+    setFirstName(input.value);
+  };
+
+  const onLastNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    validateFullNameInputs(input);
+    input.reportValidity();
+    setLastName(input.value);
+  };
+
+  const onFullNameInputInvalid = (event: React.FormEvent<HTMLInputElement>) => {
+    validateFullNameInputs(event.currentTarget);
+  };
+
+  const onPositionInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    validatePositionInput(input);
+    input.reportValidity();
+    setPosition(input.value);
+  };
+
+  const onPositionInputInvalid = (event: React.FormEvent<HTMLInputElement>) => {
+    validatePositionInput(event.currentTarget);
+  };
+
+  const onRoomNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    validateRoomNameInput(input);
+    input.reportValidity();
+    setRoomName(input.value);
+  };
+
+  const onRoomNameInputInvalid = (event: React.FormEvent<HTMLInputElement>) => {
+    validateRoomNameInput(event.currentTarget);
+  };
+
   const onAvatarInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.currentTarget;
     if (!input.files || !input.files[0]) {
@@ -79,7 +122,6 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
       setAvatar(imageURL);
     }
   };
-  const onRoomNameInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setRoomName(event.currentTarget.value);
 
   const onFormSubmitAdmin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -125,6 +167,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 required
                 bordered
                 onChange={onFirstNameInputChange}
+                onInvalid={onFullNameInputInvalid}
               />
               <TextInput
                 name='lastName'
@@ -133,6 +176,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 required
                 bordered
                 onChange={onLastNameInputChange}
+                onInvalid={onFullNameInputInvalid}
               />
               <TextInput
                 name='position'
@@ -141,6 +185,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 required
                 bordered
                 onChange={onPositionInputChange}
+                onInvalid={onPositionInputInvalid}
               />
               {userType === 'admin' ? (
                 <TextInput
@@ -150,6 +195,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                   required
                   bordered
                   onChange={onRoomNameInputChange}
+                  onInvalid={onRoomNameInputInvalid}
                 />
               ) : (
                 <Toggle name='isObserver' checked={isObserver} onChange={setObserverStatus}>
