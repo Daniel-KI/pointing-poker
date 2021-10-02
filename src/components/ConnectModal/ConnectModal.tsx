@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectModal.scss';
 
+import { useHistory } from 'react-router-dom';
 import TextInput from '../TextInput/TextInput';
 import { ConnectModalProps } from './models';
 import Avatar from '../Avatar/Avatar';
@@ -21,6 +22,7 @@ import emptyStringValidation from '../../utils/validation/emptyStringValidation'
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const socket = useSelector((state: IState) => state.socket);
   const roomId = useSelector((state: IState) => state.room.id);
@@ -48,6 +50,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
   };
 
   const getUserData = (): IConnectionData => ({
+    id: socket.id,
     firstName,
     lastName,
     position,
@@ -125,18 +128,18 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
   const onFormSubmitAdmin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user = getUserData();
-    joinRoom(socket, user);
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
     dispatch(updateRoom({ id: socket.id, name: user.roomName, admin: user }));
     resetData();
     setActive(false);
     // redirect to lobby page
+    history.push(`/settings/${socket.id}`);
+    joinRoom(socket, user);
   };
 
   const onFormSubmitUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user = { ...getUserData(), roomId };
-    joinRoom(socket, user);
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
     const roomData = await getRoomData(roomId);
     if (roomData) {
@@ -144,6 +147,8 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
       resetData();
       setActive(false);
       // redirect to lobby page
+      history.push(`/lobby/${roomId}`);
+      joinRoom(socket, user);
     }
   };
 

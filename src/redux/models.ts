@@ -4,12 +4,12 @@ import PriorityLevel from '../types/PriorityLevel';
 import UserType from '../types/UserType';
 
 export interface IUser {
-  id?: string;
+  id: string;
   firstName: string;
   lastName: string;
   position: string;
   avatar: string;
-  isObserver?: boolean;
+  isObserver: boolean;
 }
 
 export interface IIssue {
@@ -43,6 +43,11 @@ export interface ISettings {
 export interface IMessage {
   user: IUser;
   text: string;
+}
+
+export interface IGameResult {
+  issue: IIssue;
+  votesPercentage: number[];
 }
 
 export interface IState {

@@ -15,7 +15,6 @@ const initialState: ISettings = {
 const settingsReducer = (state = initialState, action: ISettingsAction): ISettings => {
   switch (action.type) {
     case SET_SETTINGS:
-      // send settings to server
       return { ...action.settings };
     default:
       return state;
