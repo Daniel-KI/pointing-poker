@@ -64,12 +64,12 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
   };
 
   const validatePositionInput = (input: HTMLInputElement) => {
-    const validationMessage = emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
+    const validationMessage = !emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
     input.setCustomValidity(validationMessage);
   };
 
   const validateRoomNameInput = (input: HTMLInputElement) => {
-    const validationMessage = emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
+    const validationMessage = !emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
     input.setCustomValidity(validationMessage);
   };
 
