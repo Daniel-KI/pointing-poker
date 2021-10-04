@@ -9,125 +9,88 @@
   @extend .page;
 
   &__wrapper {
-    padding: 0px 10%;
-    margin-bottom: 100px;
-    display: flex;
-    gap: 50px;
-    justify-content: space-between;
-
-    @media (max-width: $screen-md) {
-      flex-direction: column-reverse;
-    }
-  }
-
-  &__results {
-    flex-basis: 70%;
-
-    @media (max-width: $screen-xxl) {
-      flex-basis: 50%;
-    }
-    @media (max-width: $screen-xl) {
-      flex-basis: 50%;
-    }
-    @media (max-width: $screen-lg) {
-      flex-basis: 50%;
-    }
-  }
-
-  &__chat-wrapper {
     height: 100%;
-    position: relative;
-    flex-basis: 30%;
-
-    @media (max-width: $screen-xxl) {
-      flex-basis: 40%;
-    }
-    @media (max-width: $screen-xl) {
-      flex-basis: 40%;
-    }
-    @media (max-width: $screen-lg) {
-      flex-basis: 50%;
-    }
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    justify-content: center;
   }
 
-  &__chat-wrapper &__chat {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 80px;
-    bottom: 80px;
+  &__container {
+    @extend .container_large;
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
+    font-size: $title-md;
+    display: block;
+    width: 100%;
     text-align: center;
-    margin-bottom: 50px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
     overflow: hidden;
-    -ms-line-clamp: 2;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    display: -webkit-box;
-    display: box;
-    word-wrap: break-word;
-    -webkit-box-orient: vertical;
-    box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 2rem 0 3rem;
+    color: $text-dark;
   }
 
-  &__download-btn-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 60px;
+  &__small-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
   }
 
-  &__download-btn {
+  &__statistics-file {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    justify-self: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__download-file-card {
+    padding: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: $basic-shadow;
+    transition: 1s ease;
+
+    &:hover {
+      box-shadow: $basic-shadow-hover;
+    }
   }
 
   &__statistics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 60px 120px;
-
-    @media (max-width: $screen-md) {
-      justify-content: center;
-    }
-  }
-
-  &__cards-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    @media (max-width: $screen-md) {
-      justify-content: center;
-    }
-  }
-
-  &__statistic-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    @media (max-width: $screen-md) {
-      justify-content: center;
-    }
-  }
-
-  &__statistic-wrapper &__statistics-issue {
-    margin: 0;
-    @media (max-width: $screen-md) {
-      margin: 0 auto;
-    }
-  }
-
-  &__statistics-percent {
+    padding: 2rem 0 0 0;
     display: flex;
     justify-content: center;
-    margin-top: 10px;
-    font-size: $text-lg;
-    font-weight: 500;
+    align-items: center;
+    flex-wrap:  wrap;
+    gap: 4rem;
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__values {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__value-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
   }
 }

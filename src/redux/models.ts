@@ -71,4 +71,5 @@ export interface IState {
   issues: IIssue[];
   messages: IMessage[];
   settings: ISettings;
+  gameResults: IGameResult[];
 }
