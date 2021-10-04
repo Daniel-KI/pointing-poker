@@ -55,7 +55,12 @@ export interface IMessage {
 
 export interface IGameResult {
   issue: IIssue;
-  votesPercentage: number[];
+  votesPercentage: IStatistics[];
+}
+
+export interface IStatistics {
+  value: string;
+  percentage: number;
 }
 
 export interface IState {
