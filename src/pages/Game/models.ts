@@ -4,11 +4,6 @@ import { IssueCardProps } from '../../components/IssueCard/models';
 import { SpCardFrontProps } from '../../components/SpCardFront/models';
 import { UserCardProps } from '../../components/UserCard/models';
 
-export interface IStatistics {
-  value: string;
-  percentage: number;
-}
-
 export interface GameProps {
   lobbyTitle: string;
   master?: UserCardProps;

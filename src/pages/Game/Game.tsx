@@ -13,13 +13,17 @@ import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueCreationCard from '../../components/IssueCreationCard/IssueCreationCard';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
-import { IIssue, IState, IUser } from '../../redux/models';
+import { IIssue, IState, IStatistics, IUser } from '../../redux/models';
 import { addIssue, removeIssue, updateIssue, updateIssues } from '../../redux/actions/issuesActions';
 import PriorityLevel from '../../types/PriorityLevel';
 import changeCurrentIssue from '../../api/changeCurrentIssue';
 import SpCardFront from '../../components/SpCardFront/SpCardFront';
-import { IStatistics } from './models';
 import countVotes from '../../utils/countVotes';
+import { addGameResult } from '../../redux/actions/gameResultsActions';
+import useGame from '../../hooks/useGame';
+import { updateUsers } from '../../redux/actions/usersActions';
+import Color from '../../types/Color';
+import Tooltip from '../../components/Tooltip/Tooltip';
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -34,23 +38,26 @@ const Game: React.FC = () => {
   const currentUser = members.find(user => user.id === currentUserData.id);
   const isMaster = currentUserData.role === 'admin';
   const issues = useSelector((state: IState) => state.issues);
+  const results = useSelector((state: IState) => state.gameResults);
 
   const [isRoundEnded, setRoundEnded] = useState(false);
   const [isRoundStarted, setRoundStarted] = useState(false);
   const [minutes, setMinutes] = useState(() => settings.timer?.minutes);
   const [seconds, setSeconds] = useState(() => settings.timer?.seconds);
 
-  const [currentIssue, setCurrentIssue] = useState((): IIssue => issues[0]);
+  // const [isVisibleIssueTooltip, setVisibilityIssueTooltip] = useState(() => false);
   const [isCardsFlipped, setCardsFlipped] = useState(() => false);
   const [chosenCardIndex, setChosenCardIndex] = useState((): number | null => null);
-  const [votes, setVote] = useState(() => members.map(member => ({ member, score: '' })));
   const [statisticsForCurrentIssue, setStatistics] = useState((): IStatistics[] | null => null);
 
   // CRUD operation: Exit, Users, Issues ----------------------------
+  const [newUser, setNewUser] = useState<IUser | null>(null);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [selectedIssue, setSelectedIssue] = useState<IIssue | null>(null);
 
-  const [isActiveStopConfirmModal, setActiveStatusStopConfirmModal] = useState<boolean>(false);
+  const [isActiveAddNewUserModal, setActiveAddNewUserModal] = useState(false);
+
+  const [isActiveStopConfirmModal, setActiveStatusStopConfirmModal] = useState(false);
 
   const [isActiveDeleteUserModal, setActiveStatusDeleteUserModal] = useState(false);
 
@@ -58,9 +65,16 @@ const Game: React.FC = () => {
   const [isActiveEditIssueModal, setActiveStatusEditIssueModal] = useState(false);
   const [isActiveDeleteIssueModal, setActiveStatusDeleteIssueModal] = useState(false);
 
+  const { votes, currentIssue } = useGame();
+
   useEffect(() => {
-    socket.on('issues', (newIssues: IIssue[]) => {
-      dispatch(updateIssues(newIssues));
+    socket.on('users', (users: IUser[], user: IUser) => {
+      if (currentUserData.role === 'admin' && !settings.addNewPlayersAutomatically) {
+        setNewUser(user);
+        setActiveAddNewUserModal(true);
+      } else if (settings.addNewPlayersAutomatically) {
+        dispatch(updateUsers(users));
+      }
     });
 
     socket.on('startRound', () => {
@@ -74,15 +88,6 @@ const Game: React.FC = () => {
       setRoundStarted(false);
       setRoundEnded(true);
       console.log('stop round!');
-    });
-
-    socket.on('newVote', (newVote: { member: IUser; score: string }) => {
-      setVote([...votes, newVote]);
-    });
-
-    socket.on('currentIssue', (issue: IIssue) => {
-      console.log('change issue', issue);
-      setCurrentIssue(issue);
     });
 
     return () => {
@@ -105,9 +110,16 @@ const Game: React.FC = () => {
       console.log(votesForCurrentIssue, 'from useEffect for round end');
       setStatistics(votesForCurrentIssue);
       setCardsFlipped(true);
-      // add dispatch for game results ()
+      dispatch(addGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
     }
   }, [isRoundEnded]);
+
+  const onIssueAddNewUserConfirm = () => {
+    setActiveAddNewUserModal(false);
+  };
+  const onIssueAddNewUserDecline = () => {
+    setActiveAddNewUserModal(false);
+  };
 
   // CRUD operation: Exit, Users, Issues ----------------------------
   const onStopGameClick = () => {
@@ -175,9 +187,9 @@ const Game: React.FC = () => {
   };
   // ----------------------------------------------------------------
 
-  const onChangeCurrentIssue = (issue: IIssue) => {
+  const onChangeCurrentIssue = (chosenIssue: IIssue) => {
     // console.log('change issue', issue);
-    changeCurrentIssue(socket, issue);
+    changeCurrentIssue(socket, chosenIssue);
   };
 
   const onNextIssue = () => {
@@ -263,23 +275,38 @@ const Game: React.FC = () => {
             <div className='game__issues'>
               <h3 className='game__issues-title'>Issues</h3>
               <div className='game__issues-field'>
-                {issues.map(issue => (
-                  <IssueCard
-                    id={issue.id.toString()}
-                    key={issue.id}
-                    name={issue.name}
-                    priority={issue.priority}
-                    deleteAction={isMaster ? () => deleteIssueAction(issue) : undefined}
-                    editAction={isMaster ? () => editIssueAction(issue) : undefined}
-                    className='game__issue'
-                    color={currentIssue.id === issue.id ? 'primary' : undefined}
-                    onClick={
-                      currentIssue.id !== issue.id && isMaster && !isRoundStarted
-                        ? () => onChangeCurrentIssue(issue)
-                        : undefined
-                    }
-                  />
-                ))}
+                {issues.map(item => {
+                  let color: Color | undefined;
+                  if (currentIssue.id === item.id) {
+                    color = 'primary';
+                  } else if (results.find(({ issue }) => issue.id === item.id)) {
+                    color = 'dark';
+                  }
+                  return (
+                    // <Tooltip
+                    //   message='You cannot start the game without at least two card values'
+                    //   visibility={isVisibleIssueTooltip}
+                    //   setVisibilityStatus={setVisibilityIssueTooltip}
+                    //   color='light'
+                    // >
+                    <IssueCard
+                      id={item.id.toString()}
+                      key={item.id}
+                      name={item.name}
+                      priority={item.priority}
+                      deleteAction={isMaster ? () => deleteIssueAction(item) : undefined}
+                      editAction={isMaster ? () => editIssueAction(item) : undefined}
+                      className='game__issue'
+                      color={color}
+                      onClick={
+                        currentIssue.id !== item.id && isMaster && !isRoundStarted
+                          ? () => onChangeCurrentIssue(item)
+                          : undefined
+                      }
+                    />
+                    // </Tooltip>
+                  );
+                })}
                 {isMaster ? (
                   <IssueCreationCard label='Create issue' addAction={addIssueAction} className='game__create-issue' />
                 ) : null}
@@ -289,11 +316,11 @@ const Game: React.FC = () => {
               <div className='game__vote'>
                 <div>
                   <h3 className='game__vote-title'>Vote</h3>
-                  {/* {!settings.cardsFlipAutomatically && isRoundStarted && !isRoundEnded ? (
-                    <Button color='dark' size='large' onClick={() => setCardsFlipped(true)}>
-                      Flip cards
+                  {settings.canChangeChoice && isRoundStarted && !isRoundEnded && isCardsFlipped ? (
+                    <Button color='dark' size='large' onClick={() => setCardsFlipped(false)}>
+                      Change choice
                     </Button>
-                  ) : null} */}
+                  ) : null}
                 </div>
                 <div className='game__vote-field'>
                   {settings.cardValues.map((value, index) => (
@@ -407,6 +434,15 @@ const Game: React.FC = () => {
             onConfirm={onIssueDeleteModalConfirm}
           >
             {`Remove issue "${selectedIssue?.name}" from the game?`}
+          </ConfirmModal>
+
+          <ConfirmModal
+            isActive={isActiveAddNewUserModal}
+            setActive={setActiveAddNewUserModal}
+            onDecline={onIssueAddNewUserDecline}
+            onConfirm={onIssueAddNewUserConfirm}
+          >
+            {`${newUser?.firstName} ${newUser?.lastName} wants to join the game`}
           </ConfirmModal>
         </>
       ) : null}

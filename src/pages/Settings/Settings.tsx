@@ -49,6 +49,7 @@ const Settings: React.FC = () => {
   const [timerMinutes, setTimerMinutes] = useState<number>(data && data.timer ? data.timer.minutes : 0);
   const [timerSeconds, setTimerSeconds] = useState<number>(data && data.timer ? data.timer.seconds : 0);
   const [autoAddUsers, setAutoAddUsers] = useState<boolean>(data ? data.addNewPlayersAutomatically : false);
+  const [canChangeChoice, setCanChangeChoice] = useState(() => false);
   const [scoreType, setScoreType] = useState<string>(data ? data.scoreType : '');
   const [cardBack, setCardBack] = useState<SpCardBackType>(data ? data.cardBack : 'type1');
   const [voteCardValues, setVoteCardValues] = useState<string[]>(data ? data.cardValues : []);
@@ -84,7 +85,6 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     if (voteCardValues.length >= 2) {
-      console.log(voteCardValues);
       setVoteCardsValidStatus(true);
     }
   }, [voteCardValues]);
@@ -109,6 +109,7 @@ const Settings: React.FC = () => {
     cardBack,
     addNewPlayersAutomatically: autoAddUsers,
     cardsFlipAutomatically: flipCardsInTheEnd,
+    canChangeChoice,
   });
 
   const onCopyClick = () => {
@@ -417,13 +418,16 @@ const Settings: React.FC = () => {
                 Scram master as player
               </Toggle>
               <Toggle checked={flipCardsInTheEnd} inputId='changingCardToggle' onChange={setFlipCardsInTheEnd}>
-                Flip cards in round end
+                Flip cards after all players have voted
               </Toggle>
               <Toggle checked={isTimer} inputId='timerNeededToggle' onChange={setIsTimer}>
                 Is timer needed
               </Toggle>
               <Toggle checked={autoAddUsers} inputId='addNewPlayerToggle' onChange={setAutoAddUsers}>
-                Auto add users
+                Add users automatically
+              </Toggle>
+              <Toggle checked={canChangeChoice} inputId='canChangeChoiceToggle' onChange={setCanChangeChoice}>
+                Can player change choice after cards were flipped
               </Toggle>
               <label htmlFor='scoreType' className='lobby__score-input'>
                 <span>Score type</span>

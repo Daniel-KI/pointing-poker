@@ -1,4 +1,4 @@
-import { IStatistics } from '../pages/Game/models';
+import { IStatistics } from '../redux/models';
 
 const countVotes = (votes: string[]): IStatistics[] => {
   console.log(votes, 'from count votes');

@@ -46,6 +46,7 @@ export interface ISettings {
   cardBack: SpCardBackType;
   addNewPlayersAutomatically: boolean;
   cardsFlipAutomatically: boolean;
+  canChangeChoice: boolean;
 }
 
 export interface IMessage {
@@ -55,7 +56,12 @@ export interface IMessage {
 
 export interface IGameResult {
   issue: IIssue;
-  votesPercentage: number[];
+  votesPercentage: IStatistics[];
+}
+
+export interface IStatistics {
+  value: string;
+  percentage: number;
 }
 
 export interface IState {
@@ -66,4 +72,5 @@ export interface IState {
   issues: IIssue[];
   messages: IMessage[];
   settings: ISettings;
+  gameResults: IGameResult[];
 }
