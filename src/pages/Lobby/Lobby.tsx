@@ -1,21 +1,28 @@
 import './Lobby.scss';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+
 import { IState, IUser } from '../../redux/models';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import UserCard from '../../components/UserCard/UserCard';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import leaveRoom from '../../api/leaveRoom';
+import useLobby from '../../hooks/useLobby';
 
 const Lobby: React.FC = () => {
   const [isActiveExitModal, setExitModalActiveStatus] = useState<boolean>(false);
 
   // Get data from state
+  const socket = useSelector((state: IState) => state.socket);
   const lobbyTitle = useSelector((state: IState) => state.room.name);
   const master = useSelector((state: IState) => state.room.admin);
   const members = useSelector((state: IState) => state.users);
+  const roomId = useSelector((state: IState) => state.room.id);
   const currentUserData = useSelector((state: IState) => state.currentUser);
   const currentUser = members.find(user => user.id === currentUserData.id);
+
+  useLobby();
 
   const exitBtnOnClick = () => {
     setExitModalActiveStatus(true);
@@ -26,13 +33,15 @@ const Lobby: React.FC = () => {
   };
   const onConfirmExit = () => {
     setExitModalActiveStatus(false);
-    // delete currentUser & currentUserData
+    if (currentUserData.id && roomId) {
+      leaveRoom(socket, currentUserData.id, roomId);
+    }
   };
 
   const isOnlyMasterAndCurrentUser = (): boolean => {
     let commonUsersAmount = members.length;
     const isAdmin = Boolean(members.find(member => member.id === master?.id));
-    const isCurrentUser = Boolean(members.find(member => member.id === currentUser?.id));
+    const isCurrentUser = Boolean(members.find(member => member.id === currentUserData.id));
     if (isAdmin) commonUsersAmount -= 1;
     if (isCurrentUser) commonUsersAmount -= 1;
     return commonUsersAmount === 0;
@@ -40,7 +49,7 @@ const Lobby: React.FC = () => {
 
   const checkIsAdminOrCurrentUser = (user: IUser) => {
     const isAdmin = user.id === master?.id;
-    const isCurrentUser = user.id === currentUser?.id;
+    const isCurrentUser = user.id === currentUserData.id;
     return isAdmin || isCurrentUser;
   };
 
@@ -93,7 +102,7 @@ const Lobby: React.FC = () => {
                 <p className='lobby__empty-text'>There is no members</p>
               ) : (
                 members?.map(user =>
-                  checkIsAdminOrCurrentUser(user) === true ? (
+                  checkIsAdminOrCurrentUser(user) === true ? null : (
                     <UserCard
                       key={user.firstName}
                       name={user.firstName}
@@ -102,7 +111,7 @@ const Lobby: React.FC = () => {
                       avatar={user.avatar}
                       className='lobby__member_card'
                     />
-                  ) : null,
+                  ),
                 )
               )}
             </div>

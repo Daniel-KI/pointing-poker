@@ -3,6 +3,7 @@ import { IIssue } from '../models';
 export const ADD_ISSUE = 'ADD_ISSUE';
 export const UPDATE_ISSUE = 'UPDATE_ISSUE';
 export const REMOVE_ISSUE = 'REMOVE_ISSUE';
+export const UPDATE_ISSUES = 'UPDATE_ISSUES';
 
 interface IAddIssueAction {
   type: typeof ADD_ISSUE;
@@ -19,7 +20,12 @@ interface IRemoveIssueAction {
   id: number;
 }
 
-export type IssuesActionsType = IAddIssueAction | IUpdateIssueAction | IRemoveIssueAction;
+interface IUpdateIssuesAction {
+  type: typeof UPDATE_ISSUES;
+  issues: IIssue[];
+}
+
+export type IssuesActionsType = IAddIssueAction | IUpdateIssueAction | IRemoveIssueAction | IUpdateIssuesAction;
 
 export const addIssue = (issue: IIssue): IAddIssueAction => {
   return {
@@ -39,5 +45,12 @@ export const removeIssue = (id: number): IRemoveIssueAction => {
   return {
     type: REMOVE_ISSUE,
     id,
+  };
+};
+
+export const updateIssues = (issues: IIssue[]): IUpdateIssuesAction => {
+  return {
+    type: UPDATE_ISSUES,
+    issues,
   };
 };

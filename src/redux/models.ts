@@ -23,6 +23,9 @@ export interface IRoom {
   id: string | undefined;
   name: string | undefined;
   admin: IUser | undefined;
+  isGameStarted?: boolean;
+  settings?: ISettings;
+  issues?: IIssue[];
 }
 
 export interface ICurrentUser {
@@ -48,6 +51,11 @@ export interface ISettings {
 export interface IMessage {
   user: IUser;
   text: string;
+}
+
+export interface IGameResult {
+  issue: IIssue;
+  votesPercentage: number[];
 }
 
 export interface IState {

@@ -58,14 +58,13 @@ const Main: React.FC = () => {
     setPendingStatus(false);
 
     if (validateConnectionMessage && validateConnectionMessage !== '') {
-      if (textInput) {
-        textInput.setCustomValidity(validateConnectionMessage);
-        textInput.reportValidity();
-      }
+      textInput.setCustomValidity(validateConnectionMessage);
+      textInput.reportValidity();
       return;
     }
 
     setActive(true);
+    textInput.setCustomValidity('');
     dispatch(
       updateRoom({
         id,

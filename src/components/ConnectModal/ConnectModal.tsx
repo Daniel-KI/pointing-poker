@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './ConnectModal.scss';
 
+import { useHistory } from 'react-router-dom';
 import TextInput from '../TextInput/TextInput';
 import { ConnectModalProps } from './models';
 import Avatar from '../Avatar/Avatar';
@@ -18,9 +19,12 @@ import { updateRoom } from '../../redux/actions/roomActions';
 import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 import validateFullName from '../../utils/validation/validateFullName';
 import emptyStringValidation from '../../utils/validation/emptyStringValidation';
+import { updateSettings } from '../../redux/actions/settingsActions';
+import { updateIssues } from '../../redux/actions/issuesActions';
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const socket = useSelector((state: IState) => state.socket);
   const roomId = useSelector((state: IState) => state.room.id);
@@ -64,12 +68,12 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
   };
 
   const validatePositionInput = (input: HTMLInputElement) => {
-    const validationMessage = !emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
+    const validationMessage = emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
     input.setCustomValidity(validationMessage);
   };
 
   const validateRoomNameInput = (input: HTMLInputElement) => {
-    const validationMessage = !emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
+    const validationMessage = emptyStringValidation(input.value) ? 'This field cannot be empty' : '';
     input.setCustomValidity(validationMessage);
   };
 
@@ -126,26 +130,33 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
   const onFormSubmitAdmin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user = getUserData();
-    joinRoom(socket, user);
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
     dispatch(updateRoom({ id: socket.id, name: user.roomName, admin: user }));
     resetData();
     setActive(false);
     // redirect to lobby page
+    history.push(`/settings/${socket.id}`);
+    joinRoom(socket, user);
   };
 
   const onFormSubmitUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user = { ...getUserData(), roomId };
-    joinRoom(socket, user);
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
     const roomData = await getRoomData(roomId);
-    if (roomData) {
-      dispatch(updateRoom(roomData));
-      resetData();
-      setActive(false);
-      // redirect to lobby page
+    if (!roomData) {
+      return;
     }
+    dispatch(updateRoom(roomData));
+    if (roomData.isGameStarted && roomData.settings && roomData.issues) {
+      dispatch(updateSettings(roomData.settings));
+      dispatch(updateIssues(roomData.issues));
+    }
+    resetData();
+    setActive(false);
+    // redirect to lobby page
+    history.push(roomData.isGameStarted ? `/game/${roomId}` : `/lobby/${roomId}`);
+    joinRoom(socket, user);
   };
 
   const cancelBtnOnClick = () => {
