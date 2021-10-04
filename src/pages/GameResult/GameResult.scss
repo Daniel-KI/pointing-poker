@@ -14,6 +14,7 @@
     display: flex;
     gap: 50px;
     justify-content: space-between;
+
     @media (max-width: $screen-md) {
       flex-direction: column-reverse;
     }
@@ -21,6 +22,7 @@
 
   &__results {
     flex-basis: 70%;
+
     @media (max-width: $screen-xxl) {
       flex-basis: 50%;
     }
@@ -31,8 +33,12 @@
       flex-basis: 50%;
     }
   }
-  &__chat {
+
+  &__chat-wrapper {
+    height: 100%;
+    position: relative;
     flex-basis: 30%;
+
     @media (max-width: $screen-xxl) {
       flex-basis: 40%;
     }
@@ -43,6 +49,14 @@
       flex-basis: 50%;
     }
   }
+
+  &__chat-wrapper &__chat {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 80px;
+    bottom: 80px;
+  }
+
   &__title {
     text-align: center;
     margin-bottom: 50px;
@@ -73,6 +87,7 @@
     justify-content: center;
     justify-self: center;
   }
+
   &__statistics {
     display: flex;
     flex-wrap: wrap;
@@ -81,36 +96,38 @@
     @media (max-width: $screen-md) {
       justify-content: center;
     }
+  }
 
-    &_statistic-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
-    }
-    &_statistic-wrapper &_issue {
-      margin: 0;
-      @media (max-width: $screen-md) {
-        margin: 0 auto;
-      }
-    }
-    &_cards-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      // justify-content: center;
-      gap: 20px;
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
-    }
-    &_percent {
-      display: flex;
+  &__cards-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    @media (max-width: $screen-md) {
       justify-content: center;
-      margin-top: 10px;
-      font-size: $text-lg;
-      font-weight: 500;
     }
+  }
+
+  &__statistic-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    @media (max-width: $screen-md) {
+      justify-content: center;
+    }
+  }
+
+  &__statistic-wrapper &__statistics-issue {
+    margin: 0;
+    @media (max-width: $screen-md) {
+      margin: 0 auto;
+    }
+  }
+
+  &__statistics-percent {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: $text-lg;
+    font-weight: 500;
   }
 }

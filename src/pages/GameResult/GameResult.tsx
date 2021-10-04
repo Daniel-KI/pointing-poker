@@ -26,26 +26,20 @@ const GameResult: React.FC<GameResultProps> = ({ lobbyTitle, gameResult }) => {
           </div>
           <div className='game-result__statistics'>
             {gameResult?.map((issue: GameResultListProps, index: number) => (
-              <div className='game-result__statistics_statistic-wrapper'>
+              <div className='game-result__statistic-wrapper'>
                 <IssueCard
                   key={index.toString()}
                   name={issue.issue?.name}
                   priority={issue.issue?.priority}
-                  className='game-result__statistics_issue'
+                  className='game-result__statistics-issue'
                   color='dark'
                 />
 
-                <div className='game-result__statistics_cards-wrapper'>
+                <div className='game-result__cards-wrapper'>
                   {issue.statistics?.map((element: StatisticsCardsProps, key: number) => (
                     <div>
-                      <SpCardFront
-                        key={key.toString()}
-                        className='game-result__statistics_cards-front-item'
-                        score={element.score}
-                        units={element.units}
-                        size='small'
-                      />
-                      <div className='game-result__statistics_percent'>{element.percent}</div>
+                      <SpCardFront key={key.toString()} score={element.score} units={element.units} size='small' />
+                      <div className='game-result__statistics-percent'>{element.percent}</div>
                     </div>
                   ))}
                 </div>
@@ -53,7 +47,9 @@ const GameResult: React.FC<GameResultProps> = ({ lobbyTitle, gameResult }) => {
             ))}
           </div>
         </div>
-        <Chat messages={messages} className='game-result__chat' />
+        <div className='game-result__chat-wrapper'>
+          <Chat chatMessage={messages} className='game-result__chat' />
+        </div>
       </div>
       <Footer />
     </div>
