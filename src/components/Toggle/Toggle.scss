@@ -3,8 +3,9 @@
 .toggle {
   display: flex;
   flex-flow: row;
+  flex-wrap: wrap-reverse;
   align-items: center;
-  column-gap: 20px;
+  gap: 1rem;
 
   &__toggle-btn {
     position: relative;

@@ -5,10 +5,11 @@ import { SpOptionCardProps } from './models';
 import DataControlPanel from '../DataControlPanel/DataControlPanel';
 import SpCardFront from '../SpCardFront/SpCardFront';
 
-const SpOptionCard: React.FC<SpOptionCardProps> = ({ units, score, editAction, deleteAction, className, id }) => {
+const SpOptionCard: React.FC<SpOptionCardProps> = ({ units, score, editAction, deleteAction, size, className, id }) => {
   const classes = classNames(
     {
       'sp-option-card': true,
+      [`sp-option-card--${size}`]: size,
     },
     className,
   );
@@ -24,7 +25,7 @@ const SpOptionCard: React.FC<SpOptionCardProps> = ({ units, score, editAction, d
           />
         </div>
       ) : null}
-      <SpCardFront units={units} score={score} />
+      <SpCardFront units={units} score={score} size={size} />
     </div>
   );
 };
@@ -34,6 +35,7 @@ SpOptionCard.defaultProps = {
   score: undefined,
   editAction: undefined,
   deleteAction: undefined,
+  size: undefined,
   className: undefined,
   id: undefined,
 };

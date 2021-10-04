@@ -2,6 +2,7 @@
 @import '../../ui/shadows.scss';
 
 .sp-creation-card {
+  $self: &;
   width: 8rem;
   height: 12rem;
   background-color: #ffffff;
@@ -44,9 +45,49 @@
     align-items: center;
   }
 
-  &__plus-icon {
+  &__icon {
     color: $dark;
     width: 2rem;
     height: 2rem;
+  }
+
+  &--small {
+    width: 7rem;
+    height: 10.5rem;
+
+    & #{ $self }__container {
+      width: 6rem;
+      height: 9.5rem;
+    }
+
+    & #{ $self }__circle {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    & #{ $self }__icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &--large {
+    width: 9rem;
+    height: 13.5rem;
+
+    & #{ $self }__container {
+      width: 8rem;
+      height: 12.5rem;
+    }
+
+    & #{ $self }__circle {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    & #{ $self }__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
   }
 }

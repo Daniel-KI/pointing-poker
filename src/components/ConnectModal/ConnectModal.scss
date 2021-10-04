@@ -3,6 +3,7 @@
 @import '../../ui/breakpoints.scss';
 
 .connect-form {
+  max-width: 100%;
   &__title {
     font-size: $title-lg;
     line-height: 78px;

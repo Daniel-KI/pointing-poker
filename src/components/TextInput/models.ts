@@ -16,4 +16,5 @@ export interface TextInputProps {
   required?: boolean;
   name?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onInvalid?: (event: React.FormEvent<HTMLInputElement>) => void;
 }

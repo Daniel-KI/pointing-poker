@@ -1,4 +1,5 @@
 .sp-vote-card {
+  margin: 1rem;
   $self: &;
   position: relative;
   width: 8rem;
@@ -33,5 +34,17 @@
     & #{ $self }__back {
       transform: rotateY(0deg) !important;
     }
+  }
+
+  &--small {
+    width: 7rem;
+    height: 10.5rem;
+    perspective: 40rem;
+  }
+
+  &--large {
+    width: 9rem;
+    height: 13.5rem;
+    perspective: 60rem;
   }
 }
