@@ -38,35 +38,34 @@ const Game: React.FC = () => {
   const currentUser = members.find(user => user.id === currentUserData.id);
   const isMaster = currentUserData.role === 'admin';
   const issues = useSelector((state: IState) => state.issues);
-  const results = useSelector((state: IState) => state.gameResults);
   const votes = useSelector((state: IState) => state.votes);
   const statistics = useSelector((state: IState) => state.gameResults);
 
   const [currentIssue, setCurrentIssue] = useState((): IIssue => issues[0]);
   const [isRoundStarted, setRoundStarted] = useState(false);
   const [isRoundEnded, setRoundEnded] = useState(false);
+
   const [minutes, setMinutes] = useState(() => settings.timer?.minutes);
   const [seconds, setSeconds] = useState(() => settings.timer?.seconds);
 
-  // const [isVisibleIssueTooltip, setVisibilityIssueTooltip] = useState(() => false);
   const [isCardsFlipped, setCardsFlipped] = useState(() => false);
   const [chosenCardIndex, setChosenCardIndex] = useState((): number | null => null);
-  // const [statisticsForCurrentIssue, setStatistics] = useState((): IStatistics[] | null => null);
 
-  // CRUD operation: Exit, Users, Issues ----------------------------
-  const [newUser, setNewUser] = useState<IUser | null>(null);
+  const [newСonnectedUser, setNewСonnectedUser] = useState<IUser | null>(null);
+
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [selectedIssue, setSelectedIssue] = useState<IIssue | null>(null);
 
   const [isActiveAddNewUserModal, setActiveAddNewUserModal] = useState(false);
-
-  const [isActiveStopConfirmModal, setActiveStatusStopConfirmModal] = useState(false);
-
   const [isActiveDeleteUserModal, setActiveStatusDeleteUserModal] = useState(false);
 
   const [isActiveCreateIssueModal, setActiveStatusCreateIssueModal] = useState(false);
   const [isActiveEditIssueModal, setActiveStatusEditIssueModal] = useState(false);
   const [isActiveDeleteIssueModal, setActiveStatusDeleteIssueModal] = useState(false);
+
+  const [isActiveExitModal, setActiveStatusExitModal] = useState(false);
+  const [isActiveFinishModal, setActiveStatusFinishModal] = useState(false);
+  // TODO - для модалки окончания игры + сделать кнопку + перенаправление на страницу результатов + уведомить
 
   useGame();
 
@@ -82,14 +81,17 @@ const Game: React.FC = () => {
     );
 
     socket.on('users', (users: IUser[], user: IUser) => {
-      if (currentUserData.role === 'admin' && !settings.addNewPlayersAutomatically) {
-        setNewUser(user);
-        setActiveAddNewUserModal(true);
-      } else if (settings.addNewPlayersAutomatically) {
+      if (settings.addNewPlayersAutomatically) {
         dispatch(updateUsers(users));
       }
+
       if (currentUserData.role === 'admin') {
-        socket.emit('game:sendState', user.id, { result: statistics, currentIssue, isRoundStarted, isRoundEnded });
+        if (settings.addNewPlayersAutomatically) {
+          socket.emit('game:sendState', user.id, { result: statistics, currentIssue, isRoundStarted, isRoundEnded });
+        } else {
+          setNewСonnectedUser(user);
+          setActiveAddNewUserModal(true);
+        }
       }
     });
 
@@ -98,16 +100,20 @@ const Game: React.FC = () => {
     });
 
     socket.on('startRound', () => {
-      if (!isRoundStarted && !isRoundEnded) {
+      if (!isRoundStarted) {
+        // ? можно убрать
         setRoundStarted(true);
         console.log('start round!');
       }
     });
 
     socket.on('endRound', () => {
-      setRoundStarted(false);
-      setRoundEnded(true);
-      console.log('stop round!');
+      if (!isRoundEnded) {
+        // ? можно убрать
+        setRoundStarted(false);
+        setRoundEnded(true);
+        console.log('stop round!');
+      }
     });
 
     return () => {
@@ -115,9 +121,20 @@ const Game: React.FC = () => {
     };
   }, []);
 
-  // stop game when everybody have voted
+  const getPlayers = (): IUser[] => {
+    return members.filter(member => !member.isObserver);
+  };
+
+  const getScore = (players: IUser[]): string[] => {
+    return players.map(player => votes.find(({ member }) => member.id === player.id)?.score || '');
+  };
+
+  const isIssueExistsInStatistics = (item: IIssue): boolean => {
+    return !!statistics.find(({ issue }) => issue.id === item.id);
+  };
+
   useDidUpdateEffect(() => {
-    const players = members.filter(member => !member.isObserver);
+    const players = getPlayers();
     if (settings.cardsFlipAutomatically && votes.length === players.length) {
       console.log('use effect for votes');
       setRoundEnded(true);
@@ -128,63 +145,90 @@ const Game: React.FC = () => {
   // count votes and save statistics
   useDidUpdateEffect(() => {
     if (isRoundEnded) {
-      const score = members
-        .filter(member => !member.isObserver)
-        .map(player => votes.find(({ member }) => member.id === player.id)?.score || '');
-      const votesForCurrentIssue = countVotes(score);
       setCardsFlipped(true);
-      if (!statistics.find(({ issue }) => issue.id === currentIssue.id)) {
+      const players = getPlayers();
+      const score = getScore(players);
+      const votesForCurrentIssue = countVotes(score);
+      if (!isIssueExistsInStatistics(currentIssue)) {
         console.log('add new result');
         dispatch(addGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
+      } else {
+        console.log('upd');
+        // else update
+        // проверить голосовали ли за эту issue и если да, удалить из голов (где записаны результаты прошлых баллов)
+        // перезаписать если повторно головал TODO
       }
       console.log(votes, 'from game end');
     }
   }, [isRoundEnded]);
 
-  useEffect(() => {
-    if (statistics.find(({ issue }) => issue.id === currentIssue.id)) {
-      console.log('use effect for current issue');
-      setRoundEnded(true);
-    }
-  }, [currentIssue]);
-
-  const onAddNewUserConfirm = () => {
-    setActiveAddNewUserModal(false);
+  // Game controls
+  const onClickExitBtn = () => {
+    setActiveStatusExitModal(true);
   };
-  const onAddNewUserDecline = () => {
-    setActiveAddNewUserModal(false);
-  };
-
-  // CRUD operation: Exit, Users, Issues ----------------------------
-  const onStopGameClick = () => {
-    setActiveStatusStopConfirmModal(true);
-  };
-  const onStopModalConfirm = () => {
-    if (master && roomId) {
-      leaveRoom(socket, master?.id, roomId);
-    }
-    setActiveStatusStopConfirmModal(false);
-  };
-  const onStopModalDecline = () => {
-    setActiveStatusStopConfirmModal(false);
-  };
-
-  const onUserDeleteModalConfirm = () => {
-    if (selectedUser && roomId) {
-      leaveRoom(socket, selectedUser.id, roomId);
-      setSelectedUser(null);
-      setActiveStatusDeleteUserModal(false);
+  const onExitModalConfirm = () => {
+    if (roomId && currentUserData && currentUserData.id) {
+      leaveRoom(socket, currentUserData.id, roomId);
+      setActiveStatusExitModal(false);
     }
   };
-  const onUserDeleteModalDecline = () => {
-    setActiveStatusDeleteUserModal(false);
-  };
-  const deleteUserAction = (user: IUser) => {
-    setSelectedUser(user);
-    setActiveStatusDeleteUserModal(true);
+  const onExitModalDecline = () => {
+    setActiveStatusExitModal(false);
   };
 
-  const addIssueAction = () => {
+  const onClickStartBtn = () => {
+    if (isMaster) {
+      // isRoundStarted && isRoundEnded - не бывает
+      // isRoundStarted && !isRoundEnded - идет игра (стоп)
+      // !isRoundStarted && isRoundEnded - после конца игры (рестарт)
+      // !isRoundStarted && !isRoundEnded - самый первый вход в игру (первый раз открыл страницу)
+      if (isRoundStarted && !isRoundEnded) {
+        socket.emit('game:endRound');
+        console.log('stop round click');
+      } else {
+        socket.emit('game:startRound');
+        console.log('start round click');
+      }
+    }
+  };
+
+  const onClickNextIssueBtn = () => {
+    if (!isRoundStarted) {
+      const nextIssueIndex = issues.findIndex(issue => issue.id === currentIssue.id) + 1;
+      const correctNewIssueIndex = nextIssueIndex < issues.length ? nextIssueIndex : 0;
+      console.log('change issue', issues[correctNewIssueIndex]);
+      changeCurrentIssue(socket, issues[correctNewIssueIndex]);
+      setRoundStarted(false);
+      setRoundEnded(false);
+    }
+  };
+
+  const getControlRoundBtnText = (): string => {
+    if (isRoundStarted && !isRoundEnded) return 'Stop round';
+    if (!isRoundStarted && isRoundEnded) return 'Restart round';
+    return 'Run round';
+  };
+
+  // Select issue
+  const onClickIssue = (chosenIssue: IIssue) => {
+    if (isMaster) {
+      if (isRoundStarted && !isRoundEnded) return;
+      if (currentIssue.id === chosenIssue.id) return;
+      console.log('change issue', chosenIssue);
+      setRoundStarted(false);
+      setRoundEnded(false);
+      changeCurrentIssue(socket, chosenIssue);
+    }
+  };
+
+  const getIssueColorByStatus = (issue: IIssue): Color | undefined => {
+    if (currentIssue.id === issue.id) return 'primary';
+    if (isIssueExistsInStatistics(issue)) return 'dark';
+    return undefined;
+  };
+
+  // Add issue card
+  const createIssueAction = () => {
     setActiveStatusCreateIssueModal(true);
   };
   const onCreateIssueModalConfirm = (name: string, priority: PriorityLevel) => {
@@ -193,6 +237,8 @@ const Game: React.FC = () => {
     socket.emit('issue:add', newIssue);
     setActiveStatusCreateIssueModal(false);
   };
+
+  // Crud for issue card
   const editIssueAction = (issue: IIssue) => {
     setSelectedIssue(issue);
     setActiveStatusEditIssueModal(true);
@@ -204,11 +250,13 @@ const Game: React.FC = () => {
       setActiveStatusEditIssueModal(false);
     }
   };
+
   const deleteIssueAction = (issue: IIssue) => {
     setSelectedIssue(issue);
     setActiveStatusDeleteIssueModal(true);
   };
   const onIssueDeleteModalDecline = () => {
+    setSelectedIssue(null);
     setActiveStatusDeleteIssueModal(false);
   };
   const onIssueDeleteModalConfirm = () => {
@@ -218,31 +266,49 @@ const Game: React.FC = () => {
       setActiveStatusDeleteIssueModal(false);
     }
   };
-  // ----------------------------------------------------------------
 
-  const onChangeCurrentIssue = (chosenIssue: IIssue) => {
-    console.log('change issue', chosenIssue);
-    changeCurrentIssue(socket, chosenIssue);
+  // Add new user after connection request
+  const onAddNewUserConfirm = () => {
+    if (newСonnectedUser) {
+      // ответ пользователю, что его пустили TODO
+      socket.emit('game:sendState', newСonnectedUser.id, {
+        result: statistics,
+        currentIssue,
+        isRoundStarted,
+        isRoundEnded,
+      });
+      setNewСonnectedUser(null);
+      setActiveAddNewUserModal(false);
+    }
+  };
+  const onAddNewUserDecline = () => {
+    setNewСonnectedUser(null);
+    setActiveAddNewUserModal(false);
+    // ответ пользователю, что его не пустили TODO
   };
 
-  const onNextIssue = () => {
-    const nextIssueIndex = issues.findIndex(issue => issue.id === currentIssue.id) + 1;
-    console.log('change issue', issues[nextIssueIndex]);
-    changeCurrentIssue(socket, issues[nextIssueIndex]);
+  // Crud for user
+  const deleteUserAction = (user: IUser) => {
+    setSelectedUser(user);
+    setActiveStatusDeleteUserModal(true);
+  };
+  const onUserDeleteModalConfirm = () => {
+    if (selectedUser && roomId) {
+      leaveRoom(socket, selectedUser.id, roomId);
+      setSelectedUser(null);
+      setActiveStatusDeleteUserModal(false);
+    }
+  };
+  const onUserDeleteModalDecline = () => {
+    setSelectedUser(null);
+    setActiveStatusDeleteUserModal(false);
   };
 
+  // Vote
   const onChooseCard = (index: number, value: string) => {
-    setChosenCardIndex(index);
-    socket.emit('game:vote', currentUser, value);
-  };
-
-  const onStartRound = () => {
-    if (!isRoundStarted) {
-      socket.emit('game:startRound');
-      console.log('start round click');
-    } else if (isRoundStarted && !isRoundEnded) {
-      socket.emit('game:endRound');
-      console.log('stop round click');
+    if (isRoundStarted && !isRoundEnded) {
+      setChosenCardIndex(index);
+      socket.emit('game:vote', currentUser, value);
     }
   };
 
@@ -268,8 +334,8 @@ const Game: React.FC = () => {
                 />
               </div>
               <div className='scram-master__card-master-btn'>
-                <Button color='danger' size='large' className='scram-master__exit-btn' onClick={onStopGameClick}>
-                  {isMaster ? 'Stop game' : 'Exit'}
+                <Button color='danger' size='large' className='scram-master__exit-btn' onClick={onClickExitBtn}>
+                  Exit
                 </Button>
               </div>
               {settings.timer ? (
@@ -287,54 +353,46 @@ const Game: React.FC = () => {
                     disabled={!master}
                   />
                 </div>
-              ) : (
-                [isRoundStarted ? <h3 className='game__issues-title'>Round started!</h3> : null]
-              )}
+              ) : null}
+
               {isMaster ? (
                 <div className='scram-master__timer-btn'>
-                  <Button color='dark' size='large' onClick={onStartRound}>
-                    {!isRoundStarted && !isRoundEnded
-                      ? 'Run round'
-                      : [isRoundStarted && !isRoundEnded ? 'Stop round' : 'Restart round']}
+                  <Button color='success' size='large' onClick={onClickStartBtn}>
+                    {getControlRoundBtnText()}
                   </Button>
-                  {!isRoundEnded && issues.findIndex(issue => issue.id === currentIssue.id) !== issues.length - 1 ? (
-                    <Button color='dark' size='large' onClick={onNextIssue}>
-                      Next issue
-                    </Button>
-                  ) : null}
+                  <Button
+                    color='dark'
+                    size='large'
+                    onClick={onClickNextIssueBtn}
+                    disabled={isRoundStarted && !isRoundEnded}
+                  >
+                    Next issue
+                  </Button>
                 </div>
               ) : null}
             </div>
             <div className='game__issues'>
               <h3 className='game__issues-title'>Issues</h3>
               <div className='game__issues-field'>
-                {issues.map(item => {
-                  let color: Color | undefined;
-                  if (currentIssue.id === item.id) {
-                    color = 'primary';
-                  } else if (results.find(({ issue }) => issue.id === item.id)) {
-                    color = 'dark';
-                  }
-                  return (
-                    <IssueCard
-                      id={item.id.toString()}
-                      key={item.id}
-                      name={item.name}
-                      priority={item.priority}
-                      deleteAction={isMaster ? () => deleteIssueAction(item) : undefined}
-                      editAction={isMaster ? () => editIssueAction(item) : undefined}
-                      className='game__issue'
-                      color={color}
-                      onClick={
-                        currentIssue.id !== item.id && isMaster && !isRoundStarted
-                          ? () => onChangeCurrentIssue(item)
-                          : undefined
-                      }
-                    />
-                  );
-                })}
+                {issues.map(item => (
+                  <IssueCard
+                    id={item.id.toString()}
+                    key={item.id}
+                    name={item.name}
+                    priority={item.priority}
+                    deleteAction={isMaster ? () => deleteIssueAction(item) : undefined}
+                    editAction={isMaster ? () => editIssueAction(item) : undefined}
+                    className='game__issue'
+                    color={getIssueColorByStatus(item)}
+                    onClick={() => onClickIssue(item)}
+                  />
+                ))}
                 {isMaster ? (
-                  <IssueCreationCard label='Create issue' addAction={addIssueAction} className='game__create-issue' />
+                  <IssueCreationCard
+                    label='Create issue'
+                    addAction={createIssueAction}
+                    className='game__create-issue'
+                  />
                 ) : null}
               </div>
             </div>
@@ -352,7 +410,7 @@ const Game: React.FC = () => {
                         units={settings.scoreType}
                         isFlipped={isCardsFlipped}
                         isSelected={chosenCardIndex === index}
-                        onClick={!isRoundEnded && isRoundStarted ? () => onChooseCard(index, value) : undefined}
+                        onClick={() => onChooseCard(index, value)}
                         size='large'
                       />
                     </div>
@@ -360,11 +418,11 @@ const Game: React.FC = () => {
                 </div>
               </div>
             )}
-            {isRoundEnded ? (
-              <div className='game__statistics'>
-                <h3 className='game__statistics-title'>Statistics</h3>
-                <div className='game__statistics-field'>
-                  {statistics
+            <div className='game__statistics'>
+              <h3 className='game__statistics-title'>Statistics</h3>
+              <div className='game__statistics-field'>
+                {isIssueExistsInStatistics(currentIssue) ? (
+                  statistics
                     .find(({ issue }) => issue.id === currentIssue.id)
                     ?.votesPercentage.map((element, index) => (
                       <div key={index.toString()}>
@@ -376,10 +434,12 @@ const Game: React.FC = () => {
                         />
                         <div className='game__statistics-percent'>{element.percentage}%</div>
                       </div>
-                    ))}
-                </div>
+                    ))
+                ) : (
+                  <p>No results yet</p>
+                )}
               </div>
-            ) : null}
+            </div>
           </div>
           <div className='game__score-wrapper'>
             <h3 className='game__score-title'>Score table</h3>
@@ -425,56 +485,55 @@ const Game: React.FC = () => {
       <Footer />
 
       <ConfirmModal
-        isActive={isActiveStopConfirmModal}
-        setActive={setActiveStatusStopConfirmModal}
-        onDecline={onStopModalDecline}
-        onConfirm={onStopModalConfirm}
+        isActive={isActiveExitModal}
+        setActive={setActiveStatusExitModal}
+        onDecline={onExitModalDecline}
+        onConfirm={onExitModalConfirm}
       >
-        {isMaster ? <p>Are you sure you want to stop the game?</p> : <p>Are you sure you want to exit the game?</p>}
+        <div>
+          <p>Are you sure you want to exit the game?</p>
+          {isMaster ? <p>(because of you are a master, other users will also leave the game)</p> : null}
+        </div>
       </ConfirmModal>
 
-      {isMaster ? (
-        <>
-          <ConfirmModal
-            isActive={isActiveDeleteUserModal}
-            setActive={setActiveStatusDeleteUserModal}
-            onDecline={onUserDeleteModalDecline}
-            onConfirm={onUserDeleteModalConfirm}
-          >
-            {`Remove ${selectedUser?.firstName} ${selectedUser?.lastName} from the game?`}
-          </ConfirmModal>
+      <ConfirmModal
+        isActive={isActiveDeleteUserModal}
+        setActive={setActiveStatusDeleteUserModal}
+        onDecline={onUserDeleteModalDecline}
+        onConfirm={onUserDeleteModalConfirm}
+      >
+        {`Remove ${selectedUser?.firstName} ${selectedUser?.lastName} from the game?`}
+      </ConfirmModal>
 
-          <CreateIssueModal
-            isActive={isActiveCreateIssueModal}
-            setActive={setActiveStatusCreateIssueModal}
-            onSubmit={onCreateIssueModalConfirm}
-          />
+      <CreateIssueModal
+        isActive={isActiveCreateIssueModal}
+        setActive={setActiveStatusCreateIssueModal}
+        onSubmit={onCreateIssueModalConfirm}
+      />
 
-          <CreateIssueModal
-            isActive={isActiveEditIssueModal}
-            setActive={setActiveStatusEditIssueModal}
-            onSubmit={onEditIssueModalConfirm}
-          />
+      <CreateIssueModal
+        isActive={isActiveEditIssueModal}
+        setActive={setActiveStatusEditIssueModal}
+        onSubmit={onEditIssueModalConfirm}
+      />
 
-          <ConfirmModal
-            isActive={isActiveDeleteIssueModal}
-            setActive={setActiveStatusDeleteIssueModal}
-            onDecline={onIssueDeleteModalDecline}
-            onConfirm={onIssueDeleteModalConfirm}
-          >
-            {`Remove issue "${selectedIssue?.name}" from the game?`}
-          </ConfirmModal>
+      <ConfirmModal
+        isActive={isActiveDeleteIssueModal}
+        setActive={setActiveStatusDeleteIssueModal}
+        onDecline={onIssueDeleteModalDecline}
+        onConfirm={onIssueDeleteModalConfirm}
+      >
+        {`Remove issue "${selectedIssue?.name}" from the game?`}
+      </ConfirmModal>
 
-          <ConfirmModal
-            isActive={isActiveAddNewUserModal}
-            setActive={setActiveAddNewUserModal}
-            onDecline={onAddNewUserDecline}
-            onConfirm={onAddNewUserConfirm}
-          >
-            {`${newUser?.firstName} ${newUser?.lastName} wants to join the game`}
-          </ConfirmModal>
-        </>
-      ) : null}
+      <ConfirmModal
+        isActive={isActiveAddNewUserModal}
+        setActive={setActiveAddNewUserModal}
+        onDecline={onAddNewUserDecline}
+        onConfirm={onAddNewUserConfirm}
+      >
+        {`${newСonnectedUser?.firstName} ${newСonnectedUser?.lastName} wants to join the game`}
+      </ConfirmModal>
     </div>
   );
 };
