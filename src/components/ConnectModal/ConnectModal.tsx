@@ -21,6 +21,7 @@ import validateFullName from '../../utils/validation/validateFullName';
 import emptyStringValidation from '../../utils/validation/emptyStringValidation';
 import { updateSettings } from '../../redux/actions/settingsActions';
 import { updateIssues } from '../../redux/actions/issuesActions';
+import { updateUsers } from '../../redux/actions/usersActions';
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
@@ -148,9 +149,10 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
       return;
     }
     dispatch(updateRoom(roomData));
-    if (roomData.isGameStarted && roomData.settings && roomData.issues) {
+    if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
       dispatch(updateSettings(roomData.settings));
       dispatch(updateIssues(roomData.issues));
+      dispatch(updateUsers(roomData.users));
     }
     resetData();
     setActive(false);

@@ -26,6 +26,7 @@ export interface IRoom {
   isGameStarted?: boolean;
   settings?: ISettings;
   issues?: IIssue[];
+  users?: IUser[];
 }
 
 export interface ICurrentUser {
@@ -54,6 +55,11 @@ export interface IMessage {
   text: string;
 }
 
+export interface IVote {
+  member: IUser;
+  score: string;
+}
+
 export interface IGameResult {
   issue: IIssue;
   votesPercentage: IStatistics[];
@@ -73,4 +79,5 @@ export interface IState {
   messages: IMessage[];
   settings: ISettings;
   gameResults: IGameResult[];
+  votes: IVote[];
 }

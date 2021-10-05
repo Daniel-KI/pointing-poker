@@ -26,9 +26,10 @@ const useLobby = (): void => {
       dispatch(addMessage(message));
     });
 
-    socket.on('settings', (settingsData: ISettings, issues: IIssue[]) => {
+    socket.on('settings', (settingsData: ISettings, issues: IIssue[], users: IUser[]) => {
       dispatch(updateSettings(settingsData));
       dispatch(updateIssues(issues));
+      dispatch(updateUsers(users));
       history.push(`/game/${roomId}`);
     });
 

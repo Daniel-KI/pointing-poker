@@ -13,17 +13,17 @@ import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueCreationCard from '../../components/IssueCreationCard/IssueCreationCard';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
-import { IIssue, IState, IStatistics, IUser } from '../../redux/models';
-import { addIssue, removeIssue, updateIssue, updateIssues } from '../../redux/actions/issuesActions';
+import { IGameResult, IIssue, IState, IUser } from '../../redux/models';
 import PriorityLevel from '../../types/PriorityLevel';
 import changeCurrentIssue from '../../api/changeCurrentIssue';
 import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import countVotes from '../../utils/countVotes';
-import { addGameResult } from '../../redux/actions/gameResultsActions';
+import { addGameResult, updateGameResults } from '../../redux/actions/gameResultsActions';
 import useGame from '../../hooks/useGame';
 import { updateUsers } from '../../redux/actions/usersActions';
 import Color from '../../types/Color';
-import Tooltip from '../../components/Tooltip/Tooltip';
+import leaveRoom from '../../api/leaveRoom';
+import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -39,16 +39,19 @@ const Game: React.FC = () => {
   const isMaster = currentUserData.role === 'admin';
   const issues = useSelector((state: IState) => state.issues);
   const results = useSelector((state: IState) => state.gameResults);
+  const votes = useSelector((state: IState) => state.votes);
+  const statistics = useSelector((state: IState) => state.gameResults);
 
-  const [isRoundEnded, setRoundEnded] = useState(false);
+  const [currentIssue, setCurrentIssue] = useState((): IIssue => issues[0]);
   const [isRoundStarted, setRoundStarted] = useState(false);
+  const [isRoundEnded, setRoundEnded] = useState(false);
   const [minutes, setMinutes] = useState(() => settings.timer?.minutes);
   const [seconds, setSeconds] = useState(() => settings.timer?.seconds);
 
   // const [isVisibleIssueTooltip, setVisibilityIssueTooltip] = useState(() => false);
   const [isCardsFlipped, setCardsFlipped] = useState(() => false);
   const [chosenCardIndex, setChosenCardIndex] = useState((): number | null => null);
-  const [statisticsForCurrentIssue, setStatistics] = useState((): IStatistics[] | null => null);
+  // const [statisticsForCurrentIssue, setStatistics] = useState((): IStatistics[] | null => null);
 
   // CRUD operation: Exit, Users, Issues ----------------------------
   const [newUser, setNewUser] = useState<IUser | null>(null);
@@ -65,9 +68,19 @@ const Game: React.FC = () => {
   const [isActiveEditIssueModal, setActiveStatusEditIssueModal] = useState(false);
   const [isActiveDeleteIssueModal, setActiveStatusDeleteIssueModal] = useState(false);
 
-  const { votes, currentIssue } = useGame();
+  useGame();
 
   useEffect(() => {
+    socket.on(
+      'getGameState',
+      (state: { result: IGameResult[]; currentIssue: IIssue; isRoundStarted: boolean; isRoundEnded: boolean }) => {
+        dispatch(updateGameResults(state.result));
+        setCurrentIssue(state.currentIssue);
+        setRoundStarted(state.isRoundStarted);
+        setRoundEnded(state.isRoundEnded);
+      },
+    );
+
     socket.on('users', (users: IUser[], user: IUser) => {
       if (currentUserData.role === 'admin' && !settings.addNewPlayersAutomatically) {
         setNewUser(user);
@@ -75,6 +88,13 @@ const Game: React.FC = () => {
       } else if (settings.addNewPlayersAutomatically) {
         dispatch(updateUsers(users));
       }
+      if (currentUserData.role === 'admin') {
+        socket.emit('game:sendState', user.id, { result: statistics, currentIssue, isRoundStarted, isRoundEnded });
+      }
+    });
+
+    socket.on('currentIssue', (issue: IIssue) => {
+      setCurrentIssue(issue);
     });
 
     socket.on('startRound', () => {
@@ -96,28 +116,42 @@ const Game: React.FC = () => {
   }, []);
 
   // stop game when everybody have voted
-  useEffect(() => {
+  useDidUpdateEffect(() => {
     const players = members.filter(member => !member.isObserver);
     if (settings.cardsFlipAutomatically && votes.length === players.length) {
+      console.log('use effect for votes');
       setRoundEnded(true);
+      setRoundStarted(false);
     }
   }, [votes]);
 
   // count votes and save statistics
-  useEffect(() => {
+  useDidUpdateEffect(() => {
     if (isRoundEnded) {
-      const votesForCurrentIssue = countVotes(votes.map(({ score }) => score));
-      console.log(votesForCurrentIssue, 'from useEffect for round end');
-      setStatistics(votesForCurrentIssue);
+      const score = members
+        .filter(member => !member.isObserver)
+        .map(player => votes.find(({ member }) => member.id === player.id)?.score || '');
+      const votesForCurrentIssue = countVotes(score);
       setCardsFlipped(true);
-      dispatch(addGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
+      if (!statistics.find(({ issue }) => issue.id === currentIssue.id)) {
+        console.log('add new result');
+        dispatch(addGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
+      }
+      console.log(votes, 'from game end');
     }
   }, [isRoundEnded]);
 
-  const onIssueAddNewUserConfirm = () => {
+  useEffect(() => {
+    if (statistics.find(({ issue }) => issue.id === currentIssue.id)) {
+      console.log('use effect for current issue');
+      setRoundEnded(true);
+    }
+  }, [currentIssue]);
+
+  const onAddNewUserConfirm = () => {
     setActiveAddNewUserModal(false);
   };
-  const onIssueAddNewUserDecline = () => {
+  const onAddNewUserDecline = () => {
     setActiveAddNewUserModal(false);
   };
 
@@ -126,7 +160,9 @@ const Game: React.FC = () => {
     setActiveStatusStopConfirmModal(true);
   };
   const onStopModalConfirm = () => {
-    // leaveRoom(socket, master.id, roomId);
+    if (master && roomId) {
+      leaveRoom(socket, master?.id, roomId);
+    }
     setActiveStatusStopConfirmModal(false);
   };
   const onStopModalDecline = () => {
@@ -135,7 +171,7 @@ const Game: React.FC = () => {
 
   const onUserDeleteModalConfirm = () => {
     if (selectedUser && roomId) {
-      // leaveRoom(socket, selectedUser.id, roomId);
+      leaveRoom(socket, selectedUser.id, roomId);
       setSelectedUser(null);
       setActiveStatusDeleteUserModal(false);
     }
@@ -154,8 +190,7 @@ const Game: React.FC = () => {
   const onCreateIssueModalConfirm = (name: string, priority: PriorityLevel) => {
     const id = issues.length > 0 ? issues[issues.length - 1].id + 1 : 1;
     const newIssue = { id, name, priority };
-    dispatch(addIssue(newIssue));
-    // socket.emit('issue:add', newIssue);
+    socket.emit('issue:add', newIssue);
     setActiveStatusCreateIssueModal(false);
   };
   const editIssueAction = (issue: IIssue) => {
@@ -164,8 +199,7 @@ const Game: React.FC = () => {
   };
   const onEditIssueModalConfirm = (name: string, priority: PriorityLevel) => {
     if (selectedIssue) {
-      dispatch(updateIssue({ id: selectedIssue.id, name, priority }));
-      // socket.emit('issue:update', { id: selectedIssue.id, name, priority });
+      socket.emit('issue:update', { id: selectedIssue.id, name, priority });
       setSelectedIssue(null);
       setActiveStatusEditIssueModal(false);
     }
@@ -179,8 +213,7 @@ const Game: React.FC = () => {
   };
   const onIssueDeleteModalConfirm = () => {
     if (selectedIssue) {
-      dispatch(removeIssue(selectedIssue.id));
-      // socket.emit('issue:delete', selectedIssue);
+      socket.emit('issue:delete', selectedIssue);
       setSelectedIssue(null);
       setActiveStatusDeleteIssueModal(false);
     }
@@ -188,7 +221,7 @@ const Game: React.FC = () => {
   // ----------------------------------------------------------------
 
   const onChangeCurrentIssue = (chosenIssue: IIssue) => {
-    // console.log('change issue', issue);
+    console.log('change issue', chosenIssue);
     changeCurrentIssue(socket, chosenIssue);
   };
 
@@ -283,12 +316,6 @@ const Game: React.FC = () => {
                     color = 'dark';
                   }
                   return (
-                    // <Tooltip
-                    //   message='You cannot start the game without at least two card values'
-                    //   visibility={isVisibleIssueTooltip}
-                    //   setVisibilityStatus={setVisibilityIssueTooltip}
-                    //   color='light'
-                    // >
                     <IssueCard
                       id={item.id.toString()}
                       key={item.id}
@@ -304,7 +331,6 @@ const Game: React.FC = () => {
                           : undefined
                       }
                     />
-                    // </Tooltip>
                   );
                 })}
                 {isMaster ? (
@@ -316,11 +342,6 @@ const Game: React.FC = () => {
               <div className='game__vote'>
                 <div>
                   <h3 className='game__vote-title'>Vote</h3>
-                  {settings.canChangeChoice && isRoundStarted && !isRoundEnded && isCardsFlipped ? (
-                    <Button color='dark' size='large' onClick={() => setCardsFlipped(false)}>
-                      Change choice
-                    </Button>
-                  ) : null}
                 </div>
                 <div className='game__vote-field'>
                   {settings.cardValues.map((value, index) => (
@@ -343,17 +364,19 @@ const Game: React.FC = () => {
               <div className='game__statistics'>
                 <h3 className='game__statistics-title'>Statistics</h3>
                 <div className='game__statistics-field'>
-                  {statisticsForCurrentIssue?.map((element, index) => (
-                    <div key={index.toString()}>
-                      <SpCardFront
-                        className='game__statistics_cards-front-item'
-                        score={element.value}
-                        units={settings.scoreType}
-                        size='small'
-                      />
-                      <div className='game__statistics-percent'>{element.percentage}</div>
-                    </div>
-                  ))}
+                  {statistics
+                    .find(({ issue }) => issue.id === currentIssue.id)
+                    ?.votesPercentage.map((element, index) => (
+                      <div key={index.toString()}>
+                        <SpCardFront
+                          className='game__statistics_cards-front-item'
+                          score={element.value}
+                          units={settings.scoreType}
+                          size='small'
+                        />
+                        <div className='game__statistics-percent'>{element.percentage}%</div>
+                      </div>
+                    ))}
                 </div>
               </div>
             ) : null}
@@ -368,21 +391,27 @@ const Game: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {votes
-                  .sort(({ member }) => (member.isObserver ? 1 : -1))
+                {members
+                  .sort(member => (member.isObserver ? 1 : -1))
                   .map(element => (
-                    <tr key={element.member.id} className='game__score-tr'>
+                    <tr key={element.id} className='game__score-tr'>
                       <td data-label='Score' className='game__table-score'>
-                        {element.member.isObserver ? `---` : [isRoundEnded ? element.score : 'In progress']}
+                        {element.isObserver
+                          ? `---`
+                          : [
+                              isRoundStarted
+                                ? 'In progress'
+                                : votes.find(({ member }) => member.id === element.id)?.score,
+                            ]}
                       </td>
                       <td data-label='Player' className='game__table-card'>
                         <UserCard
-                          name={element.member.firstName}
-                          surname={element.member.lastName}
-                          jobPosition={element.member.position}
-                          avatar={element.member.avatar}
-                          color={element.member.isObserver ? undefined : 'warning'}
-                          deleteAction={isMaster ? () => deleteUserAction(element.member) : undefined}
+                          name={element.firstName}
+                          surname={element.lastName}
+                          jobPosition={element.position}
+                          avatar={element.avatar}
+                          color={element.isObserver ? undefined : 'warning'}
+                          deleteAction={isMaster ? () => deleteUserAction(element) : undefined}
                           className='game__user-card'
                         />
                       </td>
@@ -439,8 +468,8 @@ const Game: React.FC = () => {
           <ConfirmModal
             isActive={isActiveAddNewUserModal}
             setActive={setActiveAddNewUserModal}
-            onDecline={onIssueAddNewUserDecline}
-            onConfirm={onIssueAddNewUserConfirm}
+            onDecline={onAddNewUserDecline}
+            onConfirm={onAddNewUserConfirm}
           >
             {`${newUser?.firstName} ${newUser?.lastName} wants to join the game`}
           </ConfirmModal>
