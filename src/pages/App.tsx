@@ -5,6 +5,7 @@ import { IState } from '../redux/models';
 import { adminRoutes, routes } from '../constants/routes';
 
 import './App.scss';
+import '../ui/toast-notification.scss';
 import Main from './Main/Main';
 
 function App(): ReactElement {

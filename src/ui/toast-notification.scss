@@ -1,0 +1,19 @@
+@import './colors.scss';
+@import '../ui/fonts.scss';
+:root {
+  --toastify-color-light: #fff;
+  --toastify-color-dark: #{$dark};
+  --toastify-color-info: #{$primary};
+  --toastify-color-success: #{$success};
+  --toastify-color-warning: #{$warning};
+  --toastify-color-error: #{$danger};
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-text-color-light: #{$text-dark};
+  --toastify-text-color-dark: #{$text-light};
+
+  --toastify-spinner-color: #{$text-dark-secondary};
+  --toastify-spinner-color-empty-area: #{$text-light-secondary};
+
+  --toastify-font-family: #{$default-font-family};
+}
