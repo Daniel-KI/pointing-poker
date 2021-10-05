@@ -1,30 +1,17 @@
 import { IUser } from '../models';
 
-export const ADD_USER = 'ADD_USER';
-export const REMOVE_USER = 'REMOVE_USER';
+export const UPDATE_USERS = 'UPDATE_USERS';
 
-interface IAddUserAction {
-  type: typeof ADD_USER;
-  user: IUser;
+interface IUpdateUsersAction {
+  type: typeof UPDATE_USERS;
+  users: IUser[];
 }
 
-interface IRemoveUserAction {
-  type: typeof REMOVE_USER;
-  user: IUser;
-}
+export type UsersActionsType = IUpdateUsersAction;
 
-export type UsersActionsType = IAddUserAction | IRemoveUserAction;
-
-export const addUser = (user: IUser): IAddUserAction => {
+export const updateUsers = (users: IUser[]): IUpdateUsersAction => {
   return {
-    type: ADD_USER,
-    user,
-  };
-};
-
-export const removeUser = (user: IUser): IRemoveUserAction => {
-  return {
-    type: REMOVE_USER,
-    user,
+    type: UPDATE_USERS,
+    users,
   };
 };

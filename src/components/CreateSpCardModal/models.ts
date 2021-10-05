@@ -3,5 +3,4 @@ export interface CreateSpCardModalProps {
   setActive: (value: boolean) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   score?: string;
-  units?: string;
 }

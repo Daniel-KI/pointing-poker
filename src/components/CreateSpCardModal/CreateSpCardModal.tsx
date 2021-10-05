@@ -15,18 +15,24 @@ import Toggle from '../Toggle/Toggle';
 //   console.log(Boolean(formData.get('unknown')));
 // };
 
-const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActive, onSubmit, score, units }) => {
+const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActive, onSubmit, score }) => {
   const [isUnknown, setUnknownStatus] = useState<boolean>(false);
 
   const cancelBtnOnClick = () => {
+    setUnknownStatus(false);
     setActive(false);
   };
 
+  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    if (onSubmit) onSubmit(event);
+    setUnknownStatus(false);
+  };
+
   return (
-    <ModalBox active={isActive} setActive={setActive}>
+    <ModalBox active={isActive} setActive={cancelBtnOnClick}>
       <div className='create-sp-card-modal'>
         <h2 className='create-sp-card-modal__title'>Create vote card</h2>
-        <form className='create-sp-card-modal__form' onSubmit={onSubmit}>
+        <form className='create-sp-card-modal__form' onSubmit={onFormSubmit}>
           <div className='create-sp-card-modal__text-inputs'>
             <TextInput
               name='score'
@@ -38,17 +44,7 @@ const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActi
               disabled={isUnknown}
               autocomplete='on'
             />
-            <TextInput
-              name='units'
-              value={units}
-              placeholder='Units'
-              size='large'
-              color='light'
-              bordered
-              disabled={isUnknown}
-              autocomplete='on'
-            />
-            <Toggle name='unknown' checked={isUnknown} onChange={setUnknownStatus}>
+            <Toggle name='isUnknown' checked={isUnknown} onChange={setUnknownStatus}>
               Unknown card
             </Toggle>
           </div>
@@ -68,7 +64,6 @@ const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActi
 
 CreateSpCardModal.defaultProps = {
   onSubmit: undefined,
-  units: '',
   score: '',
 };
 

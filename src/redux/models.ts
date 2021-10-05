@@ -1,15 +1,16 @@
 import { Socket } from 'socket.io-client';
 import PriorityLevel from '../types/PriorityLevel';
+import SpCardBackType from '../types/SpCardBackType';
 
 import UserType from '../types/UserType';
 
 export interface IUser {
-  id?: string;
+  id: string;
   firstName: string;
   lastName: string;
   position: string;
   avatar: string;
-  isObserver?: boolean;
+  isObserver: boolean;
 }
 
 export interface IIssue {
@@ -22,6 +23,10 @@ export interface IRoom {
   id: string | undefined;
   name: string | undefined;
   admin: IUser | undefined;
+  isGameStarted?: boolean;
+  settings?: ISettings;
+  issues?: IIssue[];
+  users?: IUser[];
 }
 
 export interface ICurrentUser {
@@ -29,20 +34,40 @@ export interface ICurrentUser {
   role: UserType;
 }
 
+export interface ITimer {
+  minutes: number;
+  seconds: number;
+}
+
 export interface ISettings {
   isAdminObserver: boolean;
-  timer: null | string;
+  timer: null | ITimer;
   scoreType: string;
-  scoreTypeShort: string;
   cardValues: string[];
-  cardBack: string;
+  cardBack: SpCardBackType;
   addNewPlayersAutomatically: boolean;
   cardsFlipAutomatically: boolean;
+  canChangeChoice: boolean;
 }
 
 export interface IMessage {
   user: IUser;
   text: string;
+}
+
+export interface IVote {
+  member: IUser;
+  score: string;
+}
+
+export interface IGameResult {
+  issue: IIssue;
+  votesPercentage: IStatistics[];
+}
+
+export interface IStatistics {
+  value: string;
+  percentage: number;
 }
 
 export interface IState {
@@ -52,4 +77,7 @@ export interface IState {
   users: IUser[];
   issues: IIssue[];
   messages: IMessage[];
+  settings: ISettings;
+  gameResults: IGameResult[];
+  votes: IVote[];
 }

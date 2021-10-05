@@ -1,23 +1,37 @@
 import { IUser } from '../models';
-import { ADD_USER, REMOVE_USER, UsersActionsType } from '../actions/usersActions';
+import { UPDATE_USERS, UsersActionsType } from '../actions/usersActions';
 
-const initialState: IUser[] = [];
+const initialState: IUser[] = [
+  // {
+  //   id: 'FoI4w4XyQS9Znf8PAAAJ',
+  //   firstName: 'aaa',
+  //   lastName: 'aaa',
+  //   position: 'aaaa',
+  //   avatar: '',
+  //   isObserver: false,
+  // },
+  // {
+  //   id: '0tmLjtZPwz3W1nB9AAAL',
+  //   firstName: 'xxx',
+  //   lastName: 'xxx',
+  //   position: 'xxx',
+  //   avatar: '',
+  //   isObserver: true,
+  // },
+  // {
+  //   id: 'Yvo3iyLmp_JTYpeeAAAH',
+  //   firstName: 'sss',
+  //   lastName: 'sss',
+  //   position: 'sss',
+  //   avatar: '',
+  //   isObserver: false,
+  // },
+];
 
 const usersReducer = (state = initialState, action: UsersActionsType): IUser[] => {
   switch (action.type) {
-    case ADD_USER: {
-      // send new user to server
-      const newUsers = [...state];
-      newUsers.push(action.user);
-      return newUsers;
-    }
-    case REMOVE_USER: {
-      // send removed user to server
-      const removedIndex = state.findIndex(({ id }) => id === action.user.id);
-      const newUsers = [...state];
-      newUsers.splice(removedIndex, 1);
-      return newUsers;
-    }
+    case UPDATE_USERS:
+      return [...action.users];
     default:
       return state;
   }

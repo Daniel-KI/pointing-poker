@@ -6,7 +6,9 @@ import currentUserReducer from './reducers/currentUserReducer';
 import usersReducer from './reducers/usersReducer';
 import issuesReducer from './reducers/issuesReducer';
 import settingsReducer from './reducers/settingsReducer';
-import messagesReducer from './reducers/messagesReduser';
+import messagesReducer from './reducers/messagesReducer';
+import gameResultsReducer from './reducers/gameResultsReducer';
+import votesReducer from './reducers/votesReducer';
 
 const rootReducer = combineReducers({
   socket: socketReducer,
@@ -16,6 +18,8 @@ const rootReducer = combineReducers({
   issues: issuesReducer,
   settings: settingsReducer,
   messages: messagesReducer,
+  gameResults: gameResultsReducer,
+  votes: votesReducer,
 });
 
 const store = createStore(rootReducer);

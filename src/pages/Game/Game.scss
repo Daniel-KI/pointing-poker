@@ -22,193 +22,69 @@
     display: flex;
     justify-content: center;
     gap: 20px;
-
-    &_content {
-      -ms-text-overflow: ellipsis;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      -ms-line-clamp: 2;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      display: -webkit-box;
-      display: box;
-      word-wrap: break-word;
-      -webkit-box-orient: vertical;
-      box-orient: vertical;
-    }
   }
 
-  &__scram-master {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 50px;
-    margin-bottom: 100px;
+  &__title-content {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -ms-line-clamp: 2;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    display: -webkit-box;
+    display: box;
+    word-wrap: break-word;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+  }
 
+  &__score-wrapper {
     @media (max-width: $screen-xl) {
-      flex-direction: column;
-      gap: 100px;
-    }
-
-    @media (max-width: $screen-md) {
-      gap: 50px;
-    }
-
-    &_score-title {
-      text-align: center;
-      margin-bottom: 6px;
-    }
-
-    &_card-field-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 100px;
-
-      @media (max-width: $screen-md) {
-        gap: 50px;
-      }
-
-      @media (max-width: $screen-sm) {
-        flex-direction: column;
-        gap: 40px;
-      }
-    }
-
-    &_card-field {
-      display: grid;
-      justify-content: left;
-      grid-template-columns: fit-content 1fr;
-      gap: 50px;
-      grid-template-areas:
-        'card-master card-master-btn'
-        'timer timer-btn';
-
-      @media (max-width: $screen-sm) {
-        grid-template-areas:
-          'card-master'
-          'card-master-btn'
-          'timer'
-          'timer-btn';
-        gap: 20px;
-        justify-content: center;
-      }
-
-      & * {
-        @media (max-width: $screen-sm) {
-          margin: 0 auto;
-        }
-      }
-    }
-
-    &_card-master {
-      grid-area: card-master;
-    }
-
-    &_card-master-btn {
-      grid-area: card-master-btn;
-      padding-top: 30px;
-
-      @media (max-width: $screen-sm) {
-        padding-top: 0;
-        margin-bottom: 30px;
-      }
-    }
-    &_exit-btn {
-      min-width: 140px;
-    }
-    &_timer {
-      grid-area: timer;
-    }
-
-    &_timer-btn {
-      grid-area: timer-btn;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    &_card-field &_card {
-      margin: 10px 0 0;
-    }
-
-    &_button-field {
-      display: flex;
-      gap: 50px;
-
-      @media (max-width: $screen-sm) {
-        flex-direction: column;
-        gap: 20px;
-      }
-    }
-
-    &_score-wrapper {
-      @media (max-width: $screen-xl) {
-        margin: 0 auto;
-      }
-    }
-
-    &_score {
-      width: fit-content;
+      margin: 0 auto;
     }
   }
 
-  &__members {
-    margin-bottom: 100px;
-    padding: 0px 160px;
+  &__score-title {
+    text-align: center;
+    margin-bottom: 6px;
+  }
 
-    &_title {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    &_members-field {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
-    }
-
-    &_members-field &_card {
-      margin: 0;
-    }
+  &__score {
+    width: fit-content;
   }
 
   &__issues {
     @media (max-width: $screen-xl) {
       margin-bottom: 0;
     }
+  }
 
-    &_title {
-      margin-bottom: 30px;
-      @media (max-width: $screen-md) {
-        text-align: center;
-      }
+  &__issues-title {
+    margin-bottom: 30px;
+    @media (max-width: $screen-md) {
+      text-align: center;
     }
+  }
 
-    &_issues-field {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+  &__issues-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
+    @media (max-width: $screen-md) {
+      justify-content: center;
     }
+  }
 
-    &_issues-field &_issue {
-      margin: 0;
-    }
+  &__issues-field &__issue {
+    margin: 0;
+  }
 
-    &_issues-field &_create-issue {
-      margin: 0;
-      height: 77px;
-      display: flex;
-      justify-content: space-between;
-    }
+  &__issues-field &__create-issue {
+    margin: 0;
+    height: 77px;
+    display: flex;
+    justify-content: space-between;
   }
 
   table {
@@ -277,89 +153,196 @@
     }
   }
 
-  &__members {
-    &_tr {
-      @media (max-width: $screen-sm) {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 20px;
-      }
+  &__score-tr {
+    @media (max-width: $screen-sm) {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
     }
+  }
 
-    &_table-score {
-      min-width: 140px;
-      white-space: nowrap;
+  &__table-score {
+    min-width: 140px;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  &__table-score,
+  &__table-card {
+    padding: 10px 4px;
+
+    @media (max-width: $screen-sm) {
+      padding: 4px;
+    }
+  }
+
+  &__table-card &__user-card {
+    margin: 8px;
+    padding: 8px;
+
+    @media (max-width: $screen-sm) {
+      margin: 4px;
+    }
+  }
+
+  &__statistics-title {
+    margin-bottom: 30px;
+
+    @media (max-width: $screen-md) {
       text-align: center;
     }
-
-    &_table-score,
-    &_table-card {
-      padding: 10px 4px;
-
-      @media (max-width: $screen-sm) {
-        padding: 4px;
-      }
-    }
-
-    &_table-card &_card {
-      margin: 8px;
-      padding: 8px;
-
-      @media (max-width: $screen-sm) {
-        margin: 4px;
-      }
-    }
   }
 
-  &__statistics {
-    &_title {
-      margin-bottom: 30px;
+  &__statistics-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 
-      @media (max-width: $screen-md) {
-        text-align: center;
-      }
-    }
-
-    &_statistic-field {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
-    }
-
-    &_percent {
-      display: flex;
+    @media (max-width: $screen-md) {
       justify-content: center;
-      margin-top: 10px;
-      font-size: $text-lg;
-      font-weight: 500;
     }
   }
 
-  &__vote {
-    &_title {
-      margin-bottom: 30px;
+  &__statistics-percent {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: $text-lg;
+    font-weight: 500;
+  }
 
-      @media (max-width: $screen-md) {
-        text-align: center;
-      }
+  &__vote-title {
+    margin-bottom: 30px;
+
+    @media (max-width: $screen-md) {
+      text-align: center;
+    }
+  }
+
+  &__vote-field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    @media (max-width: $screen-md) {
+      justify-content: center;
+    }
+  }
+
+  &__vote-field &__vote-front {
+    margin: 0;
+  }
+}
+
+.scram-master {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 50px;
+  margin-bottom: 100px;
+
+  &__section-title {
+    font-size: $text-lg;
+    font-weight: 500;
+    line-height: $line-height-md;
+    color: $text-dark;
+  }
+
+  &__empty-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
+  }
+
+  @media (max-width: $screen-xl) {
+    flex-direction: column;
+    gap: 100px;
+  }
+
+  @media (max-width: $screen-md) {
+    gap: 50px;
+  }
+
+  &__card-field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+
+    @media (max-width: $screen-md) {
+      gap: 50px;
     }
 
-    &_vote-field {
-      display: flex;
-      flex-wrap: wrap;
+    @media (max-width: $screen-sm) {
+      flex-direction: column;
+      gap: 40px;
+    }
+  }
+
+  &__card-field {
+    display: grid;
+    justify-content: left;
+    grid-template-columns: fit-content 1fr;
+    gap: 50px;
+    grid-template-areas:
+      'card-master card-master-btn'
+      'timer timer-btn';
+
+    @media (max-width: $screen-sm) {
+      grid-template-areas:
+        'card-master'
+        'card-master-btn'
+        'timer'
+        'timer-btn';
       gap: 20px;
-
-      @media (max-width: $screen-md) {
-        justify-content: center;
-      }
+      justify-content: center;
     }
 
-    &_vote-field &_cards-front-item {
-      margin: 0;
+    & * {
+      @media (max-width: $screen-sm) {
+        margin: 0 auto;
+      }
+    }
+  }
+
+  &__card-master {
+    grid-area: card-master;
+  }
+
+  &__card-master-btn {
+    grid-area: card-master-btn;
+    padding-top: 34px;
+
+    @media (max-width: $screen-sm) {
+      padding-top: 0;
+      margin-bottom: 30px;
+    }
+  }
+  &__exit-btn {
+    min-width: 140px;
+  }
+  &__timer {
+    grid-area: timer;
+  }
+
+  &__timer-btn {
+    grid-area: timer-btn;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__card-field &__card {
+    margin: 10px 0 0;
+  }
+
+  &__button-field {
+    display: flex;
+    gap: 50px;
+
+    @media (max-width: $screen-sm) {
+      flex-direction: column;
+      gap: 20px;
     }
   }
 }

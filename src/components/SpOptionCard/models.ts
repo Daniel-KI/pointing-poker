@@ -1,4 +1,4 @@
-import Size from "../../types/Size";
+import Size from '../../types/Size';
 
 export interface SpOptionCardProps {
   units?: string | undefined;

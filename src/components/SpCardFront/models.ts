@@ -1,4 +1,4 @@
-import Size from "../../types/Size";
+import Size from '../../types/Size';
 
 export interface SpCardFrontProps {
   units?: string | undefined;

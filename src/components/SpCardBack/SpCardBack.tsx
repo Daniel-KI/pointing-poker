@@ -14,7 +14,7 @@ const SpCardBack: React.FC<SpCardBackProps> = ({ type, onClick, isSelected, size
     },
     className,
   );
-  const cardBack = Object.values(spCardBacks).find(value => value.type === type) || spCardBacks.type1;
+  const cardBack = spCardBacks.find(value => value.type === type) || spCardBacks[0];
 
   return (
     <button className={classes} id={id} onClick={onClick} type='button'>
