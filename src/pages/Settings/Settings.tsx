@@ -189,7 +189,7 @@ const Settings: React.FC = () => {
   const onUserDeleteModalConfirm = () => {
     if (selectedUser && roomId) {
       leaveRoom(socket, selectedUser.id, roomId);
-      toast.error(`${selectedUser.firstName} ${selectedUser.lastName} was deleted from lobby`);
+      toast.success(`${selectedUser.firstName} ${selectedUser.lastName} was deleted from lobby`);
       setSelectedUser(null);
       setActiveStatusDeleteUserModal(false);
     }
@@ -215,7 +215,7 @@ const Settings: React.FC = () => {
   const onIssueDeleteModalConfirm = () => {
     if (selectedIssue) {
       dispatch(removeIssue(selectedIssue.id));
-      toast.error(`${selectedIssue.name} was deleted from lobby`);
+      toast.success(`${selectedIssue.name} was deleted from lobby`);
       setSelectedIssue(null);
       setActiveStatusDeleteIssueModal(false);
     }
@@ -228,7 +228,7 @@ const Settings: React.FC = () => {
   const onEditIssueModalConfirm = (name: string, priority: PriorityLevel) => {
     if (selectedIssue) {
       dispatch(updateIssue({ id: selectedIssue.id, name, priority }));
-      toast.warning(`Issue ${selectedIssue.name} was edited`);
+      toast.success(`Issue ${selectedIssue.name} was edited`);
       setSelectedIssue(null);
       setActiveStatusEditIssueModal(false);
     }
@@ -246,7 +246,7 @@ const Settings: React.FC = () => {
       const newCardValues = [...voteCardValues];
       newCardValues.splice(selectedVoteCard, 1);
       setVoteCardValues(newCardValues);
-      toast.error(`Vote card was deleted from lobby`);
+      toast.success(`Vote card was deleted from lobby`);
       setSelectedVoteCard(null);
     }
     setActiveStatusDeleteVoteCardModal(false);
@@ -269,7 +269,7 @@ const Settings: React.FC = () => {
         newCardValues[selectedVoteCard] = score;
       }
     }
-    toast.warning(`Vote card was edited`);
+    toast.success(`Vote card was edited`);
     setVoteCardValues(newCardValues);
     setActiveStatusEditVoteCardModal(false);
   };
