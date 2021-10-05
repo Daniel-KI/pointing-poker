@@ -1,0 +1,86 @@
+@import '../../ui/colors.scss';
+@import '../../ui/containers.scss';
+@import '../../ui/page.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+@import '../../ui/shadows.scss';
+
+.lobby {
+  @extend .page;
+
+  &__wrapper {
+    height: 100%;
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__container {
+    @extend .container;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-size: $title-md;
+    display: block;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 2rem 0 3rem;
+    color: $text-dark;
+  }
+
+  &__empty-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
+  }
+
+  &__section-title {
+    font-size: $text-lg;
+    font-weight: 500;
+    line-height: $line-height-md;
+    color: $text-dark;
+  }
+
+  &__main-members {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    @media (max-width: $screen-md) {
+      flex-direction: column;
+    }
+  }
+
+  &__scram-master,
+  &__current-user {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  &__members {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  &__members_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}

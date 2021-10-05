@@ -1,0 +1,53 @@
+@import '../../ui/colors.scss';
+
+.avatar {
+  $self: &;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: transparent;
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &--empty {
+    background-color: $light;
+
+    #{ $self }__icon {
+      height: 2rem;
+      width: 2rem;
+      color: $dark;
+    }
+  }
+
+  &--large {
+    width: 7rem;
+    height: 7rem;
+
+    &#{ $self }--empty {
+      #{ $self }__icon {
+        height: 4rem;
+        width: 4rem;
+      }
+    }
+  }
+
+  &--small {
+    width: 3rem;
+    height: 3rem;
+
+    &#{ $self }--empty {
+      #{ $self }__icon {
+        height: 1rem;
+        width: 1rem;
+      }
+    }
+  }
+}

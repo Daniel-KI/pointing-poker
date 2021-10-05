@@ -1,0 +1,114 @@
+@import '../../ui/shadows.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/colors.scss';
+
+.user-card {
+  $self: &;
+  user-select: none;
+
+  width: fit-content;
+  height: fit-content;
+  max-width: 18rem;
+
+  padding: 1rem;
+  margin: 1rem;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  grid-gap: 1rem;
+
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: $basic-shadow;
+
+  transition: 1s ease;
+
+  &:hover {
+    box-shadow: $basic-shadow-hover;
+  }
+
+  &__info {
+    width: 7rem;
+    color: $text-dark;
+  }
+
+  &__fullname {
+    margin: 0 0 0.5rem 0;
+  }
+
+  &__name,
+  &__surname {
+    font-size: $text-md;
+    font-weight: 700;
+    line-height: $line-height-md;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__position {
+    font-size: $text-sm;
+    font-weight: 400;
+    line-height: $line-height-md;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &--primary {
+    background-color: $primary;
+
+    & #{ $self }__fullname,
+    & #{ $self }__position {
+      color: $text-light;
+    }
+  }
+
+  &--warning {
+    background-color: $warning;
+
+    & #{ $self }__fullname,
+    & #{ $self }__position {
+      color: $text-light;
+    }
+  }
+
+  &--danger {
+    background-color: $danger;
+
+    & #{ $self }__fullname,
+    & #{ $self }__position {
+      color: $text-light;
+    }
+  }
+
+  &--success {
+    background-color: $success;
+
+    & #{ $self }__fullname,
+    & #{ $self }__position {
+      color: $text-light;
+    }
+  }
+
+  &--dark {
+    background-color: $dark;
+
+    & #{ $self }__fullname,
+    & #{ $self }__position {
+      color: $text-light;
+    }
+  }
+
+  &--light {
+    background-color: $light;
+
+    & #{ $self }__fullname,
+    & #{ $self }__position {
+      color: $text-dark;
+    }
+  }
+}

@@ -1,0 +1,114 @@
+@import '../../ui/colors.scss';
+@import '../../ui/shadows.scss';
+@import '../../ui/fonts.scss';
+
+.tooltip {
+  $self: &;
+  position: relative;
+  height: fit-content;
+
+  &__content {
+    width: auto;
+    max-width: 100%;
+    position: absolute;
+    bottom: calc(100% + 1.5rem);
+    display: flex;
+    flex-direction: column;
+    cursor: none;
+    pointer-events: none;
+    opacity: 1;
+    transition: transform 0.5s, opacity 0.5s ease-in-out;
+    z-index: 10;
+  }
+
+  &__message {
+    font-family: inherit;
+    font-size: $text-md;
+    line-height: $line-height-md;
+    display: block;
+    width: auto;
+    min-height: 2rem;
+    min-width: 3rem;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    color: $text-dark;
+    box-shadow: $tooltip-shadow;
+    text-align: center;
+    transition: transform 0.5s, opacity 0.5s ease-in-out;
+  }
+
+  &__triangle {
+    display: block;
+    height: 1rem;
+    width: 1rem;
+    background-color: #ffffff;
+    position: absolute;
+    bottom: -0.5rem;
+    left: calc(50% - 0.5rem);
+    clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
+    transform: rotate(-45deg);
+    border-radius: 0 0 0 0.2em;
+    transition: transform 0.5s, opacity 0.5s ease-in-out;
+  }
+
+  &--hidden {
+    & #{ $self }__content {
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.3s ease-in-out;
+    }
+  }
+
+  &--primary {
+    & #{ $self }__message {
+      background-color: $primary;
+      color: $text-light;
+    }
+    & #{ $self }__triangle {
+      background-color: $primary;
+    }
+  }
+
+  &--warning {
+    & #{ $self }__message {
+      background-color: $warning;
+      color: $text-light;
+    }
+    & #{ $self }__triangle {
+      background-color: $warning;
+    }
+  }
+
+  &--danger {
+    & #{ $self }__message {
+      background-color: $danger;
+      color: $text-light;
+    }
+    & #{ $self }__triangle {
+      background-color: $danger;
+    }
+  }
+
+  &--success {
+    & #{ $self }__message {
+      background-color: $success;
+      color: $text-light;
+    }
+    & #{ $self }__triangle {
+      background-color: $success;
+    }
+  }
+
+  &--dark {
+    & #{ $self }__message {
+      background-color: $dark;
+      color: $text-light;
+    }
+    & #{ $self }__triangle {
+      background-color: $dark;
+    }
+  }
+}

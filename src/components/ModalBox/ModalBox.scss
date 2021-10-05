@@ -1,0 +1,59 @@
+@import '../../ui/colors.scss';
+@import '../../ui/breakpoints.scss';
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background-color: #00000055;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @media (max-width: $screen-md) {
+    display: block;
+  }
+}
+
+.modal {
+  max-width: 100%;
+  position: absolute;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 15px;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation-name: appear;
+  animation-duration: 0.3s;
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: $screen-md) {
+    width: 100%;
+    min-height: 100%;
+    border-radius: 0;
+  }
+
+  @media (max-width: $screen-sm) {
+    padding: 1rem;
+  }
+}

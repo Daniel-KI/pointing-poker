@@ -1,0 +1,72 @@
+@import '../../ui/colors.scss';
+@import '../../ui/fonts.scss';
+
+.timer {
+  width: 200px;
+  height: 84px;
+  border-radius: 13px;
+  padding: 8px 20px;
+  background-color: #ffffff;
+  border: 2px solid $light-disabled;
+
+  &__wrapper {
+    background-color: $light-bg;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &_inner {
+      display: flex;
+      height: 100%;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 8px;
+    }
+  }
+
+  &__minutes,
+  &__seconds {
+    display: flex;
+    align-items: flex-end;
+    font-weight: bold;
+    line-height: 30px;
+    color: $text-dark;
+  }
+
+  &__input {
+    font-family: Montserrat;
+    font-weight: bold;
+    color: $text-dark;
+    font-size: 36px;
+    padding-right: 2px;
+    line-height: 48px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: 54px;
+    height: 100%;
+    display: inline-block;
+    text-align: right;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      display: none;
+    }
+
+    &:focus {
+      background-color: #fff;
+      border-radius: 10px;
+    }
+  }
+
+  &__line {
+    display: inline-block;
+    height: 48px;
+    width: 1px;
+    background-color: $text-dark-secondary;
+    margin: 0 6px;
+  }
+}

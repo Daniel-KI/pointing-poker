@@ -1,0 +1,96 @@
+@import '../../ui/colors.scss';
+@import '../../ui/containers.scss';
+@import '../../ui/page.scss';
+@import '../../ui/fonts.scss';
+@import '../../ui/breakpoints.scss';
+@import '../../ui/shadows.scss';
+
+.game-result {
+  @extend .page;
+
+  &__wrapper {
+    height: 100%;
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__container {
+    @extend .container_large;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-size: $title-md;
+    display: block;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 2rem 0 3rem;
+    color: $text-dark;
+  }
+
+  &__small-text {
+    font-size: $text-md;
+    color: $text-dark;
+    font-weight: 400;
+  }
+
+  &__statistics-file {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__download-file-card {
+    padding: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: $basic-shadow;
+    transition: 1s ease;
+
+    &:hover {
+      box-shadow: $basic-shadow-hover;
+    }
+  }
+
+  &__statistics {
+    padding: 2rem 0 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4rem;
+  }
+
+  &__data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__values {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  &__value-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+}
