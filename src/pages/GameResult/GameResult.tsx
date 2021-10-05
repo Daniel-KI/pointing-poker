@@ -1,6 +1,7 @@
 import React from 'react';
 import './GameResult.scss';
 import { useSelector } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import IssueCard from '../../components/IssueCard/IssueCard';
@@ -8,7 +9,6 @@ import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import Button from '../../components/Button/Button';
 import { IState } from '../../redux/models';
 import downloadJsonFile from '../../utils/downloadJsonFile';
-import { toast, ToastContainer } from 'react-toastify';
 
 const GameResult: React.FC = () => {
   const lobbyTitle = useSelector((state: IState) => state.room.name);
