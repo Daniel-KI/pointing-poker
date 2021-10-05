@@ -8,6 +8,7 @@ import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import Button from '../../components/Button/Button';
 import { IState } from '../../redux/models';
 import downloadJsonFile from '../../utils/downloadJsonFile';
+import { toast, ToastContainer } from 'react-toastify';
 
 const GameResult: React.FC = () => {
   const lobbyTitle = useSelector((state: IState) => state.room.name);
@@ -16,6 +17,7 @@ const GameResult: React.FC = () => {
 
   const downloadBtnOnClick = () => {
     const jsonData = JSON.stringify(gameResult);
+    toast.success('Statistics saved in json format');
     downloadJsonFile(jsonData, `statistics`);
   };
 
@@ -66,6 +68,17 @@ const GameResult: React.FC = () => {
         </div>
       </div>
       <Footer />
+      <ToastContainer
+        position='bottom-left'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };
