@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import './Main.scss';
 
 import { ReactComponent as TeamImg } from '../../assets/team.svg';
@@ -40,7 +41,6 @@ const Main: React.FC = () => {
       if (!roomData) {
         return;
       }
-      console.log('user is admitted');
       dispatch(updateRoom(roomData));
       if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
         dispatch(updateSettings(roomData.settings));
@@ -55,8 +55,7 @@ const Main: React.FC = () => {
     });
 
     socket.on('rejected', () => {
-      console.log('user is rejected');
-      // уведомление о том, что пользователь не допущен в игру
+      toast.error('You were rejected by scram master :(');
     });
 
     return () => {
@@ -120,45 +119,58 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className='main'>
-      <Header />
-      <div className='main__wrapper'>
-        <div className='main__container'>
-          <h2 className='main__title'>Plan your project</h2>
-          <p className='main__description'>
-            Planning poker is a consensus-based, gamified technique for estimating, mostly used for timeboxing in Agile
-            principles.
-          </p>
-          <form className='main__connection' onSubmit={onFormSubmit}>
-            <TextInput
-              bordered
-              color='light'
-              placeholder='Enter lobby ID here...'
-              name='id'
-              className='main__id-input'
-              onChange={onIdFieldChange}
-            />
-            <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
-              Create
-            </Button>
-            <Button
-              color='success'
-              className='main__btn main__btn--join'
-              onClick={onJoinBtnClick}
-              submit
-              disabled={isPending}
-            >
-              Join
-            </Button>
-          </form>
-          <ConnectModal userType={currentUserType} isActive={isModalActive} setActive={setActive} />
-          <div className='main__image-container'>
-            <TeamImg className='main__image' />
+    <>
+      <div className='main'>
+        <Header />
+        <div className='main__wrapper'>
+          <div className='main__container'>
+            <h2 className='main__title'>Plan your project</h2>
+            <p className='main__description'>
+              Planning poker is a consensus-based, gamified technique for estimating, mostly used for timeboxing in
+              Agile principles.
+            </p>
+            <form className='main__connection' onSubmit={onFormSubmit}>
+              <TextInput
+                bordered
+                color='light'
+                placeholder='Enter lobby ID here...'
+                name='id'
+                className='main__id-input'
+                onChange={onIdFieldChange}
+              />
+              <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
+                Create
+              </Button>
+              <Button
+                color='success'
+                className='main__btn main__btn--join'
+                onClick={onJoinBtnClick}
+                submit
+                disabled={isPending}
+              >
+                Join
+              </Button>
+            </form>
+            <ConnectModal userType={currentUserType} isActive={isModalActive} setActive={setActive} />
+            <div className='main__image-container'>
+              <TeamImg className='main__image' />
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+      <ToastContainer
+        position='top-right'
+        autoClose={8000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 };
 

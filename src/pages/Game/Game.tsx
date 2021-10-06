@@ -67,7 +67,6 @@ const Game: React.FC = () => {
 
   const [isActiveExitModal, setActiveStatusExitModal] = useState(false);
   const [isActiveFinishModal, setActiveStatusFinishModal] = useState(false);
-  // TODO - для модалки окончания игры + сделать кнопку + перенаправление на страницу результатов + уведомить
 
   useGame();
 
@@ -101,16 +100,14 @@ const Game: React.FC = () => {
             isRoundEnded,
           });
         }
-        // else if (user) {
-        //   setNewConnectedUser(user);
-        //   setActiveAddNewUserModal(true);
-        // }
       }
     });
 
     socket.on('admitUser', (newUser: IUser) => {
-      setNewConnectedUser(newUser);
-      setActiveAddNewUserModal(true);
+      if (isMaster) {
+        setNewConnectedUser(newUser);
+        setActiveAddNewUserModal(true);
+      }
     });
 
     socket.on('currentIssue', (issue: IIssue) => {
@@ -316,9 +313,9 @@ const Game: React.FC = () => {
     }
   };
   const onAddNewUserDecline = () => {
+    socket.emit('user:reject', newConnectedUser);
     setNewConnectedUser(null);
     setActiveAddNewUserModal(false);
-    socket.emit('user:reject', newConnectedUser);
   };
 
   // Crud for user

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './ConnectModal.scss';
 
-import { useHistory } from 'react-router-dom';
 import TextInput from '../TextInput/TextInput';
 import { ConnectModalProps } from './models';
 import Avatar from '../Avatar/Avatar';
@@ -142,7 +143,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     resetData();
     setActive(false);
     joinRoom(socket, user);
-    // показать уведомление с просьбой подождать
+    toast.info('Please wait for permission to join the game');
   };
 
   const cancelBtnOnClick = () => {
