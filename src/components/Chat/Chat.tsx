@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { IoSend } from 'react-icons/io5';
 import { addMessage } from '../../redux/actions/messagesActions';
 import { IMessage, IState } from '../../redux/models';
 import Button from '../Button/Button';
@@ -85,7 +86,7 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
         })}
       </div>
       {/* TODO: добавить onSubmit функцию для отправки сообщений */}
-      <form onSubmit={onMessageSubmit}>
+      <form onSubmit={onMessageSubmit} className='chat__form'>
         <TextInput
           name='text'
           placeholder='Message...'
@@ -94,7 +95,7 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
           onChange={onMessageChange}
         />
         <Button color='light' size='small' submit>
-          Send
+          <IoSend />
         </Button>
       </form>
     </div>

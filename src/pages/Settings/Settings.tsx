@@ -321,8 +321,8 @@ const Settings: React.FC = () => {
         <div className='lobby__container'>
           <h2 className='lobby__title'>{roomName}</h2>
 
-          <div className={isChatOpen ? 'lobby__content lobby__content-chat' : 'lobby__content'}>
-            <div className='lobby__lobby-content'>
+          <div className={isChatOpen ? 'lobby__content lobby__content--double' : 'lobby__content'}>
+            <div className='lobby__main-content'>
               <div className='lobby__info'>
                 <div className='lobby__room-info'>
                   <div className='lobby__room-master'>
@@ -517,8 +517,8 @@ const Settings: React.FC = () => {
               </div>
             </div>
             {isChatOpen ? (
-              <div className='lobby-chat__wrapper'>
-                <Chat className='lobby-chat' />
+              <div className='lobby__chat-content'>
+                <Chat className='lobby__chat' />
               </div>
             ) : null}
           </div>
