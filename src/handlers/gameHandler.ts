@@ -23,17 +23,8 @@ export default (io: Server, socket: ISocket): void => {
     io.in(socket.roomId).emit('currentIssue', issue);
   };
 
-  const sendGameState = (
-    userId: string,
-    state: {
-      result: IGameResult[];
-      currentIssue: IIssue;
-      isCardsFlipped: boolean;
-      isRoundStarted: boolean;
-      isRoundEnded: boolean;
-    },
-  ) => {
-    io.to(userId).emit('getGameState', state);
+  const sendGameState = (userId: string, result: IGameResult[], currentIssue: IIssue) => {
+    io.to(userId).emit('getGameState', result, currentIssue);
   };
 
   const finishGame = () => {

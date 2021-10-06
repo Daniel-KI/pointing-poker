@@ -43,10 +43,8 @@ export default (io: Server, socket: ISocket, storage: typeof NodePersist): void 
       console.log('Room does not exist');
       return;
     }
-    console.log('admit user');
     currentRoom.users.push(newUser);
     await storage.updateItem(socket.roomId, currentRoom);
-    socket.join(socket.roomId);
     io.to(newUser.id).emit('admitted');
     io.in(socket.roomId).emit('users', currentRoom.users, newUser);
   };
@@ -103,10 +101,16 @@ export default (io: Server, socket: ISocket, storage: typeof NodePersist): void 
     socket.leave(roomId);
   };
 
+  const joinRoom = () => {
+    console.log('joined');
+    socket.join(socket.roomId);
+  };
+
   socket.on('user:join', joinUser);
   socket.on('user:admit', addAdmittedUser);
   socket.on('user:reject', rejectUser);
   socket.on('user:get', getUsers);
   socket.on('user:leave', removeUser);
+  socket.on('user:joinRoom', joinRoom);
   socket.on('user:leaveRoom', leaveRoom);
 };
