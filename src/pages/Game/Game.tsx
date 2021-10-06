@@ -535,8 +535,8 @@ const Game: React.FC = () => {
             </div>
           </div>
           {isChatOpen ? (
-            <div className='chat__wrapper'>
-              <Chat className='chat' />
+            <div className='game-chat__wrapper'>
+              <Chat className='game-chat' />
             </div>
           ) : null}
         </div>

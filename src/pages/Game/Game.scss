@@ -248,7 +248,7 @@
   }
 }
 
-.chat__wrapper {
+.game-chat__wrapper {
   position: relative;
   flex-basis: 30%;
   margin-top: 28px;
@@ -263,10 +263,11 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 0;
   }
 }
 
-.chat__wrapper .chat {
+.game-chat__wrapper .game-chat {
   position: -webkit-sticky;
   position: sticky;
   top: 80px;
