@@ -78,15 +78,12 @@ const Game: React.FC = () => {
   };
 
   useEffect(() => {
-    socket.on(
-      'getGameState',
-      (state: { result: IGameResult[]; currentIssue: IIssue; isRoundStarted: boolean; isRoundEnded: boolean }) => {
-        dispatch(updateGameResults(state.result));
-        setCurrentIssue(state.currentIssue);
-        setRoundStarted(state.isRoundStarted);
-        setRoundEnded(state.isRoundEnded);
-      },
-    );
+    socket.on('getGameState', async (result: IGameResult[], newCurrentIssue: IIssue) => {
+      if (result.length !== 0) {
+        dispatch(updateGameResults(result));
+      }
+      setCurrentIssue(newCurrentIssue);
+    });
 
     socket.on('users', (users: IUser[], user: IUser | null) => {
       if (settings.addNewPlayersAutomatically) {
@@ -96,12 +93,7 @@ const Game: React.FC = () => {
       if (currentUserData.role === 'admin') {
         if (user) {
           // user может прийти в значении null, если обновление происходит после удаления пользователя
-          socket.emit('game:sendState', user.id, {
-            result: statistics,
-            currentIssue,
-            isRoundStarted,
-            isRoundEnded,
-          });
+          socket.emit('game:sendState', user.id, statistics, currentIssue);
         }
       }
     });
@@ -125,7 +117,7 @@ const Game: React.FC = () => {
     });
 
     socket.on('timer', (newTimer: ITimer) => {
-      if (!isMaster) {
+      if (!isMaster && settings.timer) {
         setMinutes(newTimer.minutes);
         setSeconds(newTimer.seconds);
         dispatch(updateTimer(newTimer));
@@ -133,23 +125,17 @@ const Game: React.FC = () => {
     });
 
     socket.on('startRound', () => {
-      if (!isRoundStarted) {
-        // ? можно убрать
-        setRoundStarted(true);
-        setCardsFlipped(false);
-        if (isRoundEnded && settings.timer) {
-          setMinutes(settings.timer?.minutes);
-          setSeconds(settings.timer?.seconds);
-        }
+      setRoundStarted(true);
+      setCardsFlipped(false);
+      if (isRoundEnded && settings.timer) {
+        setMinutes(settings.timer?.minutes);
+        setSeconds(settings.timer?.seconds);
       }
     });
 
     socket.on('endRound', () => {
-      if (!isRoundEnded) {
-        // ? можно убрать
-        setRoundStarted(false);
-        setRoundEnded(true);
-      }
+      setRoundStarted(false);
+      setRoundEnded(true);
     });
 
     return () => {
@@ -302,15 +288,10 @@ const Game: React.FC = () => {
   };
 
   // Add new user after connection request
-  const onAddNewUserConfirm = () => {
+  const onAddNewUserConfirm = async () => {
     if (newConnectedUser) {
-      socket.emit('user:admit', newConnectedUser);
-      socket.emit('game:sendState', newConnectedUser.id, {
-        result: statistics,
-        currentIssue,
-        isRoundStarted,
-        isRoundEnded,
-      });
+      await socket.emit('user:admit', newConnectedUser, statistics, currentIssue);
+      socket.emit('game:sendState', newConnectedUser.id, statistics, currentIssue);
       setNewConnectedUser(null);
       setActiveAddNewUserModal(false);
     }
