@@ -16,7 +16,7 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpCardBack from '../../components/SpCardBack/SpCardBack';
 import SpCreationCard from '../../components/SpCreationCard/SpCreationCard';
-import { IIssue, IMessage, ISettings, IState, IUser } from '../../redux/models';
+import { IIssue, ISettings, IState, IUser } from '../../redux/models';
 import spCardBacks from '../../constants/spCardBacks';
 import { updateSettings } from '../../redux/actions/settingsActions';
 import SpCardBackType from '../../types/SpCardBackType';
@@ -30,7 +30,6 @@ import leaveRoom from '../../api/leaveRoom';
 import sendSettingsData from '../../api/sendSettingsData';
 import useLobby from '../../hooks/useLobby';
 import Chat from '../../components/Chat/Chat';
-import { addMessage } from '../../redux/actions/messagesActions';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
