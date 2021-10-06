@@ -234,6 +234,49 @@
   }
 }
 
+.game__content {
+}
+
+.game__content-chat {
+  display: flex;
+  gap: 50px;
+  justify-content: space-between;
+
+  @media (max-width: $screen-lg) {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}
+
+.chat__wrapper {
+  position: relative;
+  flex-basis: 30%;
+  margin-top: 28px;
+
+  @media (max-width: $screen-xxl) {
+    flex-basis: 40%;
+  }
+  @media (max-width: $screen-xl) {
+    flex-basis: 40%;
+  }
+  @media (max-width: $screen-lg) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.chat__wrapper .chat {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px;
+  bottom: 80px;
+
+  @media (max-width: $screen-lg) {
+    width: 100%;
+  }
+}
+
 .scram-master {
   display: flex;
   flex-direction: row;
@@ -241,6 +284,22 @@
   align-items: flex-start;
   gap: 50px;
   margin-bottom: 100px;
+
+  flex-basis: 70%;
+
+  @media (max-width: $screen-xxl) {
+    flex-basis: 40%;
+    flex-direction: column;
+    gap: 100px;
+  }
+
+  @media (max-width: $screen-xl) {
+    flex-basis: 50%;
+  }
+
+  @media (max-width: $screen-md) {
+    gap: 50px;
+  }
 
   &__section-title {
     font-size: $text-lg;
@@ -253,15 +312,6 @@
     font-size: $text-md;
     color: $text-dark;
     font-weight: 400;
-  }
-
-  @media (max-width: $screen-xl) {
-    flex-direction: column;
-    gap: 100px;
-  }
-
-  @media (max-width: $screen-md) {
-    gap: 50px;
   }
 
   &__card-field-wrapper {
@@ -287,7 +337,9 @@
     grid-template-areas:
       'card-master card-master-btn'
       'timer timer-btn';
-
+    @media (max-width: $screen-lg) {
+      justify-content: center;
+    }
     @media (max-width: $screen-sm) {
       grid-template-areas:
         'card-master'
@@ -312,6 +364,9 @@
   &__card-master-btn {
     grid-area: card-master-btn;
     padding-top: 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 
     @media (max-width: $screen-sm) {
       padding-top: 0;
@@ -319,7 +374,7 @@
     }
   }
   &__exit-btn {
-    min-width: 140px;
+    min-width: 160px;
   }
   &__timer {
     grid-area: timer;

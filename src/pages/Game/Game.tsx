@@ -365,171 +365,183 @@ const Game: React.FC = () => {
         <h2 className='game__title'>
           <div className='game__title-content'>{gameTitle || 'Game'}</div>
         </h2>
-        <div className='scram-master'>
-          <div className='scram-master__card-field-wrapper'>
-            <div className='scram-master__card-field'>
-              <div className='scram-master__card-master'>
-                <h3 className='scram-master__section-title'>Scram master:</h3>
-                <UserCard
-                  name={master?.firstName}
-                  surname={master?.lastName}
-                  jobPosition={master?.position}
-                  avatar={master?.avatar}
-                  color={isMaster ? 'primary' : undefined}
-                  className='scram-master__card'
-                />
-              </div>
-              <div className='scram-master__card-master-btn'>
-                <Button color='danger' size='large' className='scram-master__exit-btn' onClick={onClickExitBtn}>
-                  Exit
-                </Button>
-                {isMaster ? (
-                  <Button color='light' size='large' className='scram-master__exit-btn' onClick={onClickFinishGameBtn}>
-                    Finish game
-                  </Button>
-                ) : null}
-              </div>
-              {settings.timer ? (
-                <div className='scram-master__timer'>
-                  <Timer
-                    id='timer'
-                    minutes={minutes}
-                    seconds={seconds}
-                    setMinutes={setMinutes}
-                    setSeconds={setSeconds}
-                    isGameOn={isRoundStarted}
-                    setGameOn={setRoundStarted}
-                    setTimeOut={setRoundEnded}
-                    className='game__settings_timer'
-                    disabled={!isMaster}
+        <div className={isChatOpen ? 'game__content game__content-chat' : 'game__content'}>
+          <div className='scram-master'>
+            <div className='scram-master__card-field-wrapper'>
+              <div className='scram-master__card-field'>
+                <div className='scram-master__card-master'>
+                  <h3 className='scram-master__section-title'>Scram master:</h3>
+                  <UserCard
+                    name={master?.firstName}
+                    surname={master?.lastName}
+                    jobPosition={master?.position}
+                    avatar={master?.avatar}
+                    color={isMaster ? 'primary' : undefined}
+                    className='scram-master__card'
                   />
                 </div>
-              ) : null}
-
-              {isMaster ? (
-                <div className='scram-master__timer-btn'>
-                  {!settings.canChangeChoice && isIssueExistsInStatistics(currentIssue) ? null : (
-                    <Button color='success' size='large' onClick={onClickStartBtn}>
-                      {getControlRoundBtnText()}
+                <div className='scram-master__card-master-btn'>
+                  <Button color='danger' size='large' className='scram-master__exit-btn' onClick={onClickExitBtn}>
+                    Exit
+                  </Button>
+                  {isMaster ? (
+                    <Button
+                      color='light'
+                      size='large'
+                      className='scram-master__exit-btn'
+                      onClick={onClickFinishGameBtn}
+                    >
+                      Finish game
                     </Button>
-                  )}
-                  <Button
-                    color='dark'
-                    size='large'
-                    onClick={onClickNextIssueBtn}
-                    disabled={isRoundStarted && !isRoundEnded}
-                  >
-                    Next issue
-                  </Button>
+                  ) : null}
                 </div>
-              ) : null}
-            </div>
-            <div className='game__issues'>
-              <h3 className='game__issues-title'>Issues</h3>
-              <div className='game__issues-field'>
-                {issues.map(item => (
-                  <IssueCard
-                    id={item.id.toString()}
-                    key={item.id}
-                    name={item.name}
-                    priority={item.priority}
-                    deleteAction={isMaster ? () => deleteIssueAction(item) : undefined}
-                    editAction={isMaster ? () => editIssueAction(item) : undefined}
-                    className='game__issue'
-                    color={getIssueColorByStatus(item)}
-                    onClick={() => onClickIssue(item)}
-                  />
-                ))}
+                {settings.timer ? (
+                  <div className='scram-master__timer'>
+                    <Timer
+                      id='timer'
+                      minutes={minutes}
+                      seconds={seconds}
+                      setMinutes={setMinutes}
+                      setSeconds={setSeconds}
+                      isGameOn={isRoundStarted}
+                      setGameOn={setRoundStarted}
+                      setTimeOut={setRoundEnded}
+                      className='game__settings_timer'
+                      disabled={!isMaster}
+                    />
+                  </div>
+                ) : null}
+
                 {isMaster ? (
-                  <IssueCreationCard
-                    label='Create issue'
-                    addAction={createIssueAction}
-                    className='game__create-issue'
-                  />
+                  <div className='scram-master__timer-btn'>
+                    {!settings.canChangeChoice && isIssueExistsInStatistics(currentIssue) ? null : (
+                      <Button color='success' size='large' onClick={onClickStartBtn}>
+                        {getControlRoundBtnText()}
+                      </Button>
+                    )}
+                    <Button
+                      color='dark'
+                      size='large'
+                      onClick={onClickNextIssueBtn}
+                      disabled={isRoundStarted && !isRoundEnded}
+                    >
+                      Next issue
+                    </Button>
+                  </div>
                 ) : null}
               </div>
-            </div>
-            {currentUser?.isObserver || (isMaster && settings.isAdminObserver) ? null : (
-              <div className='game__vote'>
-                <div>
-                  <h3 className='game__vote-title'>Vote</h3>
-                </div>
-                <div className='game__vote-field'>
-                  {settings.cardValues.map((value, index) => (
-                    <div key={index.toString()}>
-                      <SpVoteCard
-                        className='game__vote-front'
-                        score={value}
-                        units={settings.scoreType}
-                        isFlipped={isCardsFlipped}
-                        isSelected={chosenCardIndex === index}
-                        onClick={() => onChooseCard(index, value)}
-                        size='large'
-                      />
-                    </div>
+              <div className='game__issues'>
+                <h3 className='game__issues-title'>Issues</h3>
+                <div className='game__issues-field'>
+                  {issues.map(item => (
+                    <IssueCard
+                      id={item.id.toString()}
+                      key={item.id}
+                      name={item.name}
+                      priority={item.priority}
+                      deleteAction={isMaster ? () => deleteIssueAction(item) : undefined}
+                      editAction={isMaster ? () => editIssueAction(item) : undefined}
+                      className='game__issue'
+                      color={getIssueColorByStatus(item)}
+                      onClick={() => onClickIssue(item)}
+                    />
                   ))}
+                  {isMaster ? (
+                    <IssueCreationCard
+                      label='Create issue'
+                      addAction={createIssueAction}
+                      className='game__create-issue'
+                    />
+                  ) : null}
                 </div>
               </div>
-            )}
-            <div className='game__statistics'>
-              <h3 className='game__statistics-title'>Statistics</h3>
-              <div className='game__statistics-field'>
-                {isIssueExistsInStatistics(currentIssue) ? (
-                  statistics
-                    .find(({ issue }) => issue.id === currentIssue.id)
-                    ?.votesPercentage.map((element, index) => (
+              {currentUser?.isObserver || (isMaster && settings.isAdminObserver) ? null : (
+                <div className='game__vote'>
+                  <div>
+                    <h3 className='game__vote-title'>Vote</h3>
+                  </div>
+                  <div className='game__vote-field'>
+                    {settings.cardValues.map((value, index) => (
                       <div key={index.toString()}>
-                        <SpCardFront
-                          className='game__statistics_cards-front-item'
-                          score={element.value}
+                        <SpVoteCard
+                          className='game__vote-front'
+                          score={value}
                           units={settings.scoreType}
-                          size='small'
+                          isFlipped={isCardsFlipped}
+                          isSelected={chosenCardIndex === index}
+                          onClick={() => onChooseCard(index, value)}
+                          size='large'
                         />
-                        <div className='game__statistics-percent'>{element.percentage}%</div>
                       </div>
-                    ))
-                ) : (
-                  <p>No results yet</p>
-                )}
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div className='game__statistics'>
+                <h3 className='game__statistics-title'>Statistics</h3>
+                <div className='game__statistics-field'>
+                  {isIssueExistsInStatistics(currentIssue) ? (
+                    statistics
+                      .find(({ issue }) => issue.id === currentIssue.id)
+                      ?.votesPercentage.map((element, index) => (
+                        <div key={index.toString()}>
+                          <SpCardFront
+                            className='game__statistics_cards-front-item'
+                            score={element.value}
+                            units={settings.scoreType}
+                            size='small'
+                          />
+                          <div className='game__statistics-percent'>{element.percentage}%</div>
+                        </div>
+                      ))
+                  ) : (
+                    <p>No results yet</p>
+                  )}
+                </div>
               </div>
             </div>
+            <div className='game__score-wrapper'>
+              <h3 className='game__score-title'>Score table</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th className='game__score'>Score</th>
+                    <th>Players</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {members
+                    .sort(member => (member.isObserver ? 1 : -1))
+                    .map(user => (
+                      <tr key={user.id} className='game__score-tr'>
+                        <td data-label='Score' className='game__table-score'>
+                          {user.isObserver ? `---` : getScoreTableValue(user)}
+                        </td>
+                        <td data-label='Player' className='game__table-card'>
+                          <UserCard
+                            name={user.firstName}
+                            surname={user.lastName}
+                            jobPosition={user.position}
+                            avatar={user.avatar}
+                            color={getUserCardColor(user)}
+                            deleteAction={isMaster ? () => deleteUserAction(user) : undefined}
+                            className='game__user-card'
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div className='game__score-wrapper'>
-            <h3 className='game__score-title'>Score table</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th className='game__score'>Score</th>
-                  <th>Players</th>
-                </tr>
-              </thead>
-              <tbody>
-                {members
-                  .sort(member => (member.isObserver ? 1 : -1))
-                  .map(user => (
-                    <tr key={user.id} className='game__score-tr'>
-                      <td data-label='Score' className='game__table-score'>
-                        {user.isObserver ? `---` : getScoreTableValue(user)}
-                      </td>
-                      <td data-label='Player' className='game__table-card'>
-                        <UserCard
-                          name={user.firstName}
-                          surname={user.lastName}
-                          jobPosition={user.position}
-                          avatar={user.avatar}
-                          color={getUserCardColor(user)}
-                          deleteAction={isMaster ? () => deleteUserAction(user) : undefined}
-                          className='game__user-card'
-                        />
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          {isChatOpen ? (
+            <div className='chat__wrapper'>
+              <Chat className='chat' />
+            </div>
+          ) : null}
         </div>
       </div>
-      {isChatOpen ? <Chat /> : null}
+
       <Footer />
 
       <ConfirmModal
