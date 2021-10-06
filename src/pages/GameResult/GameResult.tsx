@@ -31,8 +31,8 @@ const GameResult: React.FC = () => {
         <div className='game-result__container'>
           <h2 className='game-result__title'>{lobbyTitle || 'Results'}</h2>
 
-          <div className={isChatOpen ? 'game-result__content game-result__content-chat' : 'game-result__content'}>
-            <div className='game-result__result-content'>
+          <div className={isChatOpen ? 'game-result__content game-result__content--double' : 'game-result__content'}>
+            <div className='game-result__main-content'>
               <div className='game-result__statistics-file'>
                 <p className='game-result__small-text'>Click here to download json file with results</p>
                 <div className='game-result__download-file-card'>
@@ -70,8 +70,8 @@ const GameResult: React.FC = () => {
               </div>
             </div>
             {isChatOpen ? (
-              <div className='game-result-chat__wrapper'>
-                <Chat className='game-result-chat' />
+              <div className='game-result__chat-content'>
+                <Chat className='game-result__chat' />
               </div>
             ) : null}
           </div>

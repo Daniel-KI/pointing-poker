@@ -16,7 +16,7 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpCardBack from '../../components/SpCardBack/SpCardBack';
 import SpCreationCard from '../../components/SpCreationCard/SpCreationCard';
-import { IIssue, IMessage, ISettings, IState, IUser } from '../../redux/models';
+import { IIssue, ISettings, IState, IUser } from '../../redux/models';
 import spCardBacks from '../../constants/spCardBacks';
 import { updateSettings } from '../../redux/actions/settingsActions';
 import SpCardBackType from '../../types/SpCardBackType';
@@ -30,7 +30,6 @@ import leaveRoom from '../../api/leaveRoom';
 import sendSettingsData from '../../api/sendSettingsData';
 import useLobby from '../../hooks/useLobby';
 import Chat from '../../components/Chat/Chat';
-import { addMessage } from '../../redux/actions/messagesActions';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -319,10 +318,10 @@ const Settings: React.FC = () => {
       <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='lobby__wrapper'>
         <div className='lobby__container'>
-          <h2 className='lobby__title'>{roomName}</h2>
+          <h2 className='lobby__title'>{roomName || 'Settings'}</h2>
 
-          <div className={isChatOpen ? 'lobby__content lobby__content-chat' : 'lobby__content'}>
-            <div className='lobby__lobby-content'>
+          <div className={isChatOpen ? 'lobby__content lobby__content--double' : 'lobby__content'}>
+            <div className='lobby__main-content'>
               <div className='lobby__info'>
                 <div className='lobby__room-info'>
                   <div className='lobby__room-master'>
@@ -517,8 +516,8 @@ const Settings: React.FC = () => {
               </div>
             </div>
             {isChatOpen ? (
-              <div className='lobby-chat__wrapper'>
-                <Chat className='lobby-chat' />
+              <div className='lobby__chat-content'>
+                <Chat className='lobby__chat' />
               </div>
             ) : null}
           </div>

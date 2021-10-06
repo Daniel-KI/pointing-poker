@@ -1,41 +1,43 @@
 @import '../../ui/colors.scss';
+@import '../../ui/shadows.scss';
 
 .chat {
-  max-height: calc(100vh - 80px - 80px);
-  min-height: 270px;
-  padding: 20px;
-  background-color: #f3f2f8;
-  border-radius: 10px;
-  min-width: 220px;
-  max-width: 600px;
-  position: relative;
+  width: 100%;
+  max-height: calc(100vh - 10rem);
+  height: 25rem;
+  padding: 1rem;
+  background-color: $light-bg;
+  box-shadow: $basic-shadow;
+  border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 1rem;
   border: 2px solid #ffffff;
   overflow: hidden;
 
   &__items {
-    padding: 10px 0;
+    height: 100%;
+    padding: 1rem 0;
     position: relative;
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
-    gap: 20px;
+    overflow-y: auto;
+    gap: 1rem;
     scroll-behavior: smooth;
 
     &::-webkit-scrollbar {
-      width: 4px;
+      width: 0.3rem;
     }
 
     &::-webkit-scrollbar-track {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+      border-radius: 0.6rem;
+      -webkit-box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.1);
     }
 
     &::-webkit-scrollbar-thumb {
       background-color: rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+      border-radius: 0.6rem;
     }
 
     &::-webkit-scrollbar-thumb:hover {
@@ -51,7 +53,13 @@
     width: 90%;
     display: flex;
     flex-direction: row;
-    gap: 10px;
     align-items: flex-end;
+  }
+
+  &__form {
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 85% 15%;
+    gap: 0.5rem;
   }
 }

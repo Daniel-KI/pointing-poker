@@ -6,15 +6,6 @@ import Button from '../Button/Button';
 import ModalBox from '../ModalBox/ModalBox';
 import Toggle from '../Toggle/Toggle';
 
-// const [isActive, setActiveStatus] = useState(true);
-// const onSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
-//   event.preventDefault();
-//   const formData = new FormData(event.currentTarget);
-//   console.log(formData.get('units'));
-//   console.log(formData.get('score'));
-//   console.log(Boolean(formData.get('unknown')));
-// };
-
 const CreateSpCardModal: React.FC<CreateSpCardModalProps> = ({ isActive, setActive, onSubmit, score }) => {
   const [isUnknown, setUnknownStatus] = useState<boolean>(false);
 

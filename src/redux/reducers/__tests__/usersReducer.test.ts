@@ -25,6 +25,5 @@ describe('Test usersReducer', () => {
     const newState = usersReducer(initialState, removeUser(testUser.id));
     expect(newState).toStrictEqual(expect.arrayContaining(expectedState));
     expect(newState).toStrictEqual(expectedState);
-
   });
 });

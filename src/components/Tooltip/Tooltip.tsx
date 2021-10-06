@@ -3,38 +3,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { TooltipProps } from './models';
 
-// TOOLTIP FOR INPUT
-
-// valid status - статус валидности input
-// errorMessage - сообщение об ошибке input
-
-// const [validStatus, setValidStatus] = useState(true);
-// const [errorMessage, setErrorMessage] = useState('');
-
-// Функция валидации input
-
-// const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//   if (event.currentTarget.value === 'qwe') {
-//     setErrorMessage('QWE string here...');
-//     setValidStatus(false);
-//     return;
-//   }
-//   setValidStatus(true);
-//   setErrorMessage('');
-// };
-
-// Layout
-
-// <Tooltip message={errorMessage} visible={!validStatus}>
-//   <TextInput onChange={onInputChange} bordered color='dark' />
-// </Tooltip>
-
-// TOOLTIP onHover
-//
-// <Tooltip message='some tooltip text'>
-//   <p>Tooltip</p>
-// </Tooltip>
-
 const Tooltip: React.FC<TooltipProps> = ({
   children,
   message,

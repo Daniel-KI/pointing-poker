@@ -3,13 +3,6 @@ import classNames from 'classnames';
 import { ToggleProps } from './models';
 import './Toggle.scss';
 
-/*
-  По умолчанию через пропсы приходит false для toggle. При изменении меняется на true.
-  В родительском компоненте это выглядит следующим образом:
-  const [checked, toggleChecked] = useState<boolean>(false);
-  <Toggle checked={checked} onChange={toggleChecked} />
-*/
-
 const Toggle: React.FC<ToggleProps> = ({ checked, onChange, children, id, className, name, inputId }) => {
   const classes = classNames(
     {

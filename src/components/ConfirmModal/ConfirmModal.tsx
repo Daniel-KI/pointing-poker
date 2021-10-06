@@ -4,26 +4,6 @@ import { ConfirmModalProps } from './models';
 import Button from '../Button/Button';
 import ModalBox from '../ModalBox/ModalBox';
 
-// Родительский компонент:
-// const [isActive, setActive] = useState(false);
-// const modalActive = () => {
-//   setActive(true);
-// };
-// const onConfirm = () => {
-//   setActive(false);
-//   console.log('confirm');
-// };
-// const onDecline = () => {
-//   setActive(false);
-//   console.log('decline');
-// };
-
-// <Button onClick={modalActive}>Modal</Button>
-//
-// <ConfirmModal isActive={isActive} setActive={setActive} onDecline={onDecline} onConfirm={onConfirm}>
-//   Текст всплывающего окна
-// </ConfirmModal>
-
 const ConfirmModal: React.FC<ConfirmModalProps> = ({ setActive, isActive, children, onConfirm, onDecline }) => {
   return (
     <ModalBox active={isActive} setActive={setActive}>

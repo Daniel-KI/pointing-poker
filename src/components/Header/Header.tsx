@@ -9,6 +9,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthorized, isChatOpen, setChatOpen }
   const classes = classNames({
     header: true,
     'header--centered': !isAuthorized,
+    'header--open-chat': isChatOpen,
   });
 
   const onChatClick = () => {
