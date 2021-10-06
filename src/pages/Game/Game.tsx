@@ -519,7 +519,7 @@ const Game: React.FC = () => {
                       .sort(member => (member.isObserver ? 1 : -1))
                       .map(user => (
                         <tr key={user.id} className='game__tr'>
-                          <td data-label='Score' className='game__td'>
+                          <td data-label='Score' className='game__td game__td-score'>
                             {user.isObserver ? `---` : getScoreTableValue(user)}
                           </td>
                           <td data-label='Player' className='game__td'>
@@ -535,36 +535,6 @@ const Game: React.FC = () => {
                           </td>
                         </tr>
                       ))}
-                    <tr className='game__tr'>
-                      <td data-label='Score' className='game__td game__td-score'>
-                        15
-                      </td>
-                      <td data-label='Player' className='game__td'>
-                        <UserCard
-                          name='qwe'
-                          surname='asd'
-                          jobPosition='zxc'
-                          avatar='qwe'
-                          deleteAction={() => {}}
-                          className='game__user-card'
-                        />
-                      </td>
-                    </tr>
-                    <tr className='game__tr'>
-                      <td data-label='Score' className='game__td game__td-score'>
-                        15
-                      </td>
-                      <td data-label='Player' className='game__td'>
-                        <UserCard
-                          name='qwe'
-                          surname='asd'
-                          jobPosition='zxc'
-                          avatar='qwe'
-                          deleteAction={() => {}}
-                          className='game__user-card'
-                        />
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
