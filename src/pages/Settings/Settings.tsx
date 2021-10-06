@@ -16,7 +16,7 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpCardBack from '../../components/SpCardBack/SpCardBack';
 import SpCreationCard from '../../components/SpCreationCard/SpCreationCard';
-import { IIssue, ISettings, IState, IUser } from '../../redux/models';
+import { IIssue, IMessage, ISettings, IState, IUser } from '../../redux/models';
 import spCardBacks from '../../constants/spCardBacks';
 import { updateSettings } from '../../redux/actions/settingsActions';
 import SpCardBackType from '../../types/SpCardBackType';
@@ -29,6 +29,8 @@ import Tooltip from '../../components/Tooltip/Tooltip';
 import leaveRoom from '../../api/leaveRoom';
 import sendSettingsData from '../../api/sendSettingsData';
 import useLobby from '../../hooks/useLobby';
+import Chat from '../../components/Chat/Chat';
+import { addMessage } from '../../redux/actions/messagesActions';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -43,6 +45,8 @@ const Settings: React.FC = () => {
 
   const settings = localStorage.getItem('settings');
   const data: ISettings | undefined = settings ? JSON.parse(settings) : undefined;
+
+  const [isChatOpen, setChatOpen] = useState(false);
 
   const [masterAsPlayer, setMasterAsPlayer] = useState<boolean>(data ? !data.isAdminObserver : false);
   const [flipCardsInTheEnd, setFlipCardsInTheEnd] = useState<boolean>(data ? data.cardsFlipAutomatically : false);
@@ -312,7 +316,7 @@ const Settings: React.FC = () => {
 
   return (
     <div className='lobby'>
-      <Header isAuthorized />
+      <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='lobby__wrapper'>
         <div className='lobby__container'>
           <h2 className='lobby__title'>{roomName}</h2>
@@ -511,6 +515,7 @@ const Settings: React.FC = () => {
           </div>
         </div>
       </div>
+      {isChatOpen ? <Chat /> : null}
       <Footer />
       <ToastContainer
         position='bottom-left'

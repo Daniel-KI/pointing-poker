@@ -26,6 +26,7 @@ import leaveRoom from '../../api/leaveRoom';
 import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
 import { updateVotes } from '../../redux/actions/votesActions';
 import { updateTimer } from '../../redux/actions/settingsActions';
+import Chat from '../../components/Chat/Chat';
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,8 @@ const Game: React.FC = () => {
   const issues = useSelector((state: IState) => state.issues);
   const votes = useSelector((state: IState) => state.votes);
   const statistics = useSelector((state: IState) => state.gameResults);
+
+  const [isChatOpen, setChatOpen] = useState(false);
 
   const [currentIssue, setCurrentIssue] = useState((): IIssue => issues[0]);
   const [isRoundStarted, setRoundStarted] = useState(false);
@@ -357,7 +360,7 @@ const Game: React.FC = () => {
 
   return (
     <div className='game'>
-      <Header isAuthorized />
+      <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='game__wrapper'>
         <h2 className='game__title'>
           <div className='game__title-content'>{gameTitle || 'Game'}</div>
@@ -526,6 +529,7 @@ const Game: React.FC = () => {
           </div>
         </div>
       </div>
+      {isChatOpen ? <Chat /> : null}
       <Footer />
 
       <ConfirmModal

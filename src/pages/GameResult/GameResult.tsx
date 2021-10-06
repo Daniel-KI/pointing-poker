@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './GameResult.scss';
 import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import Footer from '../../components/Footer/Footer';
-import Header from '../../components/Header/Header';
 import IssueCard from '../../components/IssueCard/IssueCard';
 import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import Button from '../../components/Button/Button';
 import { IState } from '../../redux/models';
 import downloadJsonFile from '../../utils/downloadJsonFile';
+import Header from '../../components/Header/Header';
+import Chat from '../../components/Chat/Chat';
 
 const GameResult: React.FC = () => {
   const lobbyTitle = useSelector((state: IState) => state.room.name);
   const gameResult = useSelector((state: IState) => state.gameResults);
   const scoreType = useSelector((state: IState) => state.settings.scoreType);
+
+  const [isChatOpen, setChatOpen] = useState(false);
 
   const downloadBtnOnClick = () => {
     const jsonData = JSON.stringify(gameResult);
@@ -23,7 +26,7 @@ const GameResult: React.FC = () => {
 
   return (
     <div className='game-result'>
-      <Header isAuthorized />
+      <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='game-result__wrapper'>
         <div className='game-result__container'>
           <h2 className='game-result__title'>{lobbyTitle || 'Results'}</h2>
@@ -65,6 +68,7 @@ const GameResult: React.FC = () => {
           </div>
         </div>
       </div>
+      {isChatOpen ? <Chat /> : null}
       <Footer />
       <ToastContainer
         position='bottom-left'

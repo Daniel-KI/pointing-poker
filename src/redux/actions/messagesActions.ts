@@ -1,8 +1,6 @@
 import { IMessage } from '../models';
 
 export const ADD_MESSAGE = 'ADD_MESSAGE';
-export const UPDATE_MESSAGE = 'ADD_MESSAGE';
-export const REMOVE_MESSAGE = 'REMOVE_MESSAGE';
 
 export interface IAddMessageAction {
   type: typeof ADD_MESSAGE;

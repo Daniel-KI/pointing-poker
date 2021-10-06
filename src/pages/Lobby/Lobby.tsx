@@ -9,6 +9,7 @@ import UserCard from '../../components/UserCard/UserCard';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import leaveRoom from '../../api/leaveRoom';
 import useLobby from '../../hooks/useLobby';
+import Chat from '../../components/Chat/Chat';
 
 const Lobby: React.FC = () => {
   const [isActiveExitModal, setExitModalActiveStatus] = useState<boolean>(false);
@@ -21,6 +22,8 @@ const Lobby: React.FC = () => {
   const roomId = useSelector((state: IState) => state.room.id);
   const currentUserData = useSelector((state: IState) => state.currentUser);
   const currentUser = members.find(user => user.id === currentUserData.id);
+
+  const [isChatOpen, setChatOpen] = useState(false);
 
   useLobby();
 
@@ -55,7 +58,7 @@ const Lobby: React.FC = () => {
 
   return (
     <div className='lobby'>
-      <Header isAuthorized />
+      <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='lobby__wrapper'>
         <div className='lobby__container'>
           <h2 className='lobby__title'>{lobbyTitle || 'Lobby'}</h2>
@@ -118,6 +121,7 @@ const Lobby: React.FC = () => {
           </div>
         </div>
       </div>
+      {isChatOpen ? <Chat /> : null}
       <Footer />
 
       <ConfirmModal
