@@ -31,44 +31,52 @@ const GameResult: React.FC = () => {
         <div className='game-result__container'>
           <h2 className='game-result__title'>{lobbyTitle || 'Results'}</h2>
 
-          <div className='game-result__statistics-file'>
-            <p className='game-result__small-text'>Click here to download json file with results</p>
-            <div className='game-result__download-file-card'>
-              <Button color='success' size='large' onClick={downloadBtnOnClick}>
-                Download statistics
-              </Button>
-            </div>
-          </div>
-
-          <div className='game-result__statistics'>
-            {gameResult.map((result, index) => (
-              <div key={index.toString()} className='game-result__data'>
-                <IssueCard
-                  name={result.issue.name}
-                  priority={result.issue.priority}
-                  className='game-result__issue'
-                  color='dark'
-                />
-
-                <div className='game-result__values'>
-                  {result.votesPercentage.map((element, key) => (
-                    <div key={key.toString()} className='game-result__value-wrapper'>
-                      <SpCardFront
-                        score={element.value}
-                        units={scoreType}
-                        size='small'
-                        className='game-result__value-vote-card'
-                      />
-                      <div className='game-result__small-text'>{element.percentage}%</div>
-                    </div>
-                  ))}
+          <div className={isChatOpen ? 'game-result__content game-result__content-chat' : 'game-result__content'}>
+            <div className='game-result__result-content'>
+              <div className='game-result__statistics-file'>
+                <p className='game-result__small-text'>Click here to download json file with results</p>
+                <div className='game-result__download-file-card'>
+                  <Button color='success' size='large' onClick={downloadBtnOnClick}>
+                    Download statistics
+                  </Button>
                 </div>
               </div>
-            ))}
+
+              <div className='game-result__statistics'>
+                {gameResult.map((result, index) => (
+                  <div key={index.toString()} className='game-result__data'>
+                    <IssueCard
+                      name={result.issue.name}
+                      priority={result.issue.priority}
+                      className='game-result__issue'
+                      color='dark'
+                    />
+
+                    <div className='game-result__values'>
+                      {result.votesPercentage.map((element, key) => (
+                        <div key={key.toString()} className='game-result__value-wrapper'>
+                          <SpCardFront
+                            score={element.value}
+                            units={scoreType}
+                            size='small'
+                            className='game-result__value-vote-card'
+                          />
+                          <div className='game-result__small-text'>{element.percentage}%</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {isChatOpen ? (
+              <div className='game-result-chat__wrapper'>
+                <Chat className='game-result-chat' />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
-      {isChatOpen ? <Chat /> : null}
       <Footer />
       <ToastContainer
         position='bottom-left'

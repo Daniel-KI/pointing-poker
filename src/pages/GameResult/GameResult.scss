@@ -93,4 +93,47 @@
     align-items: center;
     gap: 1rem;
   }
+
+  &__content-chat {
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
+
+    @media (max-width: $screen-lg) {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
+}
+
+.game-result-chat {
+  &__wrapper {
+    position: relative;
+    flex-basis: 30%;
+    margin-top: 38px;
+
+    @media (max-width: $screen-xxl) {
+      flex-basis: 40%;
+    }
+    @media (max-width: $screen-xl) {
+      flex-basis: 40%;
+    }
+    @media (max-width: $screen-lg) {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 0;
+    }
+  }
+
+  &__wrapper .game-result-chat {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 80px;
+    bottom: 80px;
+
+    @media (max-width: $screen-lg) {
+      width: 100%;
+    }
+  }
 }
