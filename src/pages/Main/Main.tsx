@@ -41,6 +41,7 @@ const Main: React.FC = () => {
       if (!roomData) {
         return;
       }
+      socket.emit('user:joinRoom');
       dispatch(updateRoom(roomData));
       if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
         dispatch(updateSettings(roomData.settings));

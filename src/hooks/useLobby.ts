@@ -22,7 +22,9 @@ const useLobby = (): void => {
   useEffect(() => {
     socket.on('users', (users: IUser[], newUser: IUser) => {
       dispatch(updateUsers(users));
-      toast.success(`${newUser.firstName} ${newUser.lastName} joined the room`);
+      if (newUser) {
+        toast.success(`${newUser.firstName} ${newUser.lastName} joined the room`);
+      }
     });
 
     socket.on('newMessage', (message: IMessage) => {
