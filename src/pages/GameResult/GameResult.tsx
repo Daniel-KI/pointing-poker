@@ -1,6 +1,7 @@
 import React from 'react';
 import './GameResult.scss';
 import { useSelector } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import IssueCard from '../../components/IssueCard/IssueCard';
@@ -16,6 +17,7 @@ const GameResult: React.FC = () => {
 
   const downloadBtnOnClick = () => {
     const jsonData = JSON.stringify(gameResult);
+    toast.success('Statistics saved in json format');
     downloadJsonFile(jsonData, `statistics`);
   };
 
@@ -66,6 +68,17 @@ const GameResult: React.FC = () => {
         </div>
       </div>
       <Footer />
+      <ToastContainer
+        position='bottom-left'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

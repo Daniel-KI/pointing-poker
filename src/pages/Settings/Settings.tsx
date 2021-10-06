@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './Settings.scss';
+import { toast, ToastContainer } from 'react-toastify';
 
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
@@ -113,6 +114,7 @@ const Settings: React.FC = () => {
   });
 
   const onCopyClick = () => {
+    toast.success('Lobby ID was copied');
     navigator.clipboard.writeText(`${roomId}`);
   };
 
@@ -188,6 +190,7 @@ const Settings: React.FC = () => {
   const onUserDeleteModalConfirm = () => {
     if (selectedUser && roomId) {
       leaveRoom(socket, selectedUser.id, roomId);
+      toast.success(`${selectedUser.firstName} ${selectedUser.lastName} was deleted from lobby`);
       setSelectedUser(null);
       setActiveStatusDeleteUserModal(false);
     }
@@ -199,6 +202,7 @@ const Settings: React.FC = () => {
   const onCreateIssueModalConfirm = (name: string, priority: PriorityLevel) => {
     const id = issues.length > 0 ? issues[issues.length - 1].id + 1 : 1;
     dispatch(addIssue({ id, name, priority }));
+    toast.success(` Issue ${name} was added to lobby`);
     setActiveStatusCreateIssueModal(false);
   };
 
@@ -212,6 +216,7 @@ const Settings: React.FC = () => {
   const onIssueDeleteModalConfirm = () => {
     if (selectedIssue) {
       dispatch(removeIssue(selectedIssue.id));
+      toast.success(`${selectedIssue.name} was deleted from lobby`);
       setSelectedIssue(null);
       setActiveStatusDeleteIssueModal(false);
     }
@@ -224,6 +229,7 @@ const Settings: React.FC = () => {
   const onEditIssueModalConfirm = (name: string, priority: PriorityLevel) => {
     if (selectedIssue) {
       dispatch(updateIssue({ id: selectedIssue.id, name, priority }));
+      toast.success(`Issue ${selectedIssue.name} was edited`);
       setSelectedIssue(null);
       setActiveStatusEditIssueModal(false);
     }
@@ -241,6 +247,7 @@ const Settings: React.FC = () => {
       const newCardValues = [...voteCardValues];
       newCardValues.splice(selectedVoteCard, 1);
       setVoteCardValues(newCardValues);
+      toast.success(`Vote card was deleted from lobby`);
       setSelectedVoteCard(null);
     }
     setActiveStatusDeleteVoteCardModal(false);
@@ -263,6 +270,7 @@ const Settings: React.FC = () => {
         newCardValues[selectedVoteCard] = score;
       }
     }
+    toast.success(`Vote card was edited`);
     setVoteCardValues(newCardValues);
     setActiveStatusEditVoteCardModal(false);
   };
@@ -278,6 +286,7 @@ const Settings: React.FC = () => {
     } else if (score) {
       setVoteCardValues([...voteCardValues, score]);
     }
+    toast.success(`New vote card was added to lobby`);
     setActiveStatusCreateVoteCardModal(false);
   };
 
@@ -290,6 +299,7 @@ const Settings: React.FC = () => {
       reader.onload = () => {
         const json: IIssue[] = JSON.parse(reader.result as string);
         if (json) {
+          toast.success(`Issues from file was added to lobby`);
           json.forEach(issue => {
             dispatch(addIssue(issue));
           });
@@ -501,6 +511,17 @@ const Settings: React.FC = () => {
         </div>
       </div>
       <Footer />
+      <ToastContainer
+        position='bottom-left'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 
       <ConfirmModal
         isActive={isActiveStartConfirmModal}

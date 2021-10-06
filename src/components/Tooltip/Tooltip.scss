@@ -17,7 +17,7 @@
     cursor: none;
     pointer-events: none;
     opacity: 1;
-    transition: transform .5s, opacity .5s ease-in-out;
+    transition: transform 0.5s, opacity 0.5s ease-in-out;
     z-index: 10;
   }
 
@@ -38,7 +38,7 @@
     color: $text-dark;
     box-shadow: $tooltip-shadow;
     text-align: center;
-    transition: transform .5s, opacity .5s ease-in-out;
+    transition: transform 0.5s, opacity 0.5s ease-in-out;
   }
 
   &__triangle {
@@ -52,13 +52,13 @@
     clip-path: polygon(0% 0%, 100% 100%, 0% 100%);
     transform: rotate(-45deg);
     border-radius: 0 0 0 0.2em;
-    transition: transform .5s, opacity .5s ease-in-out;
+    transition: transform 0.5s, opacity 0.5s ease-in-out;
   }
 
   &--hidden {
     & #{ $self }__content {
       opacity: 0;
-      transition: transform .3s, opacity .3s ease-in-out;
+      transition: transform 0.3s, opacity 0.3s ease-in-out;
     }
   }
 
