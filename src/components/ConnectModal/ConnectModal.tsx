@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './ConnectModal.scss';
 
-import { useHistory } from 'react-router-dom';
 import TextInput from '../TextInput/TextInput';
 import { ConnectModalProps } from './models';
 import Avatar from '../Avatar/Avatar';
@@ -14,13 +15,10 @@ import imageToDataURL from '../../utils/imageToDataURL';
 import IConnectionData from '../../api/models';
 import joinRoom from '../../api/joinRoom';
 import { IState } from '../../redux/models';
-import getRoomData from '../../api/getRoomData';
 import { updateRoom } from '../../redux/actions/roomActions';
 import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 import validateFullName from '../../utils/validation/validateFullName';
 import emptyStringValidation from '../../utils/validation/emptyStringValidation';
-import { updateSettings } from '../../redux/actions/settingsActions';
-import { updateIssues } from '../../redux/actions/issuesActions';
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
@@ -134,7 +132,6 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     dispatch(updateRoom({ id: socket.id, name: user.roomName, admin: user }));
     resetData();
     setActive(false);
-    // redirect to lobby page
     history.push(`/settings/${socket.id}`);
     joinRoom(socket, user);
   };
@@ -143,20 +140,10 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     event.preventDefault();
     const user = { ...getUserData(), roomId };
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
-    const roomData = await getRoomData(roomId);
-    if (!roomData) {
-      return;
-    }
-    dispatch(updateRoom(roomData));
-    if (roomData.isGameStarted && roomData.settings && roomData.issues) {
-      dispatch(updateSettings(roomData.settings));
-      dispatch(updateIssues(roomData.issues));
-    }
     resetData();
     setActive(false);
-    // redirect to lobby page
-    history.push(roomData.isGameStarted ? `/game/${roomId}` : `/lobby/${roomId}`);
     joinRoom(socket, user);
+    toast.info('Please wait for permission to join the game');
   };
 
   const cancelBtnOnClick = () => {
@@ -179,6 +166,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 bordered
                 onChange={onFirstNameInputChange}
                 onInvalid={onFullNameInputInvalid}
+                autocomplete='on'
               />
               <TextInput
                 name='lastName'
@@ -188,6 +176,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 bordered
                 onChange={onLastNameInputChange}
                 onInvalid={onFullNameInputInvalid}
+                autocomplete='on'
               />
               <TextInput
                 name='position'
@@ -197,6 +186,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 bordered
                 onChange={onPositionInputChange}
                 onInvalid={onPositionInputInvalid}
+                autocomplete='on'
               />
               {userType === 'admin' ? (
                 <TextInput
@@ -207,6 +197,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                   bordered
                   onChange={onRoomNameInputChange}
                   onInvalid={onRoomNameInputInvalid}
+                  autocomplete='on'
                 />
               ) : (
                 <Toggle name='isObserver' checked={isObserver} onChange={setObserverStatus}>

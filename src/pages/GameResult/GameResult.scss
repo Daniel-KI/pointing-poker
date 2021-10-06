@@ -39,6 +39,35 @@
     font-weight: 400;
   }
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &--double {
+      display: grid;
+      grid-template-columns: auto 30%;
+      gap: 2rem;
+
+      @media (max-width: $screen-xl) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+      }
+    }
+  }
+
+  &__chat-content {
+    width: 100%;
+  }
+
+  &__chat {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 7rem;
+    bottom: 7rem;
+  }
+
   &__statistics-file {
     display: flex;
     flex-direction: column;

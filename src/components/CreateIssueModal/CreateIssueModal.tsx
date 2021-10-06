@@ -8,16 +8,6 @@ import ModalBox from '../ModalBox/ModalBox';
 import priorityLevels from '../../constants/priorityLevels';
 import PriorityLevel from '../../types/PriorityLevel';
 
-// Родительский компонент:
-// const [isActive, setActive] = useState(false);
-// const modalActive = () => {
-//   setActive(true);
-// };
-
-// Появление модального окна при нажатии на кнопку
-//   <Button onClick={modalActive}>Modal</Button>
-//   <CreateIssueModal isActive={isActive} setActive={setActive}  />
-
 const CreateIssueModal: React.FC<CreateIssueModalProps> = ({ isActive, setActive, onSubmit }) => {
   const [priority, setPriority] = useState<string | undefined>(undefined);
 

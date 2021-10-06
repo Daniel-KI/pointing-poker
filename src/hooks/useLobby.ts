@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import { updateIssues } from '../redux/actions/issuesActions';
 import { addMessage } from '../redux/actions/messagesActions';
 import { updateSettings } from '../redux/actions/settingsActions';
@@ -18,17 +20,21 @@ const useLobby = (): void => {
   useLeaveRoom();
 
   useEffect(() => {
-    socket.on('users', (users: IUser[]) => {
+    socket.on('users', (users: IUser[], newUser: IUser) => {
       dispatch(updateUsers(users));
+      if (newUser) {
+        toast.success(`${newUser.firstName} ${newUser.lastName} joined the room`);
+      }
     });
 
     socket.on('newMessage', (message: IMessage) => {
       dispatch(addMessage(message));
     });
 
-    socket.on('settings', (settingsData: ISettings, issues: IIssue[]) => {
+    socket.on('settings', (settingsData: ISettings, issues: IIssue[], users: IUser[]) => {
       dispatch(updateSettings(settingsData));
       dispatch(updateIssues(issues));
+      dispatch(updateUsers(users));
       history.push(`/game/${roomId}`);
     });
 

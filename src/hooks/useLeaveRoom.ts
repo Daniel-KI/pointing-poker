@@ -16,7 +16,6 @@ const useLeaveRoom = (): void => {
   useEffect(() => {
     socket.on('userDelete', () => {
       socket.emit('user:leaveRoom', roomId);
-      // reset redux store
       dispatch(updateCurrentUser({ id: null, role: 'user' }));
       history.push(`/`);
     });

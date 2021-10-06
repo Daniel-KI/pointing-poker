@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 import './Main.scss';
 
 import { ReactComponent as TeamImg } from '../../assets/team.svg';
@@ -12,12 +14,57 @@ import UserType from '../../types/UserType';
 import validateConnection from '../../api/validateConnection';
 import { updateRoom } from '../../redux/actions/roomActions';
 import validateLobbyId from '../../utils/validation/validateLobbyId';
+import { IState, IUser } from '../../redux/models';
+import getRoomData from '../../api/getRoomData';
+import { updateSettings } from '../../redux/actions/settingsActions';
+import { updateIssues } from '../../redux/actions/issuesActions';
+import { updateUsers } from '../../redux/actions/usersActions';
+import useLeaveRoom from '../../hooks/useLeaveRoom';
+import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
+import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  const socket = useSelector((state: IState) => state.socket);
+  const roomId = useSelector((state: IState) => state.room.id);
+
   const [isPending, setPendingStatus] = useState<boolean>(false);
   const [isModalActive, setActive] = useState<boolean>(false);
   const [currentUserType, setUserType] = useState<UserType>('user');
+
+  useLeaveRoom();
+
+  useDidUpdateEffect(() => {
+    socket.on('admitted', async () => {
+      const roomData = await getRoomData(roomId);
+      if (!roomData) {
+        return;
+      }
+      socket.emit('user:joinRoom');
+      dispatch(updateCurrentUser({ id: socket.id, role: 'user', isNewUser: true }));
+      dispatch(updateRoom(roomData));
+      if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
+        dispatch(updateSettings(roomData.settings));
+        dispatch(updateIssues(roomData.issues));
+        dispatch(updateUsers(roomData.users));
+      }
+      history.push(roomData.isGameStarted ? `/game/${roomId}` : `/lobby/${roomId}`);
+    });
+
+    socket.on('users', (users: IUser[]) => {
+      dispatch(updateUsers(users));
+    });
+
+    socket.on('rejected', () => {
+      toast.error('You were rejected by scram master :(');
+    });
+
+    return () => {
+      socket.offAny();
+    };
+  }, [roomId]);
 
   const onCreateBtnClick = () => {
     setUserType('admin');
@@ -75,45 +122,59 @@ const Main: React.FC = () => {
   };
 
   return (
-    <div className='main'>
-      <Header />
-      <div className='main__wrapper'>
-        <div className='main__container'>
-          <h2 className='main__title'>Plan your project</h2>
-          <p className='main__description'>
-            Planning poker is a consensus-based, gamified technique for estimating, mostly used for timeboxing in Agile
-            principles.
-          </p>
-          <form className='main__connection' onSubmit={onFormSubmit}>
-            <TextInput
-              bordered
-              color='light'
-              placeholder='Enter lobby ID here...'
-              name='id'
-              className='main__id-input'
-              onChange={onIdFieldChange}
-            />
-            <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
-              Create
-            </Button>
-            <Button
-              color='success'
-              className='main__btn main__btn--join'
-              onClick={onJoinBtnClick}
-              submit
-              disabled={isPending}
-            >
-              Join
-            </Button>
-          </form>
-          <ConnectModal userType={currentUserType} isActive={isModalActive} setActive={setActive} />
-          <div className='main__image-container'>
-            <TeamImg className='main__image' />
+    <>
+      <div className='main'>
+        <Header />
+        <div className='main__wrapper'>
+          <div className='main__container'>
+            <h2 className='main__title'>Plan your project</h2>
+            <p className='main__description'>
+              Planning poker is a consensus-based, gamified technique for estimating, mostly used for timeboxing in
+              Agile principles.
+            </p>
+            <form className='main__connection' onSubmit={onFormSubmit}>
+              <TextInput
+                bordered
+                color='light'
+                placeholder='Enter lobby ID here...'
+                name='id'
+                className='main__id-input'
+                onChange={onIdFieldChange}
+                autocomplete='on'
+              />
+              <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
+                Create
+              </Button>
+              <Button
+                color='success'
+                className='main__btn main__btn--join'
+                onClick={onJoinBtnClick}
+                submit
+                disabled={isPending}
+              >
+                Join
+              </Button>
+            </form>
+            <ConnectModal userType={currentUserType} isActive={isModalActive} setActive={setActive} />
+            <div className='main__image-container'>
+              <TeamImg className='main__image' />
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+      <ToastContainer
+        position='top-right'
+        autoClose={8000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 };
 

@@ -4,7 +4,7 @@
 
 .chat-message {
   display: flex;
-  gap: 20px;
+  gap: 1rem;
   width: 100%;
 
   &.current-user {
@@ -13,13 +13,14 @@
 
   &__avatar {
     flex-shrink: 0;
+  }
 
-    &_empty-box {
-      width: 64px;
-    }
+  &__hidden-avatar {
+    width: 64px;
   }
 
   &__item {
+    max-width: 100%;
     padding: 12px;
     background-color: #fff;
     border-radius: 5px;
@@ -59,4 +60,9 @@
       color: $primary;
     }
   }
+}
+
+.chat-message__item_text {
+  max-width: 100%;
+  word-wrap: break-word;
 }

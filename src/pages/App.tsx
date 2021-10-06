@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../ui/toast-notification.scss';
 import Main from './Main/Main';
 
-function App(): ReactElement {
+const App = (): ReactElement => {
   const isAuth = useSelector((state: IState) => !!state.currentUser.id);
   const isAdmin = useSelector((state: IState) => state.currentUser.role === 'admin');
 
@@ -32,6 +32,6 @@ function App(): ReactElement {
       </Switch>
     </div>
   );
-}
+};
 
 export default App;

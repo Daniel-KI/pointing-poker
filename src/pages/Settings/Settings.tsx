@@ -29,6 +29,7 @@ import Tooltip from '../../components/Tooltip/Tooltip';
 import leaveRoom from '../../api/leaveRoom';
 import sendSettingsData from '../../api/sendSettingsData';
 import useLobby from '../../hooks/useLobby';
+import Chat from '../../components/Chat/Chat';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -44,12 +45,15 @@ const Settings: React.FC = () => {
   const settings = localStorage.getItem('settings');
   const data: ISettings | undefined = settings ? JSON.parse(settings) : undefined;
 
+  const [isChatOpen, setChatOpen] = useState(false);
+
   const [masterAsPlayer, setMasterAsPlayer] = useState<boolean>(data ? !data.isAdminObserver : false);
   const [flipCardsInTheEnd, setFlipCardsInTheEnd] = useState<boolean>(data ? data.cardsFlipAutomatically : false);
   const [isTimer, setIsTimer] = useState<boolean>(data ? !!data.timer : false);
   const [timerMinutes, setTimerMinutes] = useState<number>(data && data.timer ? data.timer.minutes : 0);
   const [timerSeconds, setTimerSeconds] = useState<number>(data && data.timer ? data.timer.seconds : 0);
   const [autoAddUsers, setAutoAddUsers] = useState<boolean>(data ? data.addNewPlayersAutomatically : false);
+  const [canChangeChoice, setCanChangeChoice] = useState(() => false);
   const [scoreType, setScoreType] = useState<string>(data ? data.scoreType : '');
   const [cardBack, setCardBack] = useState<SpCardBackType>(data ? data.cardBack : 'type1');
   const [voteCardValues, setVoteCardValues] = useState<string[]>(data ? data.cardValues : []);
@@ -109,6 +113,7 @@ const Settings: React.FC = () => {
     cardBack,
     addNewPlayersAutomatically: autoAddUsers,
     cardsFlipAutomatically: flipCardsInTheEnd,
+    canChangeChoice,
   });
 
   const onCopyClick = () => {
@@ -132,7 +137,6 @@ const Settings: React.FC = () => {
       setIssuesValidStatus(true);
       setSettingsValidStatus(true);
       setVoteCardsValidStatus(true);
-      // start game here
       sendSettingsData(socket, settingsData, issues);
     } else {
       let element: HTMLElement | null = null;
@@ -163,8 +167,10 @@ const Settings: React.FC = () => {
     setActiveStatusStopConfirmModal(true);
   };
   const onStopModalConfirm = () => {
-    // stop game here
-    setActiveStatusStopConfirmModal(false);
+    if (admin?.id) {
+      leaveRoom(socket, admin?.id, admin?.id);
+      setActiveStatusStopConfirmModal(false);
+    }
   };
   const onStopModalDecline = () => {
     setActiveStatusStopConfirmModal(false);
@@ -309,199 +315,211 @@ const Settings: React.FC = () => {
 
   return (
     <div className='lobby'>
-      <Header isAuthorized />
+      <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='lobby__wrapper'>
         <div className='lobby__container'>
-          <h2 className='lobby__title'>{roomName}</h2>
+          <h2 className='lobby__title'>{roomName || 'Settings'}</h2>
 
-          <div className='lobby__info'>
-            <div className='lobby__room-info'>
-              <div className='lobby__room-master'>
-                <h3 className='lobby__section-title'>Scram master:</h3>
-                <UserCard
-                  name={admin?.firstName}
-                  surname={admin?.lastName}
-                  jobPosition={admin?.position}
-                  avatar={admin?.avatar}
-                  color='primary'
-                  className='lobby__scram-master_card'
-                />
+          <div className={isChatOpen ? 'lobby__content lobby__content--double' : 'lobby__content'}>
+            <div className='lobby__main-content'>
+              <div className='lobby__info'>
+                <div className='lobby__room-info'>
+                  <div className='lobby__room-master'>
+                    <h3 className='lobby__section-title'>Scram master:</h3>
+                    <UserCard
+                      name={admin?.firstName}
+                      surname={admin?.lastName}
+                      jobPosition={admin?.position}
+                      avatar={admin?.avatar}
+                      color='primary'
+                      className='lobby__scram-master_card'
+                    />
+                  </div>
+                  <div className='lobby__room-id'>
+                    <h3 className='lobby__section-title'>Link to lobby:</h3>
+                    <TextInput size='large' color='light' bordered value={roomId} disabled />
+                    <Button color='dark' size='large' onClick={onCopyClick}>
+                      Copy
+                    </Button>
+                  </div>
+                </div>
+                <div className='lobby__controls'>
+                  <Button color='success' size='large' onClick={onStartGameClick}>
+                    Start game
+                  </Button>
+                  <Button color='danger' size='large' onClick={onStopGameClick}>
+                    Cancel game
+                  </Button>
+                </div>
               </div>
-              <div className='lobby__room-id'>
-                <h3 className='lobby__section-title'>Link to lobby:</h3>
-                <TextInput size='large' color='light' bordered value={roomId} disabled />
-                <Button color='dark' size='large' onClick={onCopyClick}>
-                  Copy
-                </Button>
-              </div>
-            </div>
-            <div className='lobby__controls'>
-              <Button color='success' size='large' onClick={onStartGameClick}>
-                Start game
-              </Button>
-              <Button color='danger' size='large' onClick={onStopGameClick}>
-                Cancel game
-              </Button>
-            </div>
-          </div>
 
-          <div className='lobby__members' id='lobby__members'>
-            <Tooltip
-              message='All participants are displayed in this list'
-              visibility={isVisibleMembersTooltip}
-              setVisibilityStatus={setVisibilityMembersTooltip}
-            >
-              <h3 className='lobby__section-title'>Members list</h3>
-            </Tooltip>
-            <div className='lobby__members-container'>
-              {users && users.length ? (
-                users.map((element, index: number) => (
-                  <UserCard
-                    key={index.toString()}
-                    name={element.firstName}
-                    surname={element.lastName}
-                    jobPosition={element.position}
-                    avatar={element.avatar}
-                    deleteAction={() => deleteUserAction(element)}
-                    className='lobby__member_card'
+              <div className='lobby__members' id='lobby__members'>
+                <Tooltip
+                  message='All participants are displayed in this list'
+                  visibility={isVisibleMembersTooltip}
+                  setVisibilityStatus={setVisibilityMembersTooltip}
+                >
+                  <h3 className='lobby__section-title'>Members list</h3>
+                </Tooltip>
+                <div className='lobby__members-container'>
+                  {users && users.length ? (
+                    users.map((element, index: number) => (
+                      <UserCard
+                        key={index.toString()}
+                        name={element.firstName}
+                        surname={element.lastName}
+                        jobPosition={element.position}
+                        avatar={element.avatar}
+                        deleteAction={() => deleteUserAction(element)}
+                        className='lobby__member_card'
+                      />
+                    ))
+                  ) : (
+                    <p className='lobby__empty-text'>There is no members</p>
+                  )}
+                </div>
+              </div>
+
+              <div className='lobby__issues' id='lobby__issues'>
+                <Tooltip
+                  message={`You can't start the game without issues`}
+                  visibility={!isValidIssues || isVisibleIssuesTooltip}
+                  setVisibilityStatus={setVisibilityIssuesTooltip}
+                  color={!isValidIssues ? 'danger' : 'light'}
+                >
+                  <h3 className='lobby__section-title'>Project issues list</h3>
+                </Tooltip>
+                <div className='lobby__issues-file'>
+                  <p className='lobby__empty-text'>Click here to load json file with issues data</p>
+                  <div className='lobby__send-file-card'>
+                    <FileInput
+                      color='success'
+                      accept='application/json'
+                      name='issues-file'
+                      onChange={fileInputOnChange}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className='lobby__issues-container'>
+                  {issues?.map((element, index) => (
+                    <IssueCard
+                      key={index.toString()}
+                      name={element.name}
+                      priority={element.priority}
+                      deleteAction={() => deleteIssueAction(element)}
+                      editAction={() => editIssueAction(element)}
+                      className='lobby__issue-card'
+                    />
+                  ))}
+                  <IssueCreationCard
+                    label='Create issue'
+                    addAction={addIssueAction}
+                    className='lobby__issues_create-issue'
                   />
-                ))
-              ) : (
-                <p className='lobby__empty-text'>There is no members</p>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
 
-          <div className='lobby__issues' id='lobby__issues'>
-            <Tooltip
-              message={`You can't start the game without issues`}
-              visibility={!isValidIssues || isVisibleIssuesTooltip}
-              setVisibilityStatus={setVisibilityIssuesTooltip}
-              color={!isValidIssues ? 'danger' : 'light'}
-            >
-              <h3 className='lobby__section-title'>Project issues list</h3>
-            </Tooltip>
-            <div className='lobby__issues-file'>
-              <p className='lobby__empty-text'>Click here to load json file with issues data</p>
-              <div className='lobby__send-file-card'>
-                <FileInput
-                  color='success'
-                  accept='application/json'
-                  name='issues-file'
-                  onChange={fileInputOnChange}
-                  required
-                />
+              <div className='lobby__settings' id='lobby__settings'>
+                <Tooltip
+                  message='All fields must be filled'
+                  visibility={!isValidSettings || isVisibleSettingsTooltip}
+                  setVisibilityStatus={setVisibilitySettingsTooltip}
+                  color={!isValidSettings ? 'danger' : 'light'}
+                >
+                  <h3 className='lobby__section-title'>Game settings</h3>
+                </Tooltip>
+                <form className='lobby__settings_form'>
+                  <Toggle checked={masterAsPlayer} inputId='scramMasterToggle' onChange={setMasterAsPlayer}>
+                    Scram master as player
+                  </Toggle>
+                  <Toggle checked={flipCardsInTheEnd} inputId='changingCardToggle' onChange={setFlipCardsInTheEnd}>
+                    Flip cards after all players have voted
+                  </Toggle>
+                  <Toggle checked={isTimer} inputId='timerNeededToggle' onChange={setIsTimer}>
+                    Is timer needed
+                  </Toggle>
+                  <Toggle checked={autoAddUsers} inputId='addNewPlayerToggle' onChange={setAutoAddUsers}>
+                    Add new users to game page automatically
+                  </Toggle>
+                  <Toggle checked={canChangeChoice} inputId='canChangeChoiceToggle' onChange={setCanChangeChoice}>
+                    Players can change choices after voting
+                  </Toggle>
+                  <label htmlFor='scoreType' className='lobby__score-input'>
+                    <span>Score type</span>
+                    <TextInput
+                      id='scoreType'
+                      name='scoreType'
+                      placeholder='Story point'
+                      value={scoreType}
+                      onChange={onScoreTypeInputChange}
+                    />
+                  </label>
+                  {isTimer ? (
+                    <label htmlFor='timer' className='lobby__timer-input'>
+                      <span>Round time</span>
+                      <Timer
+                        id='timer'
+                        minutes={timerMinutes}
+                        seconds={timerSeconds}
+                        setMinutes={setTimerMinutes}
+                        setSeconds={setTimerSeconds}
+                      />
+                    </label>
+                  ) : null}
+                </form>
+
+                <div className='lobby__card-backs' id='lobby__card-backs'>
+                  <Tooltip
+                    message='Choose the most beautiful card design for you'
+                    visibility={isVisibleCardBacksTooltip}
+                    setVisibilityStatus={setVisibilityCardBacksTooltip}
+                  >
+                    <h3 className='lobby__section-title'>Vote card backs:</h3>
+                  </Tooltip>
+                  <div className='lobby__card-backs-container'>
+                    {cardBacks?.map((element, index) => (
+                      <SpCardBack
+                        key={index.toString()}
+                        type={element}
+                        size='small'
+                        onClick={() => onCardBackClick(element)}
+                        isSelected={cardBack === element}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className='lobby__card-fronts' id='lobby__card-fronts'>
+                  <Tooltip
+                    message='You cannot start the game without at least two card values'
+                    visibility={!isValidVoteCards || isVisibleIVoteCardsTooltip}
+                    setVisibilityStatus={setVisibilityIVoteCardsTooltip}
+                    color={!isValidVoteCards ? 'danger' : 'light'}
+                  >
+                    <h3 className='lobby__section-title'>Vote card values:</h3>
+                  </Tooltip>
+                  <div className='lobby__card-fronts-container'>
+                    {voteCardValues?.map((element, index) => (
+                      <SpOptionCard
+                        key={index.toString()}
+                        deleteAction={() => deleteVoteCardAction(index)}
+                        editAction={() => editVoteCardAction(index)}
+                        score={element}
+                        units={scoreType}
+                        size='small'
+                      />
+                    ))}
+                    <SpCreationCard onClick={onCreateVoteCardClick} size='small' />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className='lobby__issues-container'>
-              {issues?.map((element, index) => (
-                <IssueCard
-                  key={index.toString()}
-                  name={element.name}
-                  priority={element.priority}
-                  deleteAction={() => deleteIssueAction(element)}
-                  editAction={() => editIssueAction(element)}
-                  className='lobby__issue-card'
-                />
-              ))}
-              <IssueCreationCard
-                label='Create issue'
-                addAction={addIssueAction}
-                className='lobby__issues_create-issue'
-              />
-            </div>
-          </div>
-
-          <div className='lobby__settings' id='lobby__settings'>
-            <Tooltip
-              message='All fields must be filled'
-              visibility={!isValidSettings || isVisibleSettingsTooltip}
-              setVisibilityStatus={setVisibilitySettingsTooltip}
-              color={!isValidSettings ? 'danger' : 'light'}
-            >
-              <h3 className='lobby__section-title'>Game settings</h3>
-            </Tooltip>
-            <form className='lobby__settings_form'>
-              <Toggle checked={masterAsPlayer} inputId='scramMasterToggle' onChange={setMasterAsPlayer}>
-                Scram master as player
-              </Toggle>
-              <Toggle checked={flipCardsInTheEnd} inputId='changingCardToggle' onChange={setFlipCardsInTheEnd}>
-                Flip cards in round end
-              </Toggle>
-              <Toggle checked={isTimer} inputId='timerNeededToggle' onChange={setIsTimer}>
-                Is timer needed
-              </Toggle>
-              <Toggle checked={autoAddUsers} inputId='addNewPlayerToggle' onChange={setAutoAddUsers}>
-                Auto add users
-              </Toggle>
-              <label htmlFor='scoreType' className='lobby__score-input'>
-                <span>Score type</span>
-                <TextInput
-                  id='scoreType'
-                  name='scoreType'
-                  placeholder='Story point'
-                  value={scoreType}
-                  onChange={onScoreTypeInputChange}
-                />
-              </label>
-              {isTimer ? (
-                <label htmlFor='timer' className='lobby__timer-input'>
-                  <span>Round time</span>
-                  <Timer
-                    id='timer'
-                    minutes={timerMinutes}
-                    seconds={timerSeconds}
-                    setMinutes={setTimerMinutes}
-                    setSeconds={setTimerSeconds}
-                  />
-                </label>
-              ) : null}
-            </form>
-
-            <div className='lobby__card-backs' id='lobby__card-backs'>
-              <Tooltip
-                message='Choose the most beautiful card design for you'
-                visibility={isVisibleCardBacksTooltip}
-                setVisibilityStatus={setVisibilityCardBacksTooltip}
-              >
-                <h3 className='lobby__section-title'>Vote card backs:</h3>
-              </Tooltip>
-              <div className='lobby__card-backs-container'>
-                {cardBacks?.map((element, index) => (
-                  <SpCardBack
-                    key={index.toString()}
-                    type={element}
-                    size='small'
-                    onClick={() => onCardBackClick(element)}
-                    isSelected={cardBack === element}
-                  />
-                ))}
+            {isChatOpen ? (
+              <div className='lobby__chat-content'>
+                <Chat className='lobby__chat' />
               </div>
-            </div>
-
-            <div className='lobby__card-fronts' id='lobby__card-fronts'>
-              <Tooltip
-                message='You cannot start the game without at least two card values'
-                visibility={!isValidVoteCards || isVisibleIVoteCardsTooltip}
-                setVisibilityStatus={setVisibilityIVoteCardsTooltip}
-                color={!isValidVoteCards ? 'danger' : 'light'}
-              >
-                <h3 className='lobby__section-title'>Vote card values:</h3>
-              </Tooltip>
-              <div className='lobby__card-fronts-container'>
-                {voteCardValues?.map((element, index) => (
-                  <SpOptionCard
-                    key={index.toString()}
-                    deleteAction={() => deleteVoteCardAction(index)}
-                    editAction={() => editVoteCardAction(index)}
-                    score={element}
-                    units={scoreType}
-                    size='small'
-                  />
-                ))}
-                <SpCreationCard onClick={onCreateVoteCardClick} size='small' />
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </div>

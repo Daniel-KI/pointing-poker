@@ -26,11 +26,13 @@ export interface IRoom {
   isGameStarted?: boolean;
   settings?: ISettings;
   issues?: IIssue[];
+  users?: IUser[];
 }
 
 export interface ICurrentUser {
   id: string | null;
   role: UserType;
+  isNewUser?: boolean;
 }
 
 export interface ITimer {
@@ -46,11 +48,17 @@ export interface ISettings {
   cardBack: SpCardBackType;
   addNewPlayersAutomatically: boolean;
   cardsFlipAutomatically: boolean;
+  canChangeChoice: boolean;
 }
 
 export interface IMessage {
   user: IUser;
   text: string;
+}
+
+export interface IVote {
+  member: IUser;
+  score: string;
 }
 
 export interface IGameResult {
@@ -72,4 +80,5 @@ export interface IState {
   messages: IMessage[];
   settings: ISettings;
   gameResults: IGameResult[];
+  votes: IVote[];
 }

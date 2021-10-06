@@ -1,4 +1,4 @@
-import { ISettingsAction, SET_SETTINGS } from '../actions/settingsActions';
+import { SettingsActionsType, SET_SETTINGS, UPDATE_TIMER } from '../actions/settingsActions';
 import { ISettings } from '../models';
 
 const initialState: ISettings = {
@@ -9,10 +9,14 @@ const initialState: ISettings = {
   cardBack: 'type1',
   addNewPlayersAutomatically: true,
   cardsFlipAutomatically: true,
+  canChangeChoice: false,
 };
 
-const settingsReducer = (state = initialState, action: ISettingsAction): ISettings => {
+const settingsReducer = (state = initialState, action: SettingsActionsType): ISettings => {
   switch (action.type) {
+    case UPDATE_TIMER: {
+      return { ...state, timer: action.timer };
+    }
     case SET_SETTINGS:
       return { ...action.settings };
     default:

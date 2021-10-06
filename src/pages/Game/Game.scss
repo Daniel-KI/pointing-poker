@@ -5,7 +5,7 @@
 @import '../../ui/breakpoints.scss';
 @import '../../ui/shadows.scss';
 
-.lobby {
+.game {
   @extend .page;
 
   &__wrapper {
@@ -77,59 +77,49 @@
     bottom: 7rem;
   }
 
-  &__info {
+  &__data {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     margin-bottom: 4rem;
-    color: $text-dark;
-  }
-
-  &__room-info {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-
-    @media (max-width: $screen-md) {
-      flex-direction: column;
-    }
-  }
-
-  &__room-master {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    @media (max-width: $screen-md) {
-      margin-bottom: 2rem;
-    }
-  }
-
-  &__room-id {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-    @media (max-width: $screen-md) {
-      margin-bottom: 2rem;
-    }
-  }
-
-  &__controls {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
 
     @media (max-width: $screen-sm) {
       flex-direction: column;
+      justify-content: center;
     }
   }
 
-  &__members,
-  &__issues {
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (max-width: $screen-sm) {
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &__master {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__master-card {
+    margin: 0 !important;
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.65rem;
+  }
+
+  &__vote,
+  &__issues,
+  &__statistics,
+  &__score {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -138,8 +128,9 @@
     margin-bottom: 4rem;
   }
 
-  &__members-container,
-  &__issues-container {
+  &__vote-container,
+  &__issues-container,
+  &__statistics-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -147,70 +138,58 @@
     align-items: center;
   }
 
-  &__issues-file {
+  &__issue,
+  &__vote-card,
+  &__statistics_card {
+    margin: 0;
+  }
+
+  &__statistics-block {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 0.5rem;
   }
 
-  &__send-file-card {
-    padding: 0.5rem;
-    display: flex;
-    gap: 0.5rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: $basic-shadow;
-    transition: 1s ease;
+  &__table {
+    max-width: 100%;
+    border: 2px solid #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
 
-    &:hover {
-      box-shadow: $basic-shadow-hover;
-    }
-  }
-
-  &__settings {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  &__settings_form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-    margin-bottom: 2rem;
-  }
-
-  &__score-input,
-  &__timer-input {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
     @media (max-width: $screen-sm) {
-      gap: 1rem;
-      flex-direction: column;
-      align-items: flex-start;
+      border: none;
     }
   }
 
-  &__card-backs,
-  &__card-fronts {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    margin-bottom: 2rem;
+  &__thead {
+    @media (max-width: $screen-sm) {
+      display: none;
+    }
   }
 
-  &__card-backs-container,
-  &__card-fronts-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
+  &__tr {
+    @media (max-width: $screen-sm) {
+      display: flex;
+      flex-direction: column-reverse;
+      border: 2px solid $light-active;
+    }
+  }
+
+  &__th,
+  &__td {
+    border: 1px solid #ffffff;
+    background-color: $light-disabled;
+    padding: 0.5rem;
+    @media (max-width: $screen-sm) {
+      padding: 1rem 0.1rem;
+    }
+  }
+
+  &__td-score {
+    text-align: center;
+  }
+
+  &__user-card {
+    margin: 0 !important;
   }
 }
