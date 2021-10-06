@@ -21,6 +21,7 @@ import { updateIssues } from '../../redux/actions/issuesActions';
 import { updateUsers } from '../../redux/actions/usersActions';
 import useLeaveRoom from '../../hooks/useLeaveRoom';
 import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
+import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const Main: React.FC = () => {
         return;
       }
       socket.emit('user:joinRoom');
+      dispatch(updateCurrentUser({ id: socket.id, role: 'user', isNewUser: true }));
       dispatch(updateRoom(roomData));
       if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
         dispatch(updateSettings(roomData.settings));

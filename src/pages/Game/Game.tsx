@@ -13,7 +13,7 @@ import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueCreationCard from '../../components/IssueCreationCard/IssueCreationCard';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
-import { IGameResult, IIssue, IState, ITimer, IUser } from '../../redux/models';
+import { IGameResult, IIssue, IMessage, IState, ITimer, IUser } from '../../redux/models';
 import PriorityLevel from '../../types/PriorityLevel';
 import changeCurrentIssue from '../../api/changeCurrentIssue';
 import SpCardFront from '../../components/SpCardFront/SpCardFront';
@@ -27,6 +27,8 @@ import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
 import { updateVotes } from '../../redux/actions/votesActions';
 import { updateTimer } from '../../redux/actions/settingsActions';
 import Chat from '../../components/Chat/Chat';
+import { addMessage } from '../../redux/actions/messagesActions';
+import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -82,7 +84,14 @@ const Game: React.FC = () => {
       if (result.length !== 0) {
         dispatch(updateGameResults(result));
       }
+      dispatch(updateCurrentUser({ id: socket.id, role: 'user', isNewUser: true }));
       setCurrentIssue(newCurrentIssue);
+    });
+
+    socket.on('newMessage', (message: IMessage) => {
+      if (currentUserData.isNewUser) {
+        dispatch(addMessage(message));
+      }
     });
 
     socket.on('users', (users: IUser[], user: IUser | null) => {

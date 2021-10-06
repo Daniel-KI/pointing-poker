@@ -32,6 +32,7 @@ export interface IRoom {
 export interface ICurrentUser {
   id: string | null;
   role: UserType;
+  isNewUser?: boolean;
 }
 
 export interface ITimer {

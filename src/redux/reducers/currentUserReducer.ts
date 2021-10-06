@@ -4,6 +4,7 @@ import { ICurrentUserAction, SET_CURRENT_USER } from '../actions/currentUserActi
 const initialState: ICurrentUser = {
   id: null,
   role: 'user',
+  isNewUser: false,
 };
 
 const currentUserReducer = (state = initialState, action: ICurrentUserAction): ICurrentUser => {
