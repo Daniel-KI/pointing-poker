@@ -138,6 +138,7 @@ const Main: React.FC = () => {
                 name='id'
                 className='main__id-input'
                 onChange={onIdFieldChange}
+                autocomplete='on'
               />
               <Button color='primary' className='main__btn main__btn--create' onClick={onCreateBtnClick}>
                 Create

@@ -406,7 +406,7 @@ const Game: React.FC = () => {
                       <Button
                         color='light'
                         size='large'
-                        className='scram-master__exit-btn'
+                        className='scram-master__finish-btn'
                         onClick={onClickFinishGameBtn}
                       >
                         Finish game

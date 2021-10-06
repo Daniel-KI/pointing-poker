@@ -166,6 +166,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 bordered
                 onChange={onFirstNameInputChange}
                 onInvalid={onFullNameInputInvalid}
+                autocomplete='on'
               />
               <TextInput
                 name='lastName'
@@ -175,6 +176,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 bordered
                 onChange={onLastNameInputChange}
                 onInvalid={onFullNameInputInvalid}
+                autocomplete='on'
               />
               <TextInput
                 name='position'
@@ -184,6 +186,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                 bordered
                 onChange={onPositionInputChange}
                 onInvalid={onPositionInputInvalid}
+                autocomplete='on'
               />
               {userType === 'admin' ? (
                 <TextInput
@@ -194,6 +197,7 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
                   bordered
                   onChange={onRoomNameInputChange}
                   onInvalid={onRoomNameInputInvalid}
+                  autocomplete='on'
                 />
               ) : (
                 <Toggle name='isObserver' checked={isObserver} onChange={setObserverStatus}>
