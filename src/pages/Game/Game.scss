@@ -9,243 +9,28 @@
   @extend .page;
 
   &__wrapper {
-    padding: 0px 10%;
+    height: 100%;
+    padding: 1rem 0 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    @media (max-width: $screen-sm) {
-      padding: 0px 20px;
-    }
+  &__container {
+    @extend .container;
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
+    font-size: $title-md;
+    display: block;
+    width: 100%;
     text-align: center;
-    margin-bottom: 50px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  &__title-content {
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis;
     overflow: hidden;
-    -ms-line-clamp: 2;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    display: -webkit-box;
-    display: box;
-    word-wrap: break-word;
-    -webkit-box-orient: vertical;
-    box-orient: vertical;
-  }
-
-  &__score-wrapper {
-    @media (max-width: $screen-xl) {
-      margin: 0 auto;
-    }
-  }
-
-  &__score-title {
-    text-align: center;
-    margin-bottom: 6px;
-  }
-
-  &__score {
-    width: fit-content;
-  }
-
-  &__issues {
-    @media (max-width: $screen-xl) {
-      margin-bottom: 0;
-    }
-  }
-
-  &__issues-title {
-    margin-bottom: 30px;
-    @media (max-width: $screen-md) {
-      text-align: center;
-    }
-  }
-
-  &__issues-field {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-
-    @media (max-width: $screen-md) {
-      justify-content: center;
-    }
-  }
-
-  &__issues-field &__issue {
-    margin: 0;
-  }
-
-  &__issues-field &__create-issue {
-    margin: 0;
-    height: 77px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  table {
-    border: 1px solid #ffffff;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 10px;
-
-    @media (max-width: $screen-sm) {
-      border: none;
-    }
-
-    thead {
-      @media (max-width: $screen-sm) {
-        display: none;
-      }
-    }
-
-    & tr:last-child td:first-child {
-      border-bottom-left-radius: 10px;
-      @media (max-width: $screen-sm) {
-        border-radius: 0;
-      }
-    }
-
-    & tr:last-child td:last-child {
-      border-bottom-right-radius: 10px;
-      @media (max-width: $screen-sm) {
-        border-radius: 0;
-      }
-    }
-
-    & tr:first-child th:first-child {
-      border-top-left-radius: 10px;
-    }
-
-    & tr:first-child th:last-child {
-      border-top-right-radius: 10px;
-    }
-
-    th {
-      border: 1px solid #ffffff;
-      background-color: #d4d4e6;
-      padding: 20px 10px;
-    }
-
-    td {
-      border: 1px solid #ffffff;
-      background-color: #ececf5;
-
-      &:first-child {
-        @media (max-width: $screen-sm) {
-          border-bottom: none;
-        }
-      }
-
-      &::before {
-        @media (max-width: $screen-sm) {
-          content: attr(data-label);
-          display: flex;
-          justify-content: left;
-          font-weight: 500;
-          color: $text-dark-secondary;
-        }
-      }
-    }
-  }
-
-  &__score-tr {
-    @media (max-width: $screen-sm) {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-    }
-  }
-
-  &__table-score {
-    min-width: 140px;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    text-align: center;
-  }
-
-  &__table-score,
-  &__table-card {
-    padding: 10px 4px;
-
-    @media (max-width: $screen-sm) {
-      padding: 4px;
-    }
-  }
-
-  &__table-card &__user-card {
-    margin: 8px;
-    padding: 8px;
-
-    @media (max-width: $screen-sm) {
-      margin: 4px;
-    }
-  }
-
-  &__statistics-title {
-    margin-bottom: 30px;
-
-    @media (max-width: $screen-md) {
-      text-align: center;
-    }
-  }
-
-  &__statistics-field {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-
-    @media (max-width: $screen-md) {
-      justify-content: center;
-    }
-  }
-
-  &__statistics-percent {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    font-size: $text-lg;
-    font-weight: 500;
-  }
-
-  &__vote-title {
-    margin-bottom: 30px;
-
-    @media (max-width: $screen-md) {
-      text-align: center;
-    }
-  }
-
-  &__vote-field {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-
-    @media (max-width: $screen-md) {
-      justify-content: center;
-    }
-  }
-
-  &__vote-field &__vote-front {
-    margin: 0;
-  }
-}
-
-.scram-master {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 50px;
-  margin-bottom: 100px;
-
-  &__section-title {
-    font-size: $text-lg;
-    font-weight: 500;
-    line-height: $line-height-md;
+    margin: 2rem 0 3rem;
     color: $text-dark;
   }
 
@@ -255,94 +40,156 @@
     font-weight: 400;
   }
 
-  @media (max-width: $screen-xl) {
-    flex-direction: column;
-    gap: 100px;
+  &__section-title {
+    cursor: pointer;
+    font-size: $text-lg;
+    font-weight: 500;
+    line-height: $line-height-md;
+    color: $text-dark;
   }
 
-  @media (max-width: $screen-md) {
-    gap: 50px;
-  }
-
-  &__card-field-wrapper {
+  &__content {
     display: flex;
     flex-direction: column;
-    gap: 100px;
+    justify-content: center;
 
-    @media (max-width: $screen-md) {
-      gap: 50px;
-    }
+    &--double {
+      display: grid;
+      grid-template-columns: auto 30%;
+      gap: 2rem;
 
-    @media (max-width: $screen-sm) {
-      flex-direction: column;
-      gap: 40px;
-    }
-  }
-
-  &__card-field {
-    display: grid;
-    justify-content: left;
-    grid-template-columns: fit-content 1fr;
-    gap: 50px;
-    grid-template-areas:
-      'card-master card-master-btn'
-      'timer timer-btn';
-
-    @media (max-width: $screen-sm) {
-      grid-template-areas:
-        'card-master'
-        'card-master-btn'
-        'timer'
-        'timer-btn';
-      gap: 20px;
-      justify-content: center;
-    }
-
-    & * {
-      @media (max-width: $screen-sm) {
-        margin: 0 auto;
+      @media (max-width: $screen-xl) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
       }
     }
   }
 
-  &__card-master {
-    grid-area: card-master;
+  &__chat-content {
+    width: 100%;
   }
 
-  &__card-master-btn {
-    grid-area: card-master-btn;
-    padding-top: 34px;
-
-    @media (max-width: $screen-sm) {
-      padding-top: 0;
-      margin-bottom: 30px;
-    }
-  }
-  &__exit-btn {
-    min-width: 140px;
-  }
-  &__timer {
-    grid-area: timer;
+  &__chat {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 7rem;
+    bottom: 7rem;
   }
 
-  &__timer-btn {
-    grid-area: timer-btn;
+  &__data {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  &__card-field &__card {
-    margin: 10px 0 0;
-  }
-
-  &__button-field {
-    display: flex;
-    gap: 50px;
+    gap: 1rem;
+    margin-bottom: 4rem;
 
     @media (max-width: $screen-sm) {
       flex-direction: column;
-      gap: 20px;
+      justify-content: center;
     }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (max-width: $screen-sm) {
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &__master {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__master-card {
+    margin: 0 !important;
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.65rem;
+  }
+
+  &__vote,
+  &__issues,
+  &__statistics,
+  &__score {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  &__vote-container,
+  &__issues-container,
+  &__statistics-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  &__issue,
+  &__vote-card,
+  &__statistics_card {
+    margin: 0;
+  }
+
+  &__statistics-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__table {
+    max-width: 100%;
+    border: 2px solid #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    @media (max-width: $screen-sm) {
+      border: none;
+    }
+  }
+
+  &__thead {
+    @media (max-width: $screen-sm) {
+      display: none;
+    }
+  }
+
+  &__tr {
+    @media (max-width: $screen-sm) {
+      display: flex;
+      flex-direction: column-reverse;
+      border: 2px solid $light-active;
+    }
+  }
+
+  &__th,
+  &__td {
+    border: 1px solid #ffffff;
+    background-color: $light-disabled;
+    padding: 0.5rem;
+    @media (max-width: $screen-sm) {
+      padding: 1rem 0.1rem;
+    }
+  }
+
+  &__td-score {
+    text-align: center;
+  }
+
+  &__user-card {
+    margin: 0 !important;
   }
 }

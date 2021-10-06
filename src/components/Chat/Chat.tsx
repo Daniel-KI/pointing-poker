@@ -1,17 +1,16 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '../../redux/actions/messagesActions';
+import { useSelector } from 'react-redux';
+import { IoSend } from 'react-icons/io5';
 import { IMessage, IState } from '../../redux/models';
 import Button from '../Button/Button';
 import ChatMessage from '../ChatMessage/ChatMessage';
 import TextInput from '../TextInput/TextInput';
 import './Chat.scss';
 import { ChatProps } from './models';
+import emptyStringValidation from '../../utils/validation/emptyStringValidation';
 
 const Chat: React.FC<ChatProps> = ({ className }) => {
-  const dispatch = useDispatch();
-
   const socket = useSelector((state: IState) => state.socket);
   const messages = useSelector((state: IState) => state.messages);
   const currentUserData = useSelector((state: IState) => state.currentUser);
@@ -19,9 +18,6 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
   const members = useSelector((state: IState) => state.users);
   const currentUser = currentUserData.role === 'admin' ? admin : members.find(user => user.id === currentUserData.id);
 
-  const [isCurrentUser, setIsCurrentUser] = useState(() => true);
-  const [isLastUserMessage, setIsLastUserMessage] = useState(() => false);
-  const [isFirstMessage, setIsFirstMessage] = useState(() => true);
   const [messageText, setMessageText] = useState(() => '');
   const classes = classNames(
     {
@@ -29,49 +25,80 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
     },
     className,
   );
+
   const onMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessageText(event.currentTarget.value);
+    if (emptyStringValidation(event.currentTarget.value)) {
+      event.currentTarget.setCustomValidity('This field cannot be empty');
+      event.currentTarget.reportValidity();
+    } else {
+      event.currentTarget.setCustomValidity('');
+      setMessageText(event.currentTarget.value);
+    }
   };
 
   const onMessageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (currentUser) {
       const newMessage = { user: currentUser, text: messageText };
-      console.log(newMessage);
-      // отправка сообщения на сервер
-      socket.emit('message:add', newMessage);
+      const textInput = event.currentTarget.elements[0] as HTMLInputElement;
+      if (emptyStringValidation(textInput.value)) {
+        textInput.setCustomValidity('This field cannot be empty');
+        textInput.reportValidity();
+      } else {
+        textInput.setCustomValidity('');
+        socket.emit('message:add', newMessage);
+        const messageBody: HTMLDivElement | null = document.querySelector('.chat__items');
+        if (messageBody) messageBody.scrollTop = messageBody.scrollHeight;
+      }
     }
   };
+
+  const checkIsNotLastMessage = (index: number, dataLength: number) => {
+    return index <= dataLength - 1;
+  };
+
+  const checkIsNotFirstMessage = (index: number) => {
+    return index > 0;
+  };
+
+  const checkIsSameUserMessages = (currentMessage: IMessage, NextMessage: IMessage) => {
+    return NextMessage && NextMessage.user && currentMessage && currentMessage.user.id === NextMessage.user.id;
+  };
+
+  const checkIsCurrentUserMessage = (currentMessage: IMessage) => {
+    return currentMessage.user.id === currentUserData.id;
+  };
+
+  const checkedMessages = messages.map((element: IMessage, index, arr) => {
+    return {
+      message: element,
+      isCurrentUser: checkIsCurrentUserMessage(element),
+      isLastUserMessage: checkIsNotLastMessage(index, arr.length) && !checkIsSameUserMessages(element, arr[index + 1]),
+      isFirstMessage: checkIsNotFirstMessage(index) && !checkIsSameUserMessages(element, arr[index - 1]),
+    };
+  });
 
   return (
     <div className={classes}>
       <div className='chat__items'>
-        {messages.map((element: IMessage, index, arr) => {
-          setIsCurrentUser(element.user.id === currentUserData.id);
-          if (index < arr.length - 1) {
-            setIsLastUserMessage(element.user.id === arr[index + 1].user.id);
-          }
-          if (index > 0) {
-            setIsFirstMessage(element.user.id === arr[index - 1].user.id);
-          }
+        {checkedMessages.map((element, index) => {
           return (
             <div key={index.toString()} className='chat__item'>
               <ChatMessage
-                userId={element.user.id}
-                name={`${element.user.firstName} ${element.user.lastName}`}
-                text={element.text}
-                imgName={element.user.avatar}
                 className='chat__message'
-                isCurrentUser={isCurrentUser}
-                isLastUserMessage={isLastUserMessage}
-                isFirstMessage={isFirstMessage}
+                userId={element.message.user.id}
+                name={`${element.message.user.firstName} ${element.message.user.lastName}`}
+                text={element.message.text}
+                imgName={element.message.user.avatar}
+                isCurrentUser={element.isCurrentUser}
+                isLastUserMessage={element.isLastUserMessage}
+                isFirstMessage={element.isFirstMessage}
               />
             </div>
           );
         })}
       </div>
-      {/* TODO: добавить onSubmit функцию для отправки сообщений */}
-      <form onSubmit={onMessageSubmit}>
+      <form onSubmit={onMessageSubmit} className='chat__form'>
         <TextInput
           name='text'
           placeholder='Message...'
@@ -80,7 +107,7 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
           onChange={onMessageChange}
         />
         <Button color='light' size='small' submit>
-          Send
+          <IoSend />
         </Button>
       </form>
     </div>

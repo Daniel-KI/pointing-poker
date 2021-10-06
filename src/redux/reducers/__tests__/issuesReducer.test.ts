@@ -18,7 +18,7 @@ describe('Test issuesReducer', () => {
   });
   it('Update issue', () => {
     const initialState = [...testState, testIssue];
-    const changedIssue = {...testIssue, name: 'test issue upd'};
+    const changedIssue = { ...testIssue, name: 'test issue upd' };
     const expectedState = [...testState, changedIssue];
     const newState = issuesReducer(initialState, updateIssue(changedIssue));
     expect(newState).toStrictEqual(expect.arrayContaining(expectedState));
@@ -30,6 +30,5 @@ describe('Test issuesReducer', () => {
     const newState = issuesReducer(initialState, removeIssue(testIssue.id));
     expect(newState).toStrictEqual(expect.arrayContaining(expectedState));
     expect(newState).toStrictEqual(expectedState);
-
   });
 });

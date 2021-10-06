@@ -34,6 +34,17 @@
     }
   }
 
+  &--open-chat {
+    & #{ $self }__chat {
+      fill: $primary;
+
+      &:hover {
+        cursor: pointer;
+        fill: $primary-active;
+      }
+    }
+  }
+
   &--centered {
     @media (max-width: $screen-sm) {
       & #{ $self }__container {
