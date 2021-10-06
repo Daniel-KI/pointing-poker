@@ -17,9 +17,6 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
   const members = useSelector((state: IState) => state.users);
   const currentUser = currentUserData.role === 'admin' ? admin : members.find(user => user.id === currentUserData.id);
 
-  const [isCurrentUser, setIsCurrentUser] = useState(() => true);
-  const [isLastUserMessage, setIsLastUserMessage] = useState(() => false);
-  const [isFirstMessage, setIsFirstMessage] = useState(() => true);
   const [messageText, setMessageText] = useState(() => '');
   const classes = classNames(
     {
@@ -57,26 +54,30 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
     return currentMessage.user.id === currentUserData.id;
   };
 
+  const checkedMessages = messages.map((element: IMessage, index, arr) => {
+    return {
+      message: element,
+      isCurrentUser: checkIsCurrentUserMessage(element),
+      isLastUserMessage: checkIsNotLastMessage(index, arr.length) && checkIsSameUserMessages(element, arr[index + 1]),
+      isFirstMessage: checkIsNotFirstMessage(index) && checkIsSameUserMessages(element, arr[index - 1]),
+    };
+  });
+
   return (
     <div className={classes}>
       <div className='chat__items'>
-        {messages.map((element: IMessage, index, arr) => {
-          setIsCurrentUser(checkIsCurrentUserMessage(element));
-          setIsLastUserMessage(
-            checkIsNotLastMessage(index, arr.length) && checkIsSameUserMessages(element, arr[index + 1]),
-          );
-          setIsFirstMessage(checkIsNotFirstMessage(index) && checkIsSameUserMessages(element, arr[index - 1]));
+        {checkedMessages.map((element, index, arr) => {
           return (
             <div key={index.toString()} className='chat__item'>
               <ChatMessage
                 className='chat__message'
-                userId={element.user.id}
-                name={`${element.user.firstName} ${element.user.lastName}`}
-                text={element.text}
-                imgName={element.user.avatar}
-                isCurrentUser={isCurrentUser}
-                isLastUserMessage={isLastUserMessage}
-                isFirstMessage={isFirstMessage}
+                userId={element.message.user.id}
+                name={`${element.message.user.firstName} ${element.message.user.lastName}`}
+                text={element.message.text}
+                imgName={element.message.user.avatar}
+                isCurrentUser={element.isCurrentUser}
+                isLastUserMessage={element.isLastUserMessage}
+                isFirstMessage={element.isFirstMessage}
               />
             </div>
           );
