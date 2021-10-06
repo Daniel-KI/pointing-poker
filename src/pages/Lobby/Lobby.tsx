@@ -59,69 +59,77 @@ const Lobby: React.FC = () => {
   return (
     <div className='lobby'>
       <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
+
       <div className='lobby__wrapper'>
         <div className='lobby__container'>
           <h2 className='lobby__title'>{lobbyTitle || 'Lobby'}</h2>
 
-          <div className='lobby__main-members'>
-            <div className='lobby__scram-master'>
-              <h3 className='lobby__section-title'>Scram master:</h3>
-              {master ? (
-                <UserCard
-                  name={master.firstName}
-                  surname={master.lastName}
-                  jobPosition={master.position}
-                  avatar={master.avatar}
-                  color='primary'
-                  className='lobby__scram-master-card'
-                />
-              ) : (
-                <p className='lobby__empty-text'>There is no game master</p>
-              )}
-            </div>
-
-            <div className='lobby__current-user'>
-              <h3 className='lobby__section-title'>Current user:</h3>
-              {currentUserData && currentUser ? (
-                <UserCard
-                  name={currentUser?.firstName}
-                  surname={currentUser?.lastName}
-                  jobPosition={currentUser?.position}
-                  avatar={currentUser?.avatar}
-                  color='success'
-                  className='lobby__scram-master-card'
-                  deleteAction={exitBtnOnClick}
-                />
-              ) : (
-                <p className='lobby__empty-text'>There is no authorized user</p>
-              )}
-            </div>
-          </div>
-
-          <div className='lobby__members'>
-            <h3 className='lobby__section-title'>Other members</h3>
-            <div className='lobby__members_container'>
-              {isOnlyMasterAndCurrentUser() === true ? (
-                <p className='lobby__empty-text'>There is no members</p>
-              ) : (
-                members?.map(user =>
-                  checkIsAdminOrCurrentUser(user) === true ? null : (
+          <div className={isChatOpen ? 'lobby__content lobby__content--double' : 'lobby__content'}>
+            <div className='lobby__main-content'>
+              <div className='lobby__main-members'>
+                <div className='lobby__scram-master'>
+                  <h3 className='lobby__section-title'>Scram master:</h3>
+                  {master ? (
                     <UserCard
-                      key={user.firstName}
-                      name={user.firstName}
-                      surname={user.lastName}
-                      jobPosition={user.position}
-                      avatar={user.avatar}
-                      className='lobby__member_card'
+                      name={master.firstName}
+                      surname={master.lastName}
+                      jobPosition={master.position}
+                      avatar={master.avatar}
+                      color='primary'
+                      className='lobby__scram-master-card'
                     />
-                  ),
-                )
-              )}
+                  ) : (
+                    <p className='lobby__empty-text'>There is no game master</p>
+                  )}
+                </div>
+                <div className='lobby__current-user'>
+                  <h3 className='lobby__section-title'>Current user:</h3>
+                  {currentUserData && currentUser ? (
+                    <UserCard
+                      name={currentUser?.firstName}
+                      surname={currentUser?.lastName}
+                      jobPosition={currentUser?.position}
+                      avatar={currentUser?.avatar}
+                      color='success'
+                      className='lobby__scram-master-card'
+                      deleteAction={exitBtnOnClick}
+                    />
+                  ) : (
+                    <p className='lobby__empty-text'>There is no authorized user</p>
+                  )}
+                </div>
+              </div>
+
+              <div className='lobby__members'>
+                <h3 className='lobby__section-title'>Other members</h3>
+                <div className='lobby__members_container'>
+                  {isOnlyMasterAndCurrentUser() === true ? (
+                    <p className='lobby__empty-text'>There is no members</p>
+                  ) : (
+                    members?.map(user =>
+                      checkIsAdminOrCurrentUser(user) === true ? null : (
+                        <UserCard
+                          key={user.firstName}
+                          name={user.firstName}
+                          surname={user.lastName}
+                          jobPosition={user.position}
+                          avatar={user.avatar}
+                          className='lobby__member_card'
+                        />
+                      ),
+                    )
+                  )}
+                </div>
+              </div>
             </div>
+            {isChatOpen ? (
+              <div className='lobby__chat-content'>
+                <Chat className='lobby__chat' />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
-      {isChatOpen ? <Chat /> : null}
       <Footer />
 
       <ConfirmModal

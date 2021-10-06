@@ -3,13 +3,12 @@
 
 .chat {
   width: 100%;
-  max-height: calc(100vh - 14rem);
+  max-height: calc(100vh - 1rem);
   min-height: 25rem;
   padding: 1rem;
   background-color: $light-bg;
   box-shadow: $basic-shadow;
   border-radius: 1rem;
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

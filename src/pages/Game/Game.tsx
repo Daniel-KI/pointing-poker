@@ -358,81 +358,85 @@ const Game: React.FC = () => {
     return user.isObserver ? 'light' : 'warning';
   };
 
+  const checkCurrentUserIsObserver = (): boolean => {
+    return currentUser?.isObserver || (isMaster && settings.isAdminObserver);
+  };
+
   return (
     <div className='game'>
       <Header isAuthorized isChatOpen={isChatOpen} setChatOpen={setChatOpen} />
       <div className='game__wrapper'>
-        <h2 className='game__title'>
-          <div className='game__title-content'>{gameTitle || 'Game'}</div>
-        </h2>
-        <div className={isChatOpen ? 'game__content game__content-chat' : 'game__content'}>
-          <div className='scram-master'>
-            <div className='scram-master__card-field-wrapper'>
-              <div className='scram-master__card-field'>
-                <div className='scram-master__card-master'>
-                  <h3 className='scram-master__section-title'>Scram master:</h3>
-                  <UserCard
-                    name={master?.firstName}
-                    surname={master?.lastName}
-                    jobPosition={master?.position}
-                    avatar={master?.avatar}
-                    color={isMaster ? 'primary' : undefined}
-                    className='scram-master__card'
-                  />
+        <div className='game__container'>
+          <h2 className='game__title'>{gameTitle || 'Game'}</h2>
+          <div className={isChatOpen ? 'game__content game__content--double' : 'game__content'}>
+            <div className='game__main-content'>
+              <div className='game__data'>
+                <div className='game__info'>
+                  <div className='game__master'>
+                    <h3 className='game__section-title'>Scram master:</h3>
+                    <UserCard
+                      name={master?.firstName}
+                      surname={master?.lastName}
+                      jobPosition={master?.position}
+                      avatar={master?.avatar}
+                      color={isMaster ? 'primary' : undefined}
+                      className='game__master-card'
+                    />
+                  </div>
+                  {settings.timer ? (
+                    <div className='game__timer'>
+                      <Timer
+                        id='timer'
+                        minutes={minutes}
+                        seconds={seconds}
+                        setMinutes={setMinutes}
+                        setSeconds={setSeconds}
+                        isGameOn={isRoundStarted}
+                        setGameOn={setRoundStarted}
+                        setTimeOut={setRoundEnded}
+                        className='game__timer-clock'
+                        disabled={!isMaster}
+                      />
+                    </div>
+                  ) : null}
                 </div>
-                <div className='scram-master__card-master-btn'>
+                <div className='game__controls'>
+                  {isMaster ? (
+                    <>
+                      <Button
+                        color='light'
+                        size='large'
+                        className='scram-master__exit-btn'
+                        onClick={onClickFinishGameBtn}
+                      >
+                        Finish game
+                      </Button>
+                      <Button
+                        color='success'
+                        size='large'
+                        onClick={onClickStartBtn}
+                        disabled={!settings.canChangeChoice && isIssueExistsInStatistics(currentIssue)}
+                      >
+                        {getControlRoundBtnText()}
+                      </Button>
+                      <Button
+                        color='dark'
+                        size='large'
+                        onClick={onClickNextIssueBtn}
+                        disabled={isRoundStarted && !isRoundEnded}
+                      >
+                        Next issue
+                      </Button>
+                    </>
+                  ) : null}
                   <Button color='danger' size='large' className='scram-master__exit-btn' onClick={onClickExitBtn}>
                     Exit
                   </Button>
-                  {isMaster ? (
-                    <Button
-                      color='light'
-                      size='large'
-                      className='scram-master__exit-btn'
-                      onClick={onClickFinishGameBtn}
-                    >
-                      Finish game
-                    </Button>
-                  ) : null}
                 </div>
-                {settings.timer ? (
-                  <div className='scram-master__timer'>
-                    <Timer
-                      id='timer'
-                      minutes={minutes}
-                      seconds={seconds}
-                      setMinutes={setMinutes}
-                      setSeconds={setSeconds}
-                      isGameOn={isRoundStarted}
-                      setGameOn={setRoundStarted}
-                      setTimeOut={setRoundEnded}
-                      className='game__settings_timer'
-                      disabled={!isMaster}
-                    />
-                  </div>
-                ) : null}
-
-                {isMaster ? (
-                  <div className='scram-master__timer-btn'>
-                    {!settings.canChangeChoice && isIssueExistsInStatistics(currentIssue) ? null : (
-                      <Button color='success' size='large' onClick={onClickStartBtn}>
-                        {getControlRoundBtnText()}
-                      </Button>
-                    )}
-                    <Button
-                      color='dark'
-                      size='large'
-                      onClick={onClickNextIssueBtn}
-                      disabled={isRoundStarted && !isRoundEnded}
-                    >
-                      Next issue
-                    </Button>
-                  </div>
-                ) : null}
               </div>
               <div className='game__issues'>
-                <h3 className='game__issues-title'>Issues</h3>
-                <div className='game__issues-field'>
+                <h3 className='game__section-title'>Issues</h3>
+                <div className='game__issues-container'>
                   {issues.map(item => (
                     <IssueCard
                       id={item.id.toString()}
@@ -455,16 +459,15 @@ const Game: React.FC = () => {
                   ) : null}
                 </div>
               </div>
-              {currentUser?.isObserver || (isMaster && settings.isAdminObserver) ? null : (
+
+              {!checkCurrentUserIsObserver() ? (
                 <div className='game__vote'>
-                  <div>
-                    <h3 className='game__vote-title'>Vote</h3>
-                  </div>
-                  <div className='game__vote-field'>
+                  <h3 className='game__section-title'>Vote</h3>
+                  <div className='game__vote-container'>
                     {settings.cardValues.map((value, index) => (
                       <div key={index.toString()}>
                         <SpVoteCard
-                          className='game__vote-front'
+                          className='game__vote-card'
                           score={value}
                           units={settings.scoreType}
                           isFlipped={isCardsFlipped}
@@ -476,17 +479,18 @@ const Game: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              )}
+              ) : null}
+
               <div className='game__statistics'>
-                <h3 className='game__statistics-title'>Statistics</h3>
-                <div className='game__statistics-field'>
+                <h3 className='game__section-title'>Statistics</h3>
+                <div className='game__statistics-container'>
                   {isIssueExistsInStatistics(currentIssue) ? (
                     statistics
                       .find(({ issue }) => issue.id === currentIssue.id)
                       ?.votesPercentage.map((element, index) => (
-                        <div key={index.toString()}>
+                        <div key={index.toString()} className='game__statistics-block'>
                           <SpCardFront
-                            className='game__statistics_cards-front-item'
+                            className='game__statistics_card'
                             score={element.value}
                             units={settings.scoreType}
                             size='small'
@@ -495,50 +499,82 @@ const Game: React.FC = () => {
                         </div>
                       ))
                   ) : (
-                    <p>No results yet</p>
+                    <p className='game__empty-text'>No results yet</p>
                   )}
                 </div>
               </div>
+
+              <div className='game__score'>
+                <h3 className='game__section-title'>Score table</h3>
+
+                <table className='game__table'>
+                  <thead className='game__thead'>
+                    <tr className='game__tr'>
+                      <th className='game__th'>Score</th>
+                      <th className='game__th'>Players</th>
+                    </tr>
+                  </thead>
+                  <tbody className='game__tbody'>
+                    {members
+                      .sort(member => (member.isObserver ? 1 : -1))
+                      .map(user => (
+                        <tr key={user.id} className='game__tr'>
+                          <td data-label='Score' className='game__td'>
+                            {user.isObserver ? `---` : getScoreTableValue(user)}
+                          </td>
+                          <td data-label='Player' className='game__td'>
+                            <UserCard
+                              name={user.firstName}
+                              surname={user.lastName}
+                              jobPosition={user.position}
+                              avatar={user.avatar}
+                              color={getUserCardColor(user)}
+                              deleteAction={isMaster ? () => deleteUserAction(user) : undefined}
+                              className='game__user-card'
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    <tr className='game__tr'>
+                      <td data-label='Score' className='game__td game__td-score'>
+                        15
+                      </td>
+                      <td data-label='Player' className='game__td'>
+                        <UserCard
+                          name='qwe'
+                          surname='asd'
+                          jobPosition='zxc'
+                          avatar='qwe'
+                          deleteAction={() => {}}
+                          className='game__user-card'
+                        />
+                      </td>
+                    </tr>
+                    <tr className='game__tr'>
+                      <td data-label='Score' className='game__td game__td-score'>
+                        15
+                      </td>
+                      <td data-label='Player' className='game__td'>
+                        <UserCard
+                          name='qwe'
+                          surname='asd'
+                          jobPosition='zxc'
+                          avatar='qwe'
+                          deleteAction={() => {}}
+                          className='game__user-card'
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div className='game__score-wrapper'>
-              <h3 className='game__score-title'>Score table</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th className='game__score'>Score</th>
-                    <th>Players</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {members
-                    .sort(member => (member.isObserver ? 1 : -1))
-                    .map(user => (
-                      <tr key={user.id} className='game__score-tr'>
-                        <td data-label='Score' className='game__table-score'>
-                          {user.isObserver ? `---` : getScoreTableValue(user)}
-                        </td>
-                        <td data-label='Player' className='game__table-card'>
-                          <UserCard
-                            name={user.firstName}
-                            surname={user.lastName}
-                            jobPosition={user.position}
-                            avatar={user.avatar}
-                            color={getUserCardColor(user)}
-                            deleteAction={isMaster ? () => deleteUserAction(user) : undefined}
-                            className='game__user-card'
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+            {isChatOpen ? (
+              <div className='game__chat-content'>
+                <Chat className='game__chat' />
+              </div>
+            ) : null}
           </div>
-          {isChatOpen ? (
-            <div className='game-chat__wrapper'>
-              <Chat className='game-chat' />
-            </div>
-          ) : null}
         </div>
       </div>
 

@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IoSend } from 'react-icons/io5';
-import { addMessage } from '../../redux/actions/messagesActions';
 import { IMessage, IState } from '../../redux/models';
 import Button from '../Button/Button';
 import ChatMessage from '../ChatMessage/ChatMessage';
@@ -11,8 +10,6 @@ import './Chat.scss';
 import { ChatProps } from './models';
 
 const Chat: React.FC<ChatProps> = ({ className }) => {
-  const dispatch = useDispatch();
-
   const socket = useSelector((state: IState) => state.socket);
   const messages = useSelector((state: IState) => state.messages);
   const currentUserData = useSelector((state: IState) => state.currentUser);
