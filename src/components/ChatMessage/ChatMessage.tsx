@@ -16,7 +16,7 @@ const ChatMessage: React.FC<MessageProps> = ({
       {!isCurrentUser && isLastUserMessage ? (
         <Avatar className='chat-message__avatar' imgName={imgName} />
       ) : (
-        <div className='chat-message__avatar_empty-box' />
+        <div className='chat-message__hidden-avatar' />
       )}
 
       {!isLastUserMessage ? (
@@ -25,19 +25,10 @@ const ChatMessage: React.FC<MessageProps> = ({
           <div className='chat-message__item_text'>{text}</div>
         </div>
       ) : (
-        [
-          !isCurrentUser ? (
-            <div className='chat-message__item members'>
-              {isFirstMessage ? <div className='chat-message__item_name'>{name}</div> : null}
-              <div className='chat-message__item_text'>{text}</div>
-            </div>
-          ) : (
-            <div className='chat-message__item current-user'>
-              {isFirstMessage ? <div className='chat-message__item_name'>{name}</div> : null}
-              <div className='chat-message__item_text'>{text}</div>
-            </div>
-          ),
-        ]
+        <div className={isCurrentUser ? 'chat-message__item current-user' : 'chat-message__item members'}>
+          {isFirstMessage ? <div className='chat-message__item_name'>{name}</div> : null}
+          <div className='chat-message__item_text'>{text}</div>
+        </div>
       )}
     </div>
   );

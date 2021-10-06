@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { IoSend } from 'react-icons/io5';
 import { IMessage, IState } from '../../redux/models';
 import Button from '../Button/Button';
@@ -32,14 +32,12 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
     event.preventDefault();
     if (currentUser) {
       const newMessage = { user: currentUser, text: messageText };
-      console.log(newMessage);
-      // отправка сообщения на сервер
       socket.emit('message:add', newMessage);
     }
   };
 
   const checkIsNotLastMessage = (index: number, dataLength: number) => {
-    return index < dataLength - 1;
+    return index <= dataLength - 1;
   };
 
   const checkIsNotFirstMessage = (index: number) => {
@@ -58,15 +56,15 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
     return {
       message: element,
       isCurrentUser: checkIsCurrentUserMessage(element),
-      isLastUserMessage: checkIsNotLastMessage(index, arr.length) && checkIsSameUserMessages(element, arr[index + 1]),
-      isFirstMessage: checkIsNotFirstMessage(index) && checkIsSameUserMessages(element, arr[index - 1]),
+      isLastUserMessage: checkIsNotLastMessage(index, arr.length) && !checkIsSameUserMessages(element, arr[index + 1]),
+      isFirstMessage: checkIsNotFirstMessage(index) && !checkIsSameUserMessages(element, arr[index - 1]),
     };
   });
 
   return (
     <div className={classes}>
       <div className='chat__items'>
-        {checkedMessages.map((element, index, arr) => {
+        {checkedMessages.map((element, index) => {
           return (
             <div key={index.toString()} className='chat__item'>
               <ChatMessage
