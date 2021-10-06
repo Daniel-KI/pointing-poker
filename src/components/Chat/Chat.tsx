@@ -43,25 +43,39 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
     }
   };
 
+  const checkIsNotLastMessage = (index: number, dataLength: number) => {
+    return index < dataLength - 1;
+  };
+
+  const checkIsNotFirstMessage = (index: number) => {
+    return index > 0;
+  };
+
+  const checkIsSameUserMessages = (currentMessage: IMessage, NextMessage: IMessage) => {
+    return NextMessage && NextMessage.user && currentMessage && currentMessage.user.id === NextMessage.user.id;
+  };
+
+  const checkIsCurrentUserMessage = (currentMessage: IMessage) => {
+    return currentMessage.user.id === currentUserData.id;
+  };
+
   return (
     <div className={classes}>
       <div className='chat__items'>
         {messages.map((element: IMessage, index, arr) => {
-          setIsCurrentUser(element.user.id === currentUserData.id);
-          if (index < arr.length - 1) {
-            setIsLastUserMessage(element.user.id === arr[index + 1].user.id);
-          }
-          if (index > 0) {
-            setIsFirstMessage(element.user.id === arr[index - 1].user.id);
-          }
+          setIsCurrentUser(checkIsCurrentUserMessage(element));
+          setIsLastUserMessage(
+            checkIsNotLastMessage(index, arr.length) && checkIsSameUserMessages(element, arr[index + 1]),
+          );
+          setIsFirstMessage(checkIsNotFirstMessage(index) && checkIsSameUserMessages(element, arr[index - 1]));
           return (
             <div key={index.toString()} className='chat__item'>
               <ChatMessage
+                className='chat__message'
                 userId={element.user.id}
                 name={`${element.user.firstName} ${element.user.lastName}`}
                 text={element.text}
                 imgName={element.user.avatar}
-                className='chat__message'
                 isCurrentUser={isCurrentUser}
                 isLastUserMessage={isLastUserMessage}
                 isFirstMessage={isFirstMessage}
