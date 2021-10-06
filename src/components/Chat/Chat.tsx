@@ -8,6 +8,7 @@ import ChatMessage from '../ChatMessage/ChatMessage';
 import TextInput from '../TextInput/TextInput';
 import './Chat.scss';
 import { ChatProps } from './models';
+import emptyStringValidation from '../../utils/validation/emptyStringValidation';
 
 const Chat: React.FC<ChatProps> = ({ className }) => {
   const socket = useSelector((state: IState) => state.socket);
@@ -24,15 +25,31 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
     },
     className,
   );
+
   const onMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessageText(event.currentTarget.value);
+    if (emptyStringValidation(event.currentTarget.value)) {
+      event.currentTarget.setCustomValidity('This field cannot be empty');
+      event.currentTarget.reportValidity();
+    } else {
+      event.currentTarget.setCustomValidity('');
+      setMessageText(event.currentTarget.value);
+    }
   };
 
   const onMessageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (currentUser) {
       const newMessage = { user: currentUser, text: messageText };
-      socket.emit('message:add', newMessage);
+      const textInput = event.currentTarget.elements[0] as HTMLInputElement;
+      if (emptyStringValidation(textInput.value)) {
+        textInput.setCustomValidity('This field cannot be empty');
+        textInput.reportValidity();
+      } else {
+        textInput.setCustomValidity('');
+        socket.emit('message:add', newMessage);
+        const messageBody: HTMLDivElement | null = document.querySelector('.chat__items');
+        if (messageBody) messageBody.scrollTop = messageBody.scrollHeight;
+      }
     }
   };
 
