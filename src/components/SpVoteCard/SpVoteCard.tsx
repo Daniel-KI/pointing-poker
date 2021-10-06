@@ -5,9 +5,6 @@ import { SpVoteCardProps } from './models';
 import SpCardFront from '../SpCardFront/SpCardFront';
 import SpCardBack from '../SpCardBack/SpCardBack';
 
-// const [isFlipped, setFlipStatus] = useState<boolean>(false);
-// <SpVoteCard isFlipped={isFlipped} />
-
 const SpVoteCard: React.FC<SpVoteCardProps> = ({
   type,
   units,

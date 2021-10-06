@@ -29,12 +29,6 @@ const Dropdown: React.FC<DropdownProps> = ({ options, selected, setSelected }) =
 
   return (
     <div className='dropdown'>
-      {/*
-          Данные для списка элементов поступают в виде массива через пропсы.
-          В родительском компоненте это выглядит следующим образом:
-          const [priority, setPriority] = useState<string | undefined>(undefined);
-          <Dropdown options={['low', 'medium', 'hight']} selected={priority} setSelected={setPriority} />
-      */}
       <div
         className={isActive ? 'select  is-active' : 'select'}
         onClick={toggleClass}
@@ -63,7 +57,6 @@ const Dropdown: React.FC<DropdownProps> = ({ options, selected, setSelected }) =
             </div>
           ))}
 
-          {/* Фон ховера при наведении на элемент селекта */}
           <span className='select__item-bg' />
         </div>
       </div>

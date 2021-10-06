@@ -98,7 +98,6 @@ const Chat: React.FC<ChatProps> = ({ className }) => {
           );
         })}
       </div>
-      {/* TODO: добавить onSubmit функцию для отправки сообщений */}
       <form onSubmit={onMessageSubmit} className='chat__form'>
         <TextInput
           name='text'
