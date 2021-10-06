@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import './Main.scss';
 
 import { ReactComponent as TeamImg } from '../../assets/team.svg';
@@ -12,12 +13,56 @@ import UserType from '../../types/UserType';
 import validateConnection from '../../api/validateConnection';
 import { updateRoom } from '../../redux/actions/roomActions';
 import validateLobbyId from '../../utils/validation/validateLobbyId';
+import { IState, IUser } from '../../redux/models';
+import getRoomData from '../../api/getRoomData';
+import { updateSettings } from '../../redux/actions/settingsActions';
+import { updateIssues } from '../../redux/actions/issuesActions';
+import { updateUsers } from '../../redux/actions/usersActions';
+import useLeaveRoom from '../../hooks/useLeaveRoom';
+import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  const socket = useSelector((state: IState) => state.socket);
+  const roomId = useSelector((state: IState) => state.room.id);
+
   const [isPending, setPendingStatus] = useState<boolean>(false);
   const [isModalActive, setActive] = useState<boolean>(false);
   const [currentUserType, setUserType] = useState<UserType>('user');
+
+  useLeaveRoom();
+
+  useDidUpdateEffect(() => {
+    socket.on('admitted', async () => {
+      const roomData = await getRoomData(roomId);
+      if (!roomData) {
+        return;
+      }
+      console.log('user is admitted');
+      dispatch(updateRoom(roomData));
+      if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
+        dispatch(updateSettings(roomData.settings));
+        dispatch(updateIssues(roomData.issues));
+        dispatch(updateUsers(roomData.users));
+      }
+      history.push(roomData.isGameStarted ? `/game/${roomId}` : `/lobby/${roomId}`);
+    });
+
+    socket.on('users', (users: IUser[]) => {
+      dispatch(updateUsers(users));
+    });
+
+    socket.on('rejected', () => {
+      console.log('user is rejected');
+      // уведомление о том, что пользователь не допущен в игру
+    });
+
+    return () => {
+      socket.offAny();
+    };
+  }, [roomId]);
 
   const onCreateBtnClick = () => {
     setUserType('admin');

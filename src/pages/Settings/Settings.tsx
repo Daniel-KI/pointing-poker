@@ -132,7 +132,6 @@ const Settings: React.FC = () => {
       setIssuesValidStatus(true);
       setSettingsValidStatus(true);
       setVoteCardsValidStatus(true);
-      // start game here
       sendSettingsData(socket, settingsData, issues);
     } else {
       let element: HTMLElement | null = null;
@@ -163,8 +162,10 @@ const Settings: React.FC = () => {
     setActiveStatusStopConfirmModal(true);
   };
   const onStopModalConfirm = () => {
-    // stop game here
-    setActiveStatusStopConfirmModal(false);
+    if (admin?.id) {
+      leaveRoom(socket, admin?.id, admin?.id);
+      setActiveStatusStopConfirmModal(false);
+    }
   };
   const onStopModalDecline = () => {
     setActiveStatusStopConfirmModal(false);
@@ -424,10 +425,10 @@ const Settings: React.FC = () => {
                 Is timer needed
               </Toggle>
               <Toggle checked={autoAddUsers} inputId='addNewPlayerToggle' onChange={setAutoAddUsers}>
-                Add users automatically
+                Add new users to game page automatically
               </Toggle>
               <Toggle checked={canChangeChoice} inputId='canChangeChoiceToggle' onChange={setCanChangeChoice}>
-                Can player change choice after cards were flipped
+                Players can change choices after voting
               </Toggle>
               <label htmlFor='scoreType' className='lobby__score-input'>
                 <span>Score type</span>

@@ -1,22 +1,22 @@
-import { ISettingsAction, SET_SETTINGS } from '../actions/settingsActions';
+import { SettingsActionsType, SET_SETTINGS, UPDATE_TIMER } from '../actions/settingsActions';
 import { ISettings } from '../models';
 
 const initialState: ISettings = {
   isAdminObserver: true,
-  timer: {
-    minutes: 0,
-    seconds: 20,
-  },
-  scoreType: 'SP',
-  cardValues: ['', '2', '6', '12', ''],
+  timer: null,
+  scoreType: '',
+  cardValues: [],
   cardBack: 'type1',
   addNewPlayersAutomatically: true,
-  cardsFlipAutomatically: false,
+  cardsFlipAutomatically: true,
   canChangeChoice: false,
 };
 
-const settingsReducer = (state = initialState, action: ISettingsAction): ISettings => {
+const settingsReducer = (state = initialState, action: SettingsActionsType): ISettings => {
   switch (action.type) {
+    case UPDATE_TIMER: {
+      return { ...state, timer: action.timer };
+    }
     case SET_SETTINGS:
       return { ...action.settings };
     default:

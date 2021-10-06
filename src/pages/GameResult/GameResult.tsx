@@ -37,9 +37,8 @@ const GameResult: React.FC = () => {
 
           <div className='game-result__statistics'>
             {gameResult.map((result, index) => (
-              <div className='game-result__data'>
+              <div key={index.toString()} className='game-result__data'>
                 <IssueCard
-                  key={index.toString()}
                   name={result.issue.name}
                   priority={result.issue.priority}
                   className='game-result__issue'
@@ -48,9 +47,8 @@ const GameResult: React.FC = () => {
 
                 <div className='game-result__values'>
                   {result.votesPercentage.map((element, key) => (
-                    <div className='game-result__value-wrapper'>
+                    <div key={key.toString()} className='game-result__value-wrapper'>
                       <SpCardFront
-                        key={key.toString()}
                         score={element.value}
                         units={scoreType}
                         size='small'

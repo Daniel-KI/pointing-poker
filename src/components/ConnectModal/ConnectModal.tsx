@@ -14,14 +14,10 @@ import imageToDataURL from '../../utils/imageToDataURL';
 import IConnectionData from '../../api/models';
 import joinRoom from '../../api/joinRoom';
 import { IState } from '../../redux/models';
-import getRoomData from '../../api/getRoomData';
 import { updateRoom } from '../../redux/actions/roomActions';
 import { updateCurrentUser } from '../../redux/actions/currentUserActions';
 import validateFullName from '../../utils/validation/validateFullName';
 import emptyStringValidation from '../../utils/validation/emptyStringValidation';
-import { updateSettings } from '../../redux/actions/settingsActions';
-import { updateIssues } from '../../redux/actions/issuesActions';
-import { updateUsers } from '../../redux/actions/usersActions';
 
 const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userType }) => {
   const dispatch = useDispatch();
@@ -135,7 +131,6 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     dispatch(updateRoom({ id: socket.id, name: user.roomName, admin: user }));
     resetData();
     setActive(false);
-    // redirect to lobby page
     history.push(`/settings/${socket.id}`);
     joinRoom(socket, user);
   };
@@ -144,21 +139,10 @@ const ConnectModal: React.FC<ConnectModalProps> = ({ setActive, isActive, userTy
     event.preventDefault();
     const user = { ...getUserData(), roomId };
     dispatch(updateCurrentUser({ id: socket.id, role: userType }));
-    const roomData = await getRoomData(roomId);
-    if (!roomData) {
-      return;
-    }
-    dispatch(updateRoom(roomData));
-    if (roomData.isGameStarted && roomData.settings && roomData.issues && roomData.users) {
-      dispatch(updateSettings(roomData.settings));
-      dispatch(updateIssues(roomData.issues));
-      dispatch(updateUsers(roomData.users));
-    }
     resetData();
     setActive(false);
-    // redirect to lobby page
-    history.push(roomData.isGameStarted ? `/game/${roomId}` : `/lobby/${roomId}`);
     joinRoom(socket, user);
+    // показать уведомление с просьбой подождать
   };
 
   const cancelBtnOnClick = () => {
