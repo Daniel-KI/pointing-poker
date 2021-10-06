@@ -1,7 +1,6 @@
 import { IStatistics } from '../redux/models';
 
 const countVotes = (votes: string[]): IStatistics[] => {
-  console.log(votes, 'from count votes');
   if (votes.length === 0) {
     return [];
   }

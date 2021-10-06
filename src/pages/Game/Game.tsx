@@ -13,17 +13,19 @@ import IssueCard from '../../components/IssueCard/IssueCard';
 import IssueCreationCard from '../../components/IssueCreationCard/IssueCreationCard';
 import CreateIssueModal from '../../components/CreateIssueModal/CreateIssueModal';
 import SpVoteCard from '../../components/SpVoteCard/SpVoteCard';
-import { IGameResult, IIssue, IState, IUser } from '../../redux/models';
+import { IGameResult, IIssue, IState, ITimer, IUser } from '../../redux/models';
 import PriorityLevel from '../../types/PriorityLevel';
 import changeCurrentIssue from '../../api/changeCurrentIssue';
 import SpCardFront from '../../components/SpCardFront/SpCardFront';
 import countVotes from '../../utils/countVotes';
-import { addGameResult, updateGameResults } from '../../redux/actions/gameResultsActions';
+import { addGameResult, updateGameResult, updateGameResults } from '../../redux/actions/gameResultsActions';
 import useGame from '../../hooks/useGame';
 import { updateUsers } from '../../redux/actions/usersActions';
 import Color from '../../types/Color';
 import leaveRoom from '../../api/leaveRoom';
 import useDidUpdateEffect from '../../hooks/useDidUpdateEffect';
+import { updateVotes } from '../../redux/actions/votesActions';
+import { updateTimer } from '../../redux/actions/settingsActions';
 
 const Game: React.FC = () => {
   const dispatch = useDispatch();
@@ -48,10 +50,10 @@ const Game: React.FC = () => {
   const [minutes, setMinutes] = useState(() => settings.timer?.minutes);
   const [seconds, setSeconds] = useState(() => settings.timer?.seconds);
 
-  const [isCardsFlipped, setCardsFlipped] = useState(() => false);
+  const [isCardsFlipped, setCardsFlipped] = useState(() => true);
   const [chosenCardIndex, setChosenCardIndex] = useState((): number | null => null);
 
-  const [newСonnectedUser, setNewСonnectedUser] = useState<IUser | null>(null);
+  const [newConnectedUser, setNewConnectedUser] = useState<IUser | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
   const [selectedIssue, setSelectedIssue] = useState<IIssue | null>(null);
@@ -69,6 +71,10 @@ const Game: React.FC = () => {
 
   useGame();
 
+  const isIssueExistsInStatistics = (item: IIssue): boolean => {
+    return !!statistics.find(({ issue }) => issue.id === item.id);
+  };
+
   useEffect(() => {
     socket.on(
       'getGameState',
@@ -80,30 +86,61 @@ const Game: React.FC = () => {
       },
     );
 
-    socket.on('users', (users: IUser[], user: IUser) => {
+    socket.on('users', (users: IUser[], user: IUser | null) => {
       if (settings.addNewPlayersAutomatically) {
         dispatch(updateUsers(users));
       }
 
       if (currentUserData.role === 'admin') {
-        if (settings.addNewPlayersAutomatically) {
-          socket.emit('game:sendState', user.id, { result: statistics, currentIssue, isRoundStarted, isRoundEnded });
-        } else {
-          setNewСonnectedUser(user);
-          setActiveAddNewUserModal(true);
+        if (user) {
+          // user может прийти в значении null, если обновление происходит после удаления пользователя
+          socket.emit('game:sendState', user.id, {
+            result: statistics,
+            currentIssue,
+            isRoundStarted,
+            isRoundEnded,
+          });
         }
+        // else if (user) {
+        //   setNewConnectedUser(user);
+        //   setActiveAddNewUserModal(true);
+        // }
       }
+    });
+
+    socket.on('admitUser', (newUser: IUser) => {
+      setNewConnectedUser(newUser);
+      setActiveAddNewUserModal(true);
     });
 
     socket.on('currentIssue', (issue: IIssue) => {
       setCurrentIssue(issue);
+      setRoundStarted(false);
+      setRoundEnded(false);
+      dispatch(updateVotes([]));
+      if (settings.timer) {
+        setMinutes(settings.timer?.minutes);
+        setSeconds(settings.timer?.seconds);
+      }
+    });
+
+    socket.on('timer', (newTimer: ITimer) => {
+      if (!isMaster) {
+        setMinutes(newTimer.minutes);
+        setSeconds(newTimer.seconds);
+        dispatch(updateTimer(newTimer));
+      }
     });
 
     socket.on('startRound', () => {
       if (!isRoundStarted) {
         // ? можно убрать
         setRoundStarted(true);
-        console.log('start round!');
+        setCardsFlipped(false);
+        if (isRoundEnded && settings.timer) {
+          setMinutes(settings.timer?.minutes);
+          setSeconds(settings.timer?.seconds);
+        }
       }
     });
 
@@ -112,7 +149,6 @@ const Game: React.FC = () => {
         // ? можно убрать
         setRoundStarted(false);
         setRoundEnded(true);
-        console.log('stop round!');
       }
     });
 
@@ -129,14 +165,9 @@ const Game: React.FC = () => {
     return players.map(player => votes.find(({ member }) => member.id === player.id)?.score || '');
   };
 
-  const isIssueExistsInStatistics = (item: IIssue): boolean => {
-    return !!statistics.find(({ issue }) => issue.id === item.id);
-  };
-
   useDidUpdateEffect(() => {
     const players = getPlayers();
     if (settings.cardsFlipAutomatically && votes.length === players.length) {
-      console.log('use effect for votes');
       setRoundEnded(true);
       setRoundStarted(false);
     }
@@ -146,19 +177,15 @@ const Game: React.FC = () => {
   useDidUpdateEffect(() => {
     if (isRoundEnded) {
       setCardsFlipped(true);
+      setChosenCardIndex(null);
       const players = getPlayers();
       const score = getScore(players);
       const votesForCurrentIssue = countVotes(score);
-      if (!isIssueExistsInStatistics(currentIssue)) {
-        console.log('add new result');
-        dispatch(addGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
+      if (isIssueExistsInStatistics(currentIssue)) {
+        dispatch(updateGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
       } else {
-        console.log('upd');
-        // else update
-        // проверить голосовали ли за эту issue и если да, удалить из голов (где записаны результаты прошлых баллов)
-        // перезаписать если повторно головал TODO
+        dispatch(addGameResult({ issue: currentIssue, votesPercentage: votesForCurrentIssue }));
       }
-      console.log(votes, 'from game end');
     }
   }, [isRoundEnded]);
 
@@ -176,6 +203,19 @@ const Game: React.FC = () => {
     setActiveStatusExitModal(false);
   };
 
+  const onClickFinishGameBtn = () => {
+    setActiveStatusFinishModal(true);
+  };
+
+  const onFinishGameModalDecline = () => {
+    setActiveStatusFinishModal(false);
+  };
+
+  const onFinishGameModalConfirm = () => {
+    socket.emit('game:finish');
+    setActiveStatusFinishModal(false);
+  };
+
   const onClickStartBtn = () => {
     if (isMaster) {
       // isRoundStarted && isRoundEnded - не бывает
@@ -184,10 +224,8 @@ const Game: React.FC = () => {
       // !isRoundStarted && !isRoundEnded - самый первый вход в игру (первый раз открыл страницу)
       if (isRoundStarted && !isRoundEnded) {
         socket.emit('game:endRound');
-        console.log('stop round click');
       } else {
-        socket.emit('game:startRound');
-        console.log('start round click');
+        socket.emit('game:startRound', minutes, seconds);
       }
     }
   };
@@ -196,7 +234,6 @@ const Game: React.FC = () => {
     if (!isRoundStarted) {
       const nextIssueIndex = issues.findIndex(issue => issue.id === currentIssue.id) + 1;
       const correctNewIssueIndex = nextIssueIndex < issues.length ? nextIssueIndex : 0;
-      console.log('change issue', issues[correctNewIssueIndex]);
       changeCurrentIssue(socket, issues[correctNewIssueIndex]);
       setRoundStarted(false);
       setRoundEnded(false);
@@ -214,9 +251,6 @@ const Game: React.FC = () => {
     if (isMaster) {
       if (isRoundStarted && !isRoundEnded) return;
       if (currentIssue.id === chosenIssue.id) return;
-      console.log('change issue', chosenIssue);
-      setRoundStarted(false);
-      setRoundEnded(false);
       changeCurrentIssue(socket, chosenIssue);
     }
   };
@@ -269,22 +303,22 @@ const Game: React.FC = () => {
 
   // Add new user after connection request
   const onAddNewUserConfirm = () => {
-    if (newСonnectedUser) {
-      // ответ пользователю, что его пустили TODO
-      socket.emit('game:sendState', newСonnectedUser.id, {
+    if (newConnectedUser) {
+      socket.emit('user:admit', newConnectedUser);
+      socket.emit('game:sendState', newConnectedUser.id, {
         result: statistics,
         currentIssue,
         isRoundStarted,
         isRoundEnded,
       });
-      setNewСonnectedUser(null);
+      setNewConnectedUser(null);
       setActiveAddNewUserModal(false);
     }
   };
   const onAddNewUserDecline = () => {
-    setNewСonnectedUser(null);
+    setNewConnectedUser(null);
     setActiveAddNewUserModal(false);
-    // ответ пользователю, что его не пустили TODO
+    socket.emit('user:reject', newConnectedUser);
   };
 
   // Crud for user
@@ -312,6 +346,18 @@ const Game: React.FC = () => {
     }
   };
 
+  // Score table props
+  const getScoreTableValue = (player: IUser) => {
+    if (isRoundStarted) return 'In progress';
+    const value = votes.find(({ member }) => member.id === player.id)?.score;
+    return value ? `${value} ${settings.scoreType}` : 'Unknown';
+  };
+
+  const getUserCardColor = (user: IUser): Color | undefined => {
+    if (user.id === currentUser?.id) return 'primary';
+    return user.isObserver ? 'light' : 'warning';
+  };
+
   return (
     <div className='game'>
       <Header isAuthorized />
@@ -337,6 +383,11 @@ const Game: React.FC = () => {
                 <Button color='danger' size='large' className='scram-master__exit-btn' onClick={onClickExitBtn}>
                   Exit
                 </Button>
+                {isMaster ? (
+                  <Button color='light' size='large' className='scram-master__exit-btn' onClick={onClickFinishGameBtn}>
+                    Finish game
+                  </Button>
+                ) : null}
               </div>
               {settings.timer ? (
                 <div className='scram-master__timer'>
@@ -350,16 +401,18 @@ const Game: React.FC = () => {
                     setGameOn={setRoundStarted}
                     setTimeOut={setRoundEnded}
                     className='game__settings_timer'
-                    disabled={!master}
+                    disabled={!isMaster}
                   />
                 </div>
               ) : null}
 
               {isMaster ? (
                 <div className='scram-master__timer-btn'>
-                  <Button color='success' size='large' onClick={onClickStartBtn}>
-                    {getControlRoundBtnText()}
-                  </Button>
+                  {!settings.canChangeChoice && isIssueExistsInStatistics(currentIssue) ? null : (
+                    <Button color='success' size='large' onClick={onClickStartBtn}>
+                      {getControlRoundBtnText()}
+                    </Button>
+                  )}
                   <Button
                     color='dark'
                     size='large'
@@ -396,7 +449,7 @@ const Game: React.FC = () => {
                 ) : null}
               </div>
             </div>
-            {currentUser?.isObserver ? null : (
+            {currentUser?.isObserver || (isMaster && settings.isAdminObserver) ? null : (
               <div className='game__vote'>
                 <div>
                   <h3 className='game__vote-title'>Vote</h3>
@@ -453,25 +506,19 @@ const Game: React.FC = () => {
               <tbody>
                 {members
                   .sort(member => (member.isObserver ? 1 : -1))
-                  .map(element => (
-                    <tr key={element.id} className='game__score-tr'>
+                  .map(user => (
+                    <tr key={user.id} className='game__score-tr'>
                       <td data-label='Score' className='game__table-score'>
-                        {element.isObserver
-                          ? `---`
-                          : [
-                              isRoundStarted
-                                ? 'In progress'
-                                : votes.find(({ member }) => member.id === element.id)?.score,
-                            ]}
+                        {user.isObserver ? `---` : getScoreTableValue(user)}
                       </td>
                       <td data-label='Player' className='game__table-card'>
                         <UserCard
-                          name={element.firstName}
-                          surname={element.lastName}
-                          jobPosition={element.position}
-                          avatar={element.avatar}
-                          color={element.isObserver ? undefined : 'warning'}
-                          deleteAction={isMaster ? () => deleteUserAction(element) : undefined}
+                          name={user.firstName}
+                          surname={user.lastName}
+                          jobPosition={user.position}
+                          avatar={user.avatar}
+                          color={getUserCardColor(user)}
+                          deleteAction={isMaster ? () => deleteUserAction(user) : undefined}
                           className='game__user-card'
                         />
                       </td>
@@ -494,6 +541,15 @@ const Game: React.FC = () => {
           <p>Are you sure you want to exit the game?</p>
           {isMaster ? <p>(because of you are a master, other users will also leave the game)</p> : null}
         </div>
+      </ConfirmModal>
+
+      <ConfirmModal
+        isActive={isActiveFinishModal}
+        setActive={setActiveStatusFinishModal}
+        onDecline={onFinishGameModalDecline}
+        onConfirm={onFinishGameModalConfirm}
+      >
+        <p>Are you sure you want to finish the game and go to result page?</p>
       </ConfirmModal>
 
       <ConfirmModal
@@ -532,7 +588,7 @@ const Game: React.FC = () => {
         onDecline={onAddNewUserDecline}
         onConfirm={onAddNewUserConfirm}
       >
-        {`${newСonnectedUser?.firstName} ${newСonnectedUser?.lastName} wants to join the game`}
+        {`${newConnectedUser?.firstName} ${newConnectedUser?.lastName} wants to join the game`}
       </ConfirmModal>
     </div>
   );
