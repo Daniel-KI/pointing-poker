@@ -55,3 +55,13 @@ export interface IMessage {
   user: IUser;
   text: string;
 }
+
+export interface IGameResult {
+  issue: IIssue;
+  votesPercentage: IStatistics[];
+}
+
+export interface IStatistics {
+  value: string;
+  percentage: number;
+}

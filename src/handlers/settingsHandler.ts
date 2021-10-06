@@ -5,7 +5,7 @@ import { IIssue, IRoom, ISettings, ISocket } from '../models';
 export default (io: Server, socket: ISocket, storage: typeof NodePersist): void => {
   const getSettings = async () => {
     const room: IRoom = await storage.getItem(socket.roomId);
-    io.in(socket.roomId).emit('settings', room.settings, room.issues);
+    io.in(socket.roomId).emit('settings', room.settings, room.issues, room.users);
   };
 
   const addSettings = async (settingsData: ISettings, issues: IIssue[]) => {
